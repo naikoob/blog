@@ -1,0 +1,10 @@
+language: ruby
+rvm:
+  - 2.6.3
+sudo: false
+
+env:
+  global:
+    secure: Xw/ABtcyQ3n7I7fUEb0NPJpn/XGgHA+v01utCXw0yeuPEMJR7H+XSt47g7Y2GMG6L6s1zmaTEuRHZPRlozevl6zfyeIla4OHcrEUNDhJFCnVAAP2sBNIMM/Gajtz5zB5CKSkUxoaDO7KPraV5kg+6QzAj4ml1QLwBlWi4dgNeeGwUmCrjMx68R/E+RO1/54R61ldJaGUJ70UsLLROndh0id77kzKY5RO09X+l6kPUX2qzvoj6RMeqqib6t78jTTo2WdQqn/wP/pqXmKc46m203GqXgiou8dhCceA4FyiOGRVAzzel0GFRWBhHWKkplbvort2N2QtqfLZfNRpi3Jrntj58B9sx/5xdIq3QZD0Fbl+Lnm2ivUQLxv8BqiGMEzuSkHjOAjOgvlqxyCdlPiMFPKSm5e0crHTv07HgjRfUw7tz3i9VMrRJYceU6jBLAd/C2bD9oIoyN2XzirCSfuqLt9tFIdPr8GERIfx2ml42hmUXPndbwmMxTEBs++Sj6Iz6Vr0n3y2spSk0s0/IVz9ahNXrtLNRDIdpfhZQOM/zNpu3j/fdBserDQtb7emspkhWHqmwOt+l/q3hxwDH21ZCSZOanz0saMyizAA2LWx25O6VIaCFwFv1bBkdrPV0lIpvRU/V3+d48bQmKZQJS12pkC4HBvVCcgrLQnple2KWEU=
+
+script: bundle exec rake deploy
