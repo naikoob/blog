@@ -34,7 +34,7 @@ share:
   tumblr:
   pinterest:
   pocket:
-  reddit: 
+  reddit: true
   linkedin: true
   wordpress:
   email: true
