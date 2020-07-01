@@ -1,0 +1,102 @@
+---
+layout: post
+title: "On zsh, prezto and nerd fonts..."
+author: naikoob
+tags: [terminal,zsh,prezto,iterm2]
+---
+:source-highlighter: coderay
+:imagesdir: /blog/assets/img
+
+Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.
+
+== zsh, prezto
+I'm sticking to https://www.iterm2.com/[iTerm2, window='_blank'] as my preferred terminal application. As for the shell, I decided to take a look at zsh, seeing that it's now the default shell with MacOS Catalina. I also wanted capabilities such as auto-completion, git integration - without a lot of effort ;-). After a bit of googling and reading, I picked https://github.com/sorin-ionescu/prezto[prezto, window='_blank'] as my zsh configuration framework.
+
+== installing the tools
+Installing iterm2 is simple with https://brew.sh/[homebrew, window='_blank']:
+[source]
+----
+brew cask install iterm2
+----
+
+Zsh that comes with MacOS Catalina is quite current (v5.7.1), so I'll just use the OS supplied version. 
+
+Next, install prezto with the following commands:
+[source]
+----
+git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+----
+Alternatively, you can install from my fork which contains my modified theme:
+[source]
+----
+git clone --recursive https://github.com/naikoob/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+----
+
+followed by 
+[source]
+----
+setopt EXTENDED_GLOB
+for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+done
+----
+
+== tinkering 
+First, edit the modules section of `~/.zpreztorc` to enable the desired modules. I've added a couple of modules as highlighted below:
+
+[source]
+----
+# Set the Prezto modules to load (browse modules).
+# The order matters.
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'ssh' \ <1>
+  'completion' \
+  'git' \ <2>
+  'syntax-highlighting' \ <3>
+  'history-substring-search' \ <4>
+  'prompt'
+----
+<1> useful if you have passphrase protected your keys and/or often ssh over a bastion hosts
+<2> shows git information on your prompt
+<3> eh... syntax highlighting? Well, actually this also does syntax checking as you type ...
+<4> enable searching through command history using `ctrl-r`
+
+== themes
+tbh, this is a key motivation for me to explore prezto... The fancy prompt don't make me a better developer, but it sure makes me look the part ;-)
+
+This is how my prompt looks like:
+
+image::zsh-prompt.png[prompt]
+
+It's based on the paradox theme that comes with the prezto distribution, and available on my fork https://github.com/naikoob/prezto/blob/master/modules/prompt/functions/prompt_doxxed_setup[here, window='_blank']
+
+To use this theme, copy it to `~/zprezto/modules/prompt/functions/prompt_doxxed_setup`, and edit `~/.zpreztorc` like so:
+[source]
+----
+# Set the prompt theme to load.
+# Setting it to 'random' loads a random theme.
+# Auto set to 'off' on dumb terminals.
+zstyle ':prezto:module:prompt' theme 'doxxed'
+----
+
+== nerd fonts and glyphs
+Notice the branch and chevron symbols in the screenshot above? Those are not in the standard character set, so we need a patched font so that they display properly. I use the MesloLGS font from https://github.com/powerline/fonts/tree/master/Meslo%20Slashed[here, window='_blank']. Just download and install the .ttf files.
+
+If you're only using zsh from iTerm2 exclusively, you can skip the fonts and just enable built-in Powerline glyphs in iTerm2, like so:
+
+image::iterm2-glyphs.png[]
+
+And while you're at it, you can change the colour presets as well. I'm using 'Tango Dark' for the screenshot above.
+
+image::iterm2-colorpreset.png[]
+
+I use iTerm2's built-in glyphs in iTerm2 as I feel they render better, and patched/nerd font in Visual Studio Code terminals.
+
+{nbsp} +
