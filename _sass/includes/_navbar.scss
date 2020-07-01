@@ -33,7 +33,6 @@
   a {
     color: $header-link-color;
   }
-
   .avatar {
     height: 3em;
     width: 3em;
@@ -47,9 +46,11 @@
 
   .site-title {
     float: left;
+    margin-left: 10px;
+    margin-right: 10px;
     font-weight: bold;
     font-family: $font-family-logo;
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
 
   nav {
@@ -79,14 +80,12 @@
       }
 
       &#pull {
+        float: right;
         i {
-          margin-top: 13px;
+          margin-top: 15px;
           margin-right: 10px;
-          float: right;
         }
-
       }
-
     }
   }
 }
@@ -100,16 +99,6 @@
 }
 
 @media screen and (max-width: $break) {
-  .site-header {
-    img.avatar {
-      margin-top: -7px
-    }
-
-    .site-title {
-      margin-top: 7px;
-    }
-  }
-
   nav {
     height: auto;
 
@@ -149,7 +138,6 @@
         margin: 0;
         display: block;
       }
-
     }
   }
 }
