@@ -14,7 +14,8 @@ figure {
 }
 
 pre {
-  overflow-x: scroll;
+  line-height: 1.5;
+  overflow-x: auto;
 }
 
 html {
@@ -45,7 +46,7 @@ h5,
 h6 {
   font-family: $font-family-headings;
   line-height: 1.3;
-  margin: 0.67em 0;
+  margin: 0.7em 0 0.3em 0;
 
   a {
     color: $text-color;
@@ -193,7 +194,7 @@ ul,
 dl,
 .math-display {
   line-height: 1.5;
-  margin-bottom: 1em;
+  margin: 0.5em 0 0.3em 0;
 }
 
 // KaTeX math display
@@ -247,3 +248,4 @@ kbd {
   padding: 2px 4px;
   white-space: nowrap;
 }
+
