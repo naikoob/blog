@@ -65,7 +65,7 @@ zstyle ':prezto:load' pmodule \
 ----
 <1> useful if you have passphrase protected your keys and/or often ssh over a bastion hosts
 <2> shows git information on your prompt
-<3> eh... syntax highlighting? Well, actually this also does syntax checking as you type ...
+<3> eh... syntax highlighting? Well, actually this also does syntax checking as you type
 <4> enable searching through command history using `ctrl-r`
 
 == themes
@@ -87,7 +87,7 @@ zstyle ':prezto:module:prompt' theme 'doxxed'
 ----
 
 == nerd fonts and glyphs
-Notice the branch and chevron symbols in the screenshot above? Those are not in the standard character set, so we need a patched font so that they display properly. I use the MesloLGS font from https://github.com/powerline/fonts/tree/master/Meslo%20Slashed[here, window='_blank']. Just download and install the .ttf files.
+Notice the branch and chevron symbols in the screenshot above? Those are not in the standard character set, we need a patched/nerd font so that they display properly. You can find patched fonts https://github.com/ryanoasis/nerd-fonts[here, window='_blank'] or  https://github.com/powerline/fonts[here, window='_blank']. I use the MesloLGS font from https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Meslo/S[here, window='_blank']. Just download and install the .ttf files.
 
 If you're only using zsh from iTerm2 exclusively, you can skip the fonts and just enable built-in Powerline glyphs in iTerm2, like so:
 
@@ -97,6 +97,6 @@ And while you're at it, you can change the colour presets as well. I'm using 'Ta
 
 image::iterm2-colorpreset.png[]
 
-I use iTerm2's built-in glyphs in iTerm2 as I feel they render better, and patched/nerd font in Visual Studio Code terminals.
+I use iTerm2's built-in glyphs in iTerm2 as I feel they render better, and patched/nerd font in Visual Studio Code terminals. Overall, I'm pretty satisfied with this setup. Hope you find it useful too.
 
 {nbsp} +
