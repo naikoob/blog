@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<!--
+    Type on Strap jekyll theme v2.2.4
+    Copyright 2016-2019 Sylhare
+    Theme free for personal and commercial use under the MIT license
+    https://github.com/sylhare/Type-on-Strap/blob/master/LICENSE
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Main JS (navbar.js, katex_init.js and masonry_init.js)-->
+    <script defer src="/blog/assets/js/main.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/blog/assets/css/main.css">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="/blog/assets/img/favicon.png" type="image/x-icon">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="@naikoob" href="https://naikoob.github.io/blog/feed.xml"/>
+
+    
+    <!-- fontawesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.13.1/js/all.js" integrity="sha384-heKROmDHlJdBb+n64p+i+wLplNYUZPaZmp2HZ4J6KCqzmd33FJ8QClrOV3IdHZm5" crossorigin="anonymous"></script>
+  
+    <!-- KaTeX 0.8.3 -->
+    <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
+    
+    <script src="/blog/assets/js/vendor/katex.min.js"></script>
+    
+
+    <!-- Google Analytics -->
+    
+
+    <!-- seo tags -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>On zsh, prezto and nerd fonts… | @naikoob</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="On zsh, prezto and nerd fonts…" />
+<meta name="author" content="naikoob" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this." />
+<meta property="og:description" content="Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this." />
+<link rel="canonical" href="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html" />
+<meta property="og:url" content="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html" />
+<meta property="og:site_name" content="@naikoob" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-10T00:00:00+00:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html"},"datePublished":"2020-06-10T00:00:00+00:00","author":{"@type":"Person","name":"naikoob"},"description":"Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.","@type":"BlogPosting","url":"https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html","headline":"On zsh, prezto and nerd fonts…","dateModified":"2020-06-10T00:00:00+00:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
+</head>
+
+  <body>
+    <header class="site-header">
+
+    <!-- Logo and title -->
+	<div class="branding">
+        
+
+		<h1 class="site-title">
+			<a aria-label="@naikoob" href="/blog/">
+        @naikoob
+      </a>
+		</h1>
+	</div>
+
+    <!-- Toggle menu -->
+    <nav class="clear">
+    <a aria-label="pull" id="pull" class="toggle" href="#">
+    <i class="fas fa-bars fa-lg"></i>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hide">
+        
+
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Search" title="Search" href="/blog/search/">
+                     <i class="fa fas fa-search" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Tags" title="Tags" href="/blog/tags/">
+                     <i class="fa fas fa-tags" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    </ul>
+
+	</nav>
+</header>
+
+    <div class="content">
+      <article >
+  <header id="main" style="">
+    <div class="title-padder">
+      
+      <h1 id="On+zsh%2C+prezto+and+nerd+fonts..." class="title">On zsh, prezto and nerd fonts...</h1>
+      
+
+
+<div class="post-info">
+    <p class="meta">
+      June 10, 2020
+    </p></div>
+
+      
+    </div>
+  </header>
+
+  <section class="post-content">
+  
+      <div class="paragraph">
+<p>Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.</p>
+</div>
+<div class="sect1">
+<h2 id="zsh_prezto">zsh, prezto</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;m sticking to <a href="https://www.iterm2.com/" target="_blank" rel="noopener">iTerm2</a> as my preferred terminal application. As for the shell, I decided to take a look at zsh, seeing that it&#8217;s now the default shell with MacOS Catalina. I also wanted capabilities such as auto-completion, git integration - without a lot of effort ;-). After a bit of googling and reading, I picked <a href="https://github.com/sorin-ionescu/prezto" target="_blank" rel="noopener">prezto</a> as my zsh configuration framework.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing_the_tools">installing the tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Installing iterm2 is simple with <a href="https://brew.sh/" target="_blank" rel="noopener">homebrew</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>brew cask install iterm2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Zsh that comes with MacOS Catalina is quite current (v5.7.1), so I&#8217;ll just use the OS supplied version.</p>
+</div>
+<div class="paragraph">
+<p>Next, install prezto with the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone --recursive https://github.com/sorin-ionescu/prezto.git &quot;${ZDOTDIR:-$HOME}/.zprezto&quot;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can install from my fork which contains my modified theme:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone --recursive https://github.com/naikoob/prezto.git &quot;${ZDOTDIR:-$HOME}/.zprezto&quot;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>followed by</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>setopt EXTENDED_GLOB
+for rcfile in &quot;${ZDOTDIR:-$HOME}&quot;/.zprezto/runcoms/^README.md(.N); do
+  ln -s &quot;$rcfile&quot; &quot;${ZDOTDIR:-$HOME}/.${rcfile:t}&quot;
+done</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tinkering">tinkering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, edit the modules section of <code>~/.zpreztorc</code> to enable the desired modules. I&#8217;ve added a couple of modules as highlighted below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code># Set the Prezto modules to load (browse modules).
+# The order matters.
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'ssh' \ <i class="conum" data-value="1"></i><b>(1)</b>
+  'completion' \
+  'git' \ <i class="conum" data-value="2"></i><b>(2)</b>
+  'syntax-highlighting' \ <i class="conum" data-value="3"></i><b>(3)</b>
+  'history-substring-search' \ <i class="conum" data-value="4"></i><b>(4)</b>
+  'prompt'</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>useful if you have passphrase protected your keys and/or often ssh over a bastion hosts</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>shows git information on your prompt</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>eh&#8230;&#8203; syntax highlighting? Well, actually this also does syntax checking as you type</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>enable searching through command history using <code>ctrl-r</code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="themes">themes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>tbh, this is a key motivation for me to explore prezto&#8230;&#8203; The fancy prompt don&#8217;t make me a better developer, but it sure makes me look the part ;-)</p>
+</div>
+<div class="paragraph">
+<p>This is how my prompt looks like:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/blog/assets/img/zsh-prompt.png" alt="prompt">
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s based on the paradox theme that comes with the prezto distribution, and available on my fork <a href="https://github.com/naikoob/prezto/blob/master/modules/prompt/functions/prompt_doxxed_setup" target="_blank" rel="noopener">here</a></p>
+</div>
+<div class="paragraph">
+<p>To use this theme, copy it to <code>~/zprezto/modules/prompt/functions/prompt_doxxed_setup</code>, and edit <code>~/.zpreztorc</code> like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code># Set the prompt theme to load.
+# Setting it to 'random' loads a random theme.
+# Auto set to 'off' on dumb terminals.
+zstyle ':prezto:module:prompt' theme 'doxxed'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="nerd_fonts_and_glyphs">nerd fonts and glyphs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Notice the branch and chevron symbols in the screenshot above? Those are not in the standard character set, we need a patched/nerd font so that they display properly. You can find patched fonts <a href="https://github.com/ryanoasis/nerd-fonts" target="_blank" rel="noopener">here</a> or  <a href="https://github.com/powerline/fonts" target="_blank" rel="noopener">here</a>. I use the MesloLGS font from <a href="https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Meslo/S" target="_blank" rel="noopener">here</a>. Just download and install the .ttf files.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re only using zsh from iTerm2 exclusively, you can skip the fonts and just enable built-in Powerline glyphs in iTerm2, like so:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/blog/assets/img/iterm2-glyphs.png" alt="iterm2 glyphs">
+</div>
+</div>
+<div class="paragraph">
+<p>And while you&#8217;re at it, you can change the colour presets as well. I&#8217;m using 'Tango Dark' for the screenshot above.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/blog/assets/img/iterm2-colorpreset.png" alt="iterm2 colorpreset">
+</div>
+</div>
+<div class="paragraph">
+<p>I use iTerm2&#8217;s built-in glyphs in iTerm2 as I feel they render better, and patched/nerd font in Visual Studio Code terminals. Overall, I&#8217;m pretty satisfied with this setup. Hope you find it useful too.</p>
+</div>
+<div class="paragraph">
+<p>&#160;<br></p>
+</div>
+</div>
+</div>
+    
+  </section>
+
+  <!-- Social media shares -->
+  
+
+<div class="share-buttons">
+    <ul class="share-buttons">
+        <div class="meta">Share</div>
+         
+        <li>
+            <a href="https://twitter.com/intent/tweet?text=On+zsh%2C+prezto+and+nerd+fonts...%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2020%2F06%2F10%2Fmy-terminal-setup.html" target="_blank" title="">
+			<i class="fab fa-twitter-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Tweet</span>
+		</a>
+        </li>
+            
+        <li>
+            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html&title=On+zsh%2C+prezto+and+nerd+fonts...%20%7C%20%40naikoob" target="_blank" title=" Reddit">
+			<i class="fab fa-reddit-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on Reddit</span>
+		</a>
+        </li>
+         
+        <li>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html&title=On+zsh%2C+prezto+and+nerd+fonts...%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html" target="_blank" title=" LinkedIn">
+			<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on LinkedIn</span>
+		</a>
+        </li>
+          
+        <li>
+            <a href="mailto:?subject=On+zsh%2C+prezto+and+nerd+fonts...%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html" target="_blank" title="">
+			<i class="fas fa-envelope-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Email</span>
+		</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+
+   <!-- Tag list -->
+  
+  
+
+
+<footer>
+  <div class="tag-list">
+    
+      <div class="meta">Tags</div>
+    
+
+    
+    <a class="button" href="/blog/tags#iterm2">
+      <p><i class="fa fa-tag fa-fw"></i> iterm2</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#prezto">
+      <p><i class="fa fa-tag fa-fw"></i> prezto</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#terminal">
+      <p><i class="fa fa-tag fa-fw"></i> terminal</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#zsh">
+      <p><i class="fa fa-tag fa-fw"></i> zsh</p>
+    </a>
+    
+  </div>
+</footer>
+
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+  <div id="post-nav">
+    
+
+    
+</div>
+
+
+
+<!-- To change color of links in the page -->
+<style>
+  
+
+  header#main {
+    background-repeat:no-repeat;
+  
+  }
+</style>
+
+    </div>
+    <footer class="site-footer">
+    <p class="text">
+        Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+</p>
+            <div class="footer-icons">
+                <ul>
+                <!-- Social icons from Font Awesome, if enabled -->
+                
+<li>
+    <a feed.xml href="feed.xml"
+       title="Follow RSS feed">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+<li>
+    <a href="mailto:bookian@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a href="https://github.com/naikoob" title=" GitHub">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+<li>
+    <a href="https://www.linkedin.com/in/boo-kian-yeo-0663a410/" title=" LinkedIn">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-linkedin-in fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a class="type" href="https://twitter.com/naikoob"
+       title=" Twitter">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+                </ul>
+            </div>
+</footer>
+
+  </body>
+</html>

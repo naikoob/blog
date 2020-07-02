@@ -1,1 +1,162 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="https://naikoob.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://naikoob.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-06-29T15:25:40+00:00</updated><id>https://naikoob.github.io/blog/feed.xml</id><title type="html">@naikoob</title><subtitle>A website with blog posts and pages</subtitle></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="https://naikoob.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://naikoob.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-07-02T02:29:18+00:00</updated><id>https://naikoob.github.io/blog/feed.xml</id><title type="html">@naikoob</title><subtitle>A website with blog posts and pages</subtitle><entry><title type="html">On zsh, prezto and nerd fonts…</title><link href="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html" rel="alternate" type="text/html" title="On zsh, prezto and nerd fonts…" /><published>2020-06-10T00:00:00+00:00</published><updated>2020-06-10T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/06/10/my-terminal-setup</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html">&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;zsh_prezto&quot;&gt;zsh, prezto&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;m sticking to &lt;a href=&quot;https://www.iterm2.com/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;iTerm2&lt;/a&gt; as my preferred terminal application. As for the shell, I decided to take a look at zsh, seeing that it&amp;#8217;s now the default shell with MacOS Catalina. I also wanted capabilities such as auto-completion, git integration - without a lot of effort ;-). After a bit of googling and reading, I picked &lt;a href=&quot;https://github.com/sorin-ionescu/prezto&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;prezto&lt;/a&gt; as my zsh configuration framework.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;installing_the_tools&quot;&gt;installing the tools&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Installing iterm2 is simple with &lt;a href=&quot;https://brew.sh/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;homebrew&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;brew cask install iterm2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Zsh that comes with MacOS Catalina is quite current (v5.7.1), so I&amp;#8217;ll just use the OS supplied version.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Next, install prezto with the following commands:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;git clone --recursive https://github.com/sorin-ionescu/prezto.git &amp;quot;${ZDOTDIR:-$HOME}/.zprezto&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Alternatively, you can install from my fork which contains my modified theme:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;git clone --recursive https://github.com/naikoob/prezto.git &amp;quot;${ZDOTDIR:-$HOME}/.zprezto&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;followed by&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;setopt EXTENDED_GLOB
+for rcfile in &amp;quot;${ZDOTDIR:-$HOME}&amp;quot;/.zprezto/runcoms/^README.md(.N); do
+  ln -s &amp;quot;$rcfile&amp;quot; &amp;quot;${ZDOTDIR:-$HOME}/.${rcfile:t}&amp;quot;
+done&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;tinkering&quot;&gt;tinkering&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;First, edit the modules section of &lt;code&gt;~/.zpreztorc&lt;/code&gt; to enable the desired modules. I&amp;#8217;ve added a couple of modules as highlighted below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;# Set the Prezto modules to load (browse modules).
+# The order matters.
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'ssh' \ &lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;(1)&lt;/b&gt;
+  'completion' \
+  'git' \ &lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;(2)&lt;/b&gt;
+  'syntax-highlighting' \ &lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;(3)&lt;/b&gt;
+  'history-substring-search' \ &lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;(4)&lt;/b&gt;
+  'prompt'&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;colist arabic&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;1&quot;&gt;&lt;/i&gt;&lt;b&gt;1&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;useful if you have passphrase protected your keys and/or often ssh over a bastion hosts&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;2&quot;&gt;&lt;/i&gt;&lt;b&gt;2&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;shows git information on your prompt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;3&quot;&gt;&lt;/i&gt;&lt;b&gt;3&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;eh&amp;#8230;&amp;#8203; syntax highlighting? Well, actually this also does syntax checking as you type&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;i class=&quot;conum&quot; data-value=&quot;4&quot;&gt;&lt;/i&gt;&lt;b&gt;4&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;enable searching through command history using &lt;code&gt;ctrl-r&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;themes&quot;&gt;themes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;tbh, this is a key motivation for me to explore prezto&amp;#8230;&amp;#8203; The fancy prompt don&amp;#8217;t make me a better developer, but it sure makes me look the part ;-)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This is how my prompt looks like:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/blog/assets/img/zsh-prompt.png&quot; alt=&quot;prompt&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It&amp;#8217;s based on the paradox theme that comes with the prezto distribution, and available on my fork &lt;a href=&quot;https://github.com/naikoob/prezto/blob/master/modules/prompt/functions/prompt_doxxed_setup&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To use this theme, copy it to &lt;code&gt;~/zprezto/modules/prompt/functions/prompt_doxxed_setup&lt;/code&gt;, and edit &lt;code&gt;~/.zpreztorc&lt;/code&gt; like so:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;# Set the prompt theme to load.
+# Setting it to 'random' loads a random theme.
+# Auto set to 'off' on dumb terminals.
+zstyle ':prezto:module:prompt' theme 'doxxed'&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;nerd_fonts_and_glyphs&quot;&gt;nerd fonts and glyphs&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Notice the branch and chevron symbols in the screenshot above? Those are not in the standard character set, we need a patched/nerd font so that they display properly. You can find patched fonts &lt;a href=&quot;https://github.com/ryanoasis/nerd-fonts&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;here&lt;/a&gt; or  &lt;a href=&quot;https://github.com/powerline/fonts&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;here&lt;/a&gt;. I use the MesloLGS font from &lt;a href=&quot;https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Meslo/S&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;here&lt;/a&gt;. Just download and install the .ttf files.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you&amp;#8217;re only using zsh from iTerm2 exclusively, you can skip the fonts and just enable built-in Powerline glyphs in iTerm2, like so:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/blog/assets/img/iterm2-glyphs.png&quot; alt=&quot;iterm2 glyphs&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;And while you&amp;#8217;re at it, you can change the colour presets as well. I&amp;#8217;m using 'Tango Dark' for the screenshot above.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/blog/assets/img/iterm2-colorpreset.png&quot; alt=&quot;iterm2 colorpreset&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I use iTerm2&amp;#8217;s built-in glyphs in iTerm2 as I feel they render better, and patched/nerd font in Visual Studio Code terminals. Overall, I&amp;#8217;m pretty satisfied with this setup. Hope you find it useful too.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&amp;#160;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name>naikoob</name></author><category term="terminal" /><category term="zsh" /><category term="prezto" /><category term="iterm2" /><summary type="html">Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.</summary></entry></feed>
