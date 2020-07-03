@@ -1,0 +1,131 @@
+---
+layout: post
+title: "Working with multiple AWS accounts on the command line"
+author: naikoob
+tags: [aws, command line, cloud, security]
+---
+:source-highlighter: coderay
+:imagesdir: /blog/assets/img
+
+It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.
+
+== account(s)
+Why does AWS encourage multiple accounts setups (apart from getting customers further entrenched on the platform)? This https://www.youtube.com/watch?v=fxo67UeeN1A&feature=youtu.be&t=320[video, window='_blank'](3:20-7:00) gives a good explanation.
+
+As for me, I'm organising my demos and PoCs in a separate `Demo` account. This way, I can share admin access to my demos with my colleagues without exposing my main account. In addition, I'm also centralising my all IAM users in my main account, and access my `Demo` (and other accounts) by switching (assuming) roles. For readers new to this setup, I suggest this https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html[tutorial].
+
+In my `Demo` account, I create `DemoAdminRole` and `DemoPowerUserRole` roles, with the following trust policy to allow users from my main account to assume these roles:
+[source, json]
+----
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<SOURCE_ACCOUNT_NUM>:root"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+----
+
+In my main account, I created proxy roles that do not have any other permission other then to assume roles in my `Demo` account with policy that looks like this:
+[source, json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": {
+        "Effect": "Allow",
+        "Action": "sts:AssumeRole",
+        "Resource": "arn:aws:iam::<TARGET_ACCOUNT_NUM>:role/<ROLE_NAME>"
+    }
+}
+----
+
+Finally, to prevent creation of users and access keys in the `Demo` account, I attached a service control policy like so to my `Demo` account:
+[source, json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Deny",
+            "Action": [
+                "iam:CreateUser",
+                "iam:CreateAccessKey"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+----
+
+== profiles, profiles
+AWS CLI and SDKs make use of `~/.aws/config` and `~/.aws/credentials` to manage AWS profiles and credentials. My `~/.aws/config` file looks like this:
+[source]
+----
+[profile demo]
+region=ap-southeast-1
+role_arn=arn:aws:iam::<DEMO_ACCT_NUM>:role/DemoAdminRole
+source_profile=demo
+
+[profile main]
+region=us-west-2
+output=json
+----
+
+and `~/.aws/credentials` looks like this:
+[source]
+----
+[demo]
+aws_access_key_id     = <DEMO_PROXY_USER_ACCESS_KEY>
+aws_secret_access_key = <DEMO_PROXY_USER_SECRET_KEY>
+
+[main]
+aws_access_key_id     = <MAIN_ACCESS_KEY>
+aws_secret_access_key = <MAIN_SECRET_KEY>
+----
+
+== switching between profiles
+I deliberately not have a default profile to reduce the chance of targeting my scripts and ansible playbooks with the wrong profile. Instead, I added the following.footnote:[I got this off the Internet a while back, but can no longer find the source to give proper credit] to my `.zshrc` (and `.bashrc`) to allow me to quickly switch between profiles:
+
+[source]
+----
+# working with AWS profiles
+function _aws_list_all {
+    credentialFileLocation=${AWS_SHARED_CREDENTIALS_FILE};
+    if [ -z $credentialFileLocation ]; then
+        credentialFileLocation=~/.aws/credentials
+    fi
+
+    while read line; do
+        if [[ $line == "["* ]]; then echo "$line"; fi;
+    done < $credentialFileLocation;
+};
+
+function _aws_switch_profile() {
+   if [ -z $1 ]; then  echo "Usage: aws-profile profilename"; return; fi
+
+   exists="$(aws configure get aws_access_key_id --profile $1)"
+   if [[ -n $exists ]]; then
+       export AWS_DEFAULT_PROFILE=$1;
+       export AWS_PROFILE=$1;
+       export AWS_REGION=$(aws configure get region --profile $1);
+       echo "Switched to AWS Profile: $1";
+       aws configure list
+   fi
+};
+
+alias aws-all="_aws_list_all"
+alias aws-profile="_aws_switch_profile"
+alias aws-whoami="aws configure list"
+----
+{nbsp} +
+I can then switch profiles using the 3 aliases like so:
+
+image::aws-profiles.png[switching profiles]
