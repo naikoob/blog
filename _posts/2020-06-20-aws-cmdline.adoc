@@ -23,7 +23,7 @@ In my `Demo` account, I create `DemoAdminRole` and `DemoPowerUserRole` roles, wi
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::<SOURCE_ACCOUNT_NUM>:root"
+        "AWS": "arn:aws:iam::<MAIN_ACCOUNT_NUM>:root"
       },
       "Action": "sts:AssumeRole"
     }
@@ -39,7 +39,7 @@ In my main account, I created proxy roles that do not have any other permission 
     "Statement": {
         "Effect": "Allow",
         "Action": "sts:AssumeRole",
-        "Resource": "arn:aws:iam::<TARGET_ACCOUNT_NUM>:role/<ROLE_NAME>"
+        "Resource": "arn:aws:iam::<DEMO_ACCOUNT_NUM>:role/<DEMO_ROLE_NAME>"
     }
 }
 ----
@@ -71,7 +71,7 @@ AWS CLI and SDKs make use of `~/.aws/config` and `~/.aws/credentials` to manage 
 ----
 [profile demo]
 region=ap-southeast-1
-role_arn=arn:aws:iam::<DEMO_ACCT_NUM>:role/DemoAdminRole
+role_arn=arn:aws:iam::<DEMO_ACCT_NUM>:role/<DEMO_ROLE_NAME>
 source_profile=demo
 
 [profile main]
