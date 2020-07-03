@@ -1,4 +1,163 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="https://naikoob.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://naikoob.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-07-02T02:46:22+00:00</updated><id>https://naikoob.github.io/blog/feed.xml</id><title type="html">@naikoob</title><subtitle>A website with blog posts and pages</subtitle><entry><title type="html">On zsh, prezto and nerd fonts…</title><link href="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html" rel="alternate" type="text/html" title="On zsh, prezto and nerd fonts…" /><published>2020-06-10T00:00:00+00:00</published><updated>2020-06-10T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/06/10/my-terminal-setup</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html">&lt;div class=&quot;paragraph&quot;&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="https://naikoob.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://naikoob.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-07-03T09:23:36+00:00</updated><id>https://naikoob.github.io/blog/feed.xml</id><title type="html">@naikoob</title><subtitle>A website with blog posts and pages</subtitle><entry><title type="html">Working with multiple AWS accounts on the command line</title><link href="https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html" rel="alternate" type="text/html" title="Working with multiple AWS accounts on the command line" /><published>2020-06-20T00:00:00+00:00</published><updated>2020-06-20T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/06/20/aws-cmdline</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html">&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;accounts&quot;&gt;account(s)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Why does AWS encourage multiple accounts setups (apart from getting customers further entrenched on the platform)? This &lt;a href=&quot;https://www.youtube.com/watch?v=fxo67UeeN1A&amp;amp;feature=youtu.be&amp;amp;t=320&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;video&lt;/a&gt;(3:20-7:00) gives a good explanation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As for me, I&amp;#8217;m organising my demos and PoCs in a separate &lt;code&gt;Demo&lt;/code&gt; account. This way, I can share admin access to my demos with my colleagues without exposing my main account. In addition, I&amp;#8217;m also centralising my all IAM users in my main account, and access my &lt;code&gt;Demo&lt;/code&gt; (and other accounts) by switching (assuming) roles. For readers new to this setup, I suggest this &lt;a href=&quot;https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html&quot;&gt;tutorial&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In my &lt;code&gt;Demo&lt;/code&gt; account, I create &lt;code&gt;DemoAdminRole&lt;/code&gt; and &lt;code&gt;DemoPowerUserRole&lt;/code&gt; roles, with the following trust policy to allow users from my main account to assume these roles:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;json&quot;&gt;{
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Version&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;2012-10-17&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Statement&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: [
+    {
+      &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Effect&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Allow&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+      &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Principal&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: {
+        &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;AWS&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;arn:aws:iam::&amp;lt;MAIN_ACCOUNT_NUM&amp;gt;:root&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+      },
+      &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Action&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;sts:AssumeRole&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+    }
+  ]
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In my main account, I created proxy roles that do not have any other permission other then to assume roles in my &lt;code&gt;Demo&lt;/code&gt; account with policy that looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;json&quot;&gt;{
+    &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Version&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;2012-10-17&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+    &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Statement&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: {
+        &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Effect&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Allow&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+        &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Action&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;sts:AssumeRole&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+        &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Resource&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;arn:aws:iam::&amp;lt;DEMO_ACCOUNT_NUM&amp;gt;:role/&amp;lt;DEMO_ROLE_NAME&amp;gt;&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally, to prevent creation of users and access keys in the &lt;code&gt;Demo&lt;/code&gt; account, I attached a service control policy like so to my &lt;code&gt;Demo&lt;/code&gt; account:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;json&quot;&gt;{
+    &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Version&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;2012-10-17&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+    &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Statement&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: [
+        {
+            &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Sid&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Statement1&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+            &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Effect&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Deny&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+            &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Action&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: [
+                &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;iam:CreateUser&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+                &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;iam:CreateAccessKey&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+            ],
+            &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;Resource&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: [
+                &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+            ]
+        }
+    ]
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;profiles_profiles&quot;&gt;profiles, profiles&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;AWS CLI and SDKs make use of &lt;code&gt;~/.aws/config&lt;/code&gt; and &lt;code&gt;~/.aws/credentials&lt;/code&gt; to manage AWS profiles and credentials. My &lt;code&gt;~/.aws/config&lt;/code&gt; file looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;[profile demo]
+region=ap-southeast-1
+role_arn=arn:aws:iam::&amp;lt;DEMO_ACCT_NUM&amp;gt;:role/&amp;lt;DEMO_ROLE_NAME&amp;gt;
+source_profile=demo
+
+[profile main]
+region=us-west-2
+output=json&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;and &lt;code&gt;~/.aws/credentials&lt;/code&gt; looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;[demo]
+aws_access_key_id     = &amp;lt;DEMO_PROXY_USER_ACCESS_KEY&amp;gt;
+aws_secret_access_key = &amp;lt;DEMO_PROXY_USER_SECRET_KEY&amp;gt;
+
+[main]
+aws_access_key_id     = &amp;lt;MAIN_ACCESS_KEY&amp;gt;
+aws_secret_access_key = &amp;lt;MAIN_SECRET_KEY&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;switching_between_profiles&quot;&gt;switching between profiles&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I deliberately not have a default profile to reduce the chance of targeting my scripts and ansible playbooks with the wrong profile. Instead, I added the following.&lt;sup class=&quot;footnote&quot;&gt;[&lt;a id=&quot;_footnoteref_1&quot; class=&quot;footnote&quot; href=&quot;#_footnotedef_1&quot; title=&quot;View footnote.&quot;&gt;1&lt;/a&gt;]&lt;/sup&gt; to my &lt;code&gt;.zshrc&lt;/code&gt; (and &lt;code&gt;.bashrc&lt;/code&gt;) to allow me to quickly switch between profiles:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;# working with AWS profiles
+function _aws_list_all {
+    credentialFileLocation=${AWS_SHARED_CREDENTIALS_FILE};
+    if [ -z $credentialFileLocation ]; then
+        credentialFileLocation=~/.aws/credentials
+    fi
+
+    while read line; do
+        if [[ $line == &amp;quot;[&amp;quot;* ]]; then echo &amp;quot;$line&amp;quot;; fi;
+    done &amp;lt; $credentialFileLocation;
+};
+
+function _aws_switch_profile() {
+   if [ -z $1 ]; then  echo &amp;quot;Usage: aws-profile profilename&amp;quot;; return; fi
+
+   exists=&amp;quot;$(aws configure get aws_access_key_id --profile $1)&amp;quot;
+   if [[ -n $exists ]]; then
+       export AWS_DEFAULT_PROFILE=$1;
+       export AWS_PROFILE=$1;
+       export AWS_REGION=$(aws configure get region --profile $1);
+       echo &amp;quot;Switched to AWS Profile: $1&amp;quot;;
+       aws configure list
+   fi
+};
+
+alias aws-all=&amp;quot;_aws_list_all&amp;quot;
+alias aws-profile=&amp;quot;_aws_switch_profile&amp;quot;
+alias aws-whoami=&amp;quot;aws configure list&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&amp;#160;&lt;br&gt;
+I can then switch profiles using the 3 aliases like so:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/blog/assets/img/aws-profiles.png&quot; alt=&quot;switching profiles&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;footnotes&quot;&gt;
+&lt;hr&gt;
+&lt;div class=&quot;footnote&quot; id=&quot;_footnotedef_1&quot;&gt;
+&lt;a href=&quot;#_footnoteref_1&quot;&gt;1&lt;/a&gt;. I got this off the Internet a while back, but can no longer find the source to give proper credit
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name>naikoob</name></author><category term="aws" /><category term="command line" /><category term="cloud" /><category term="security" /><summary type="html">It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.</summary></entry><entry><title type="html">On zsh, prezto and nerd fonts…</title><link href="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html" rel="alternate" type="text/html" title="On zsh, prezto and nerd fonts…" /><published>2020-06-10T00:00:00+00:00</published><updated>2020-06-10T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/06/10/my-terminal-setup</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html">&lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
@@ -104,7 +263,7 @@ zstyle ':prezto:load' pmodule \
 &lt;h2 id=&quot;themes&quot;&gt;themes&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;tbh, this is a key motivation for me to explore prezto&amp;#8230;&amp;#8203; The fancy prompt don&amp;#8217;t make me a better developer, but it sure makes me look the part ;-)&lt;/p&gt;
+&lt;p&gt;Tbh, this is a key motivation for me to explore prezto&amp;#8230;&amp;#8203; The fancy prompt don&amp;#8217;t make me a better developer, but it sure makes me look the part ;-)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;This is how my prompt looks like:&lt;/p&gt;
@@ -159,4 +318,4 @@ zstyle ':prezto:module:prompt' theme 'doxxed'&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&amp;#160;&lt;br&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name>naikoob</name></author><category term="terminal" /><category term="zsh" /><category term="prezto" /><category term="iterm2" /><summary type="html">Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.</summary></entry></feed>
+&lt;/div&gt;</content><author><name>naikoob</name></author><category term="terminal" /><category term="zsh" /><category term="prezto" /><category term="iterm2" /><category term="command line" /><summary type="html">Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.</summary></entry></feed>
