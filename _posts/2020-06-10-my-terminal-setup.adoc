@@ -2,7 +2,7 @@
 layout: post
 title: "On zsh, prezto and nerd fonts..."
 author: naikoob
-tags: [terminal,zsh,prezto,iterm2]
+tags: [terminal, zsh, prezto, iterm2, command line]
 ---
 :source-highlighter: coderay
 :imagesdir: /blog/assets/img
@@ -69,7 +69,7 @@ zstyle ':prezto:load' pmodule \
 <4> enable searching through command history using `ctrl-r`
 
 == themes
-tbh, this is a key motivation for me to explore prezto... The fancy prompt don't make me a better developer, but it sure makes me look the part ;-)
+Tbh, this is a key motivation for me to explore prezto... The fancy prompt don't make me a better developer, but it sure makes me look the part ;-)
 
 This is how my prompt looks like:
 
