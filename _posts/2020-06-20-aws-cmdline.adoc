@@ -7,14 +7,14 @@ tags: [aws, command line, cloud, security]
 :source-highlighter: coderay
 :imagesdir: /blog/assets/img
 
-It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.
+It is a good practice to organise AWS workloads in multiple accounts, be it for security, accounting, or just to maintain our sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.
 
 == account(s)
 Why does AWS encourage multiple accounts setups (apart from getting customers further entrenched on the platform)? This https://www.youtube.com/watch?v=fxo67UeeN1A&feature=youtu.be&t=320[video, window='_blank'](3:20-7:00) gives a good explanation.
 
-As for me, I'm organising my demos and PoCs in a separate `Demo` account. This way, I can share admin access to my demos with my colleagues without exposing my main account. In addition, I'm also centralising my all IAM users in my main account, and access my `Demo` (and other accounts) by switching (assuming) roles. For readers new to this setup, I suggest this https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html[tutorial].
+As for me, I'm organising my demos and PoCs in a separate `Demo` account. This way, I can share admin access to my demos with my colleagues without exposing my main account. In addition, I'm also centralising all IAM users in my main account, and access my `Demo` (and other accounts) by switching (assuming) roles. For readers new to this setup, I suggest this https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html[tutorial].
 
-In my `Demo` account, I create `DemoAdminRole` and `DemoPowerUserRole` roles, with the following trust policy to allow users from my main account to assume these roles:
+In my `Demo` account, I create `DemoAdminRole` role, with the following trust policy to allow users from my main account to assume this roles:
 [source, json]
 ----
 {
@@ -31,7 +31,7 @@ In my `Demo` account, I create `DemoAdminRole` and `DemoPowerUserRole` roles, wi
 }
 ----
 
-In my main account, I created proxy roles that do not have any other permission other then to assume roles in my `Demo` account with policy that looks like this:
+In my main account, I created proxy roles that do not have any permission, other then to assume roles in my `Demo` account, with policy that looks like this:
 [source, json]
 ----
 {
@@ -43,6 +43,8 @@ In my main account, I created proxy roles that do not have any other permission 
     }
 }
 ----
+
+I can then attach this role to users that I want to grant access to my `Demo` account.
 
 Finally, to prevent creation of users and access keys in the `Demo` account, I attached a service control policy like so to my `Demo` account:
 [source, json]
@@ -92,7 +94,7 @@ aws_secret_access_key = <MAIN_SECRET_KEY>
 ----
 
 == switching between profiles
-I deliberately not have a default profile to reduce the chance of targeting my scripts and ansible playbooks with the wrong profile. Instead, I added the following.footnote:[I got this off the Internet a while back, but can no longer find the source to give proper credit] to my `.zshrc` (and `.bashrc`) to allow me to quickly switch between profiles:
+I deliberately not have a default profile to reduce the chance of targeting my scripts and ansible playbooks at the wrong profile. Instead, I added the following.footnote:[I got this off the Internet a while back, but can no longer find the source to give proper credit] to my `.zshrc` (and `.bashrc`) to allow me to quickly switch between profiles:
 
 [source]
 ----
