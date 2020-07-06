@@ -57,6 +57,7 @@ exclude:
   - Gemfile.lock
   - .travis.yml
   - LICENSE
+  - tmuxp.yaml
   - "*.gem"
   - "vendor/*"
 
@@ -66,5 +67,6 @@ asciidoctor:
   safe: unsafe
   attributes:
     - idseparator=_
-    - source-highlighter=coderay
+    - source-highlighter=rouge
+    - rouge-css=class
     - icons=font
