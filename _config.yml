@@ -55,6 +55,7 @@ exclude:
   - .jekyll-cache
   - Gemfile
   - Gemfile.lock
+  - Rakefile
   - .travis.yml
   - LICENSE
   - tmuxp.yaml
