@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<!--
+    Type on Strap jekyll theme v2.2.4
+    Copyright 2016-2019 Sylhare
+    Theme free for personal and commercial use under the MIT license
+    https://github.com/sylhare/Type-on-Strap/blob/master/LICENSE
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Main JS (navbar.js, katex_init.js and masonry_init.js)-->
+    <script defer src="/blog/assets/js/main.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/blog/assets/css/main.css">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="/blog/assets/img/favicon.png" type="image/x-icon">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="@naikoob" href="https://naikoob.github.io/blog/feed.xml"/>
+
+    
+    <!-- fontawesome -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog==" crossorigin="anonymous"></script>    
+  
+    <!-- KaTeX 0.8.3 -->
+    <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
+    
+    <script src="/blog/assets/js/vendor/katex.min.js"></script>
+    
+
+    <!-- Google Analytics -->
+    
+
+    <!-- seo tags -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>{AWS} infrastructure as {Ansible} code | @naikoob</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="{AWS} infrastructure as {Ansible} code" />
+<meta name="author" content="naikoob" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible." />
+<meta property="og:description" content="I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible." />
+<link rel="canonical" href="https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html" />
+<meta property="og:url" content="https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html" />
+<meta property="og:site_name" content="@naikoob" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-03T00:00:00+00:00" />
+<script type="application/ld+json">
+{"description":"I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.","headline":"{AWS} infrastructure as {Ansible} code","dateModified":"2020-07-03T00:00:00+00:00","datePublished":"2020-07-03T00:00:00+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html"},"url":"https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html","author":{"@type":"Person","name":"naikoob"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
+</head>
+
+  <body>
+    <header class="site-header">
+
+    <!-- Logo and title -->
+	<div class="branding">
+        
+
+		<h1 class="site-title">
+			<a aria-label="@naikoob" href="/blog/">
+        @naikoob
+      </a>
+		</h1>
+	</div>
+
+    <!-- Toggle menu -->
+    <nav class="clear">
+    <a aria-label="pull" id="pull" class="toggle" href="#">
+    <i class="fas fa-bars fa-lg"></i>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hide">
+        
+
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Search" title="Search" href="/blog/search/">
+                     <i class="fa fas fa-search" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Tags" title="Tags" href="/blog/tags/">
+                     <i class="fa fas fa-tags" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    </ul>
+
+	</nav>
+</header>
+
+    <div class="content">
+      <article >
+  <header id="main" style="">
+    <div class="title-padder">
+      
+      <h1 id="%7BAWS%7D+infrastructure+as+%7BAnsible%7D+code" class="title">{AWS} infrastructure as {Ansible} code</h1>
+      
+
+
+<div class="post-info">
+    <p class="meta">
+      July 3, 2020
+    </p></div>
+
+      
+    </div>
+  </header>
+
+  <section class="post-content">
+  
+      <div class="paragraph">
+<p>I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.</p>
+</div>
+<div class="sect1">
+<h2 id="tldr">tl;dr</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clone/download from <a href="https://github.com/naikoob/ansible-aws-vpc.git" class="bare">https://github.com/naikoob/ansible-aws-vpc.git</a></p>
+</li>
+<li>
+<p>Edit <code>&lt;repo_root&gt;/inventory/group_vars/aws_infra.yml</code> with AWS account and profile information</p>
+</li>
+<li>
+<p>Provision/unprovision with:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="c"># provision</span>
+ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra.yml
+
+<span class="c"># unprovision</span>
+ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra.yml <span class="nt">-e</span> <span class="nv">infra_state</span><span class="o">=</span>absent</code></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>when in doubt, check out the <a href="https://github.com/naikoob/ansible-aws-vpc/blob/master/README.adoc">README</a> and the comments in the playbooks.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="why_what">why? what?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickily, but don&#8217;t incur unnecessary costs when not in use.</p>
+</div>
+<div class="paragraph">
+<p>IMHO, if RTO allows, infrastructure as code is the most cost effective disaster recovery mechanism, and any non-trivial IT infrastructure should be deployed in this way.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s what my playbook provisions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A VPC</p>
+</li>
+<li>
+<p>Route 53 private hosted zone associated with the VPC</p>
+</li>
+<li>
+<p>3 public subnets across 3 AZs</p>
+</li>
+<li>
+<p>3 private subnets across 3 AZs</p>
+</li>
+<li>
+<p>Internet Gateway and associated route table</p>
+</li>
+<li>
+<p>NAT Gateway and associated route table</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ansible_aws_boto">ansible . aws . boto</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ansible is available on most Linux distributions, so you can install it with <code>apt</code>/<code>dnf</code>/<code>yum</code>/<code>pacman</code> etc. On the Mac, the recommended installation is via Python&#8217;s package manager <code>pip</code>, but I use Homebrew:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh">brew <span class="nb">install </span>ansible</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This should install Ansible and it&#8217;s dependencies, including Python.</p>
+</div>
+<div class="paragraph">
+<p>One of the strength of Ansible is the extensive collection of modules, including a <a href="https://docs.ansible.com/ansible/latest/modules/list_of_cloud_modules.html#amazon" target="_blank" rel="noopener">comprehensive list of AWS modules</a>. Most (all?) Ansible modules for AWS uses the AWS&#8217;s boto3/boto SDK. So we install them with Python&#8217;s package manager <code>pip</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh">pip <span class="nb">install </span>boto3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, you should have your AWS profiles and credentials configured (<code>~/.aws/config</code> and <code>~/.aws/credentials</code>) for your account.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ansible_files">ansible files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, clone/download my repository - <a href="https://github.com/naikoob/ansible-aws-vpc.git" class="bare">https://github.com/naikoob/ansible-aws-vpc.git</a></p>
+</div>
+<div class="sect2">
+<h3 id="account_variables">account variables</h3>
+<div class="paragraph">
+<p>I&#8217;ve chosen to embed account and profile information (note: not keys!) in <code>vars</code> files instead of environment variables to minimize the chance of running the playbooks against the wrong account.</p>
+</div>
+<div class="paragraph">
+<p>Update <code>/inventory/group_vars/aws_infra.yml</code> with AWS account and profile information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="yaml"><span class="c1"># group_vars/aws_infra.yml</span>
+<span class="c1"># ---</span>
+<span class="c1"># specify infrastructure details and AWS credentials</span>
+
+<span class="c1"># aws account, role, profile and region</span>
+<span class="na">aws_account</span><span class="pi">:</span> <span class="s2">"</span><span class="s">&lt;AWS_ACCOUNT_NUMBER&gt;"</span>
+<span class="na">aws_role</span><span class="pi">:</span> <span class="s2">"</span><span class="s">&lt;AWS_ROLE&gt;"</span>
+<span class="na">aws_profile</span><span class="pi">:</span> <span class="s2">"</span><span class="s">&lt;AWS_PROFILE&gt;"</span>                <span class="c1"># assumed profile used for provisioning</span>
+<span class="na">aws_source_profile</span><span class="pi">:</span> <span class="s2">"</span><span class="s">&lt;AWS_SOURCE_PROFILE&gt;"</span>  <span class="c1"># profile used to assume role</span>
+<span class="na">aws_region</span><span class="pi">:</span> <span class="s2">"</span><span class="s">&lt;AWS_REGION&gt;"</span>
+
+<span class="c1"># truncated ...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice the <code>aws_source_profile</code> variable. This is because I&#8217;ve centralized my IAM users in my main account, and use role switching to access the other accounts (as mentioned in my <a href="/blog/2020/06/20/aws-cmdline.html">earlier post</a>).</p>
+</div>
+<div class="paragraph">
+<p>For example, if my profile is defined as such in <code>~/.aws/config</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="ini"><span class="nn">[profile demo]</span>
+<span class="py">region</span><span class="p">=</span><span class="s">ap-southeast-1</span>
+<span class="py">role_arn</span><span class="p">=</span><span class="s">arn:aws:iam::112233445566:role/DemoAdminRole</span>
+<span class="py">source_profile</span><span class="p">=</span><span class="s">main</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>then the variables should be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="yaml"><span class="na">aws_account</span><span class="pi">:</span> <span class="s2">"</span><span class="s">112233445566"</span>
+<span class="na">aws_role</span><span class="pi">:</span> <span class="s2">"</span><span class="s">DemoAdminRole"</span>
+<span class="na">aws_profile</span><span class="pi">:</span> <span class="s2">"</span><span class="s">demo"</span>                <span class="c1"># assumed profile used for provisioning</span>
+<span class="na">aws_source_profile</span><span class="pi">:</span> <span class="s2">"</span><span class="s">main"</span>         <span class="c1"># profile used to assume role</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="vpc_variables">vpc variables</h3>
+<div class="paragraph">
+<p>Next, review and customize the VPC configuration in <code>inventory/host_vars/demo_vpc.yml</code> if necessary.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="yaml"><span class="c1"># host_vars/vpc.yml</span>
+
+<span class="c1"># general details</span>
+<span class="na">vpc_name</span><span class="pi">:</span> <span class="s">demo.vpc</span>
+<span class="na">vpc_dns_zone</span><span class="pi">:</span> <span class="s">demo.example.com.private</span>
+
+<span class="c1"># CIDR block</span>
+<span class="na">vpc_cidr_block</span><span class="pi">:</span> <span class="s">10.0.0.0/16</span>
+
+<span class="c1"># Private subnets</span>
+<span class="na">vpc_private_subnets</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="pi">{</span> <span class="nv">cidr</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10.0.21.0/24"</span><span class="pi">,</span> <span class="nv">az</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">aws_region</span><span class="nv"> </span><span class="s">}}a"</span> <span class="pi">}</span>
+  <span class="pi">-</span> <span class="pi">{</span> <span class="nv">cidr</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10.0.22.0/24"</span><span class="pi">,</span> <span class="nv">az</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">aws_region</span><span class="nv"> </span><span class="s">}}b"</span> <span class="pi">}</span>
+  <span class="pi">-</span> <span class="pi">{</span> <span class="nv">cidr</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10.0.23.0/24"</span><span class="pi">,</span> <span class="nv">az</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">aws_region</span><span class="nv"> </span><span class="s">}}c"</span> <span class="pi">}</span>
+
+<span class="na">vpc_public_subnets</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="pi">{</span> <span class="nv">cidr</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10.0.201.0/24"</span><span class="pi">,</span> <span class="nv">az</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">aws_region</span><span class="nv"> </span><span class="s">}}a"</span> <span class="pi">}</span>
+  <span class="pi">-</span> <span class="pi">{</span> <span class="nv">cidr</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10.0.202.0/24"</span><span class="pi">,</span> <span class="nv">az</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">aws_region</span><span class="nv"> </span><span class="s">}}b"</span> <span class="pi">}</span>
+  <span class="pi">-</span> <span class="pi">{</span> <span class="nv">cidr</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10.0.203.0/24"</span><span class="pi">,</span> <span class="nv">az</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">aws_region</span><span class="nv"> </span><span class="s">}}c"</span> <span class="pi">}</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="playbooks">playbooks</h3>
+<div class="paragraph">
+<p>I&#8217;ve implemented 2 playbooks as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>provision_infra.yml</code></p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>This playbook provision/unprovision the VPC and associated resources (set variable infra_state=absent to unprovision).</p>
+</div>
+<div class="paragraph">
+<p>To provision:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh">ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra.yml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To unprovision:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh">ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra.yml <span class="nt">-e</span> <span class="nv">infra_state</span><span class="o">=</span>absent</code></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p><code>delete_nat_gateway.yml</code></p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the base_infra.yml playbook. Note that this playbook looks for the var file <code>out/nat_gateway_id.var</code> that is created during VPC provisioning to know which NAT gateway should be deleted. If you&#8217;re deleting NAT gateway from a different machine/directory, you should set the <code>nat_gateway_id</code> variable in a different manner, say on the command line (-e), like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh">ansible-playbook <span class="nt">-i</span> inventory/base_infra delete_nat_gateway.yml <span class="nt">-e</span> <span class="nv">nat_gateway_id</span><span class="o">=</span>&lt;NAT_GATEWAY_ID&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="i_can_should_i">I can, should I?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you look into the <a href="https://github.com/naikoob/ansible-aws-vpc/blob/master/roles/infra/tasks/provision.yml" target="_blank" rel="noopener">list of tasks</a>, you&#8217;ll see that using Ansible to provision infrastructure of AWS is pretty fine grained. You provision the individual components that make up your VPC <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>. To me, this is a good thing, as I like to understand what&#8217;s going on under the covers. For others, you may look at IoC tools such as <a href="https://www.terraform.io/" target="_blank" rel="noopener">Terraform</a>, and drive the automation with <a href="https://docs.ansible.com/ansible/latest/modules/terraform_module.html" target="_blank" rel="noopener">Ansible Terraform module</a>. Maybe I&#8217;ll write about this in a future post ;-).</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. There used to be an <a href="https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html"><code>ec2_var</code> module</a> in Ansible, but it&#8217;s deprecated and removed since version 2.5
+</div>
+</div>
+    
+  </section>
+
+  <!-- Social media shares -->
+  
+
+<div class="share-buttons">
+    <ul class="share-buttons">
+        <div class="meta">Share</div>
+         
+        <li>
+            <a href="https://twitter.com/intent/tweet?text=%7BAWS%7D+infrastructure+as+%7BAnsible%7D+code%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2020%2F07%2F03%2Fansible-aws-vpc.html" target="_blank" title="">
+			<i class="fab fa-twitter-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Tweet</span>
+		</a>
+        </li>
+            
+        <li>
+            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html&title=%7BAWS%7D+infrastructure+as+%7BAnsible%7D+code%20%7C%20%40naikoob" target="_blank" title=" Reddit">
+			<i class="fab fa-reddit-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on Reddit</span>
+		</a>
+        </li>
+         
+        <li>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html&title=%7BAWS%7D+infrastructure+as+%7BAnsible%7D+code%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html" target="_blank" title=" LinkedIn">
+			<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on LinkedIn</span>
+		</a>
+        </li>
+          
+        <li>
+            <a href="mailto:?subject=%7BAWS%7D+infrastructure+as+%7BAnsible%7D+code%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html" target="_blank" title="">
+			<i class="fas fa-envelope-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Email</span>
+		</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+
+   <!-- Tag list -->
+  
+  
+
+
+<footer>
+  <div class="tag-list">
+    
+      <div class="meta">Tags</div>
+    
+
+    
+    <a class="button" href="/blog/tags#ansible">
+      <p><i class="fas fa-tag fa-fw"></i> ansible</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#aws">
+      <p><i class="fas fa-tag fa-fw"></i> aws</p>
+    </a>
+    
+  </div>
+</footer>
+
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+  <div id="post-nav">
+    
+
+    
+    <div id="next-post">
+        <a alt="Working with multiple AWS accounts on the command line" href="/blog/2020/06/20/aws-cmdline.html">
+            <p>Next post</p>
+            Working with multiple AWS accounts on the command line
+        </a>
+    </div>
+    
+</div>
+
+
+
+<!-- To change color of links in the page -->
+<style>
+  
+
+  header#main {
+    background-repeat:no-repeat;
+  
+  }
+</style>
+
+    </div>
+    <footer class="site-footer">
+    <p class="text">
+        Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+</p>
+            <div class="footer-icons">
+                <ul>
+                <!-- Social icons from Font Awesome, if enabled -->
+                
+<li>
+    <a feed.xml href="feed.xml"
+       title="Follow RSS feed">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+<li>
+    <a href="mailto:bookian+github@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a href="https://github.com/naikoob" title=" GitHub">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+<li>
+    <a href="https://www.linkedin.com/in/boo-kian-yeo-0663a410/" title=" LinkedIn">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-linkedin-in fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a class="type" href="https://twitter.com/naikoob"
+       title=" Twitter">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+                </ul>
+            </div>
+</footer>
+
+  </body>
+</html>

@@ -27,7 +27,7 @@
 
     
     <!-- fontawesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.13.1/js/all.js" integrity="sha384-heKROmDHlJdBb+n64p+i+wLplNYUZPaZmp2HZ4J6KCqzmd33FJ8QClrOV3IdHZm5" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog==" crossorigin="anonymous"></script>    
   
     <!-- KaTeX 0.8.3 -->
     <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
@@ -45,15 +45,15 @@
 <meta property="og:title" content="Working with multiple AWS accounts on the command line" />
 <meta name="author" content="naikoob" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line." />
-<meta property="og:description" content="It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line." />
+<meta name="description" content="It is a good practice to organise AWS workloads in multiple accounts, be it for security, accounting, or just to maintain our sanity. Here is how I work with multiple accounts in my AWS Organization from the command line." />
+<meta property="og:description" content="It is a good practice to organise AWS workloads in multiple accounts, be it for security, accounting, or just to maintain our sanity. Here is how I work with multiple accounts in my AWS Organization from the command line." />
 <link rel="canonical" href="https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html" />
 <meta property="og:url" content="https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html" />
 <meta property="og:site_name" content="@naikoob" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-20T00:00:00+00:00" />
 <script type="application/ld+json">
-{"dateModified":"2020-06-20T00:00:00+00:00","datePublished":"2020-06-20T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html"},"@type":"BlogPosting","headline":"Working with multiple AWS accounts on the command line","url":"https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html","author":{"@type":"Person","name":"naikoob"},"description":"It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.","@context":"https://schema.org"}</script>
+{"description":"It is a good practice to organise AWS workloads in multiple accounts, be it for security, accounting, or just to maintain our sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.","headline":"Working with multiple AWS accounts on the command line","dateModified":"2020-06-20T00:00:00+00:00","datePublished":"2020-06-20T00:00:00+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html"},"url":"https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html","author":{"@type":"Person","name":"naikoob"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
@@ -153,7 +153,7 @@
   <section class="post-content">
   
       <div class="paragraph">
-<p>It is good practice to organise AWS workloads in multiple accounts, be it for security, accounting or just to maintain your sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.</p>
+<p>It is a good practice to organise AWS workloads in multiple accounts, be it for security, accounting, or just to maintain our sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.</p>
 </div>
 <div class="sect1">
 <h2 id="accounts">account(s)</h2>
@@ -162,63 +162,66 @@
 <p>Why does AWS encourage multiple accounts setups (apart from getting customers further entrenched on the platform)? This <a href="https://www.youtube.com/watch?v=fxo67UeeN1A&amp;feature=youtu.be&amp;t=320" target="_blank" rel="noopener">video</a>(3:20-7:00) gives a good explanation.</p>
 </div>
 <div class="paragraph">
-<p>As for me, I&#8217;m organising my demos and PoCs in a separate <code>Demo</code> account. This way, I can share admin access to my demos with my colleagues without exposing my main account. In addition, I&#8217;m also centralising my all IAM users in my main account, and access my <code>Demo</code> (and other accounts) by switching (assuming) roles. For readers new to this setup, I suggest this <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html">tutorial</a>.</p>
+<p>As for me, I&#8217;m organising my demos and PoCs in a separate <code>Demo</code> account. This way, I can share admin access to my demos with my colleagues without exposing my main account. In addition, I&#8217;m also centralising all IAM users in my main account, and access my <code>Demo</code> (and other accounts) by switching (assuming) roles. For readers new to this setup, I suggest this <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html">tutorial</a>.</p>
 </div>
 <div class="paragraph">
-<p>In my <code>Demo</code> account, I create <code>DemoAdminRole</code> and <code>DemoPowerUserRole</code> roles, with the following trust policy to allow users from my main account to assume these roles:</p>
+<p>In my <code>Demo</code> account, I create <code>DemoAdminRole</code> role, with the following trust policy to allow users from my main account to assume this roles:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">Version</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2012-10-17</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">Statement</span><span class="delimiter">&quot;</span></span>: [
-    {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">Effect</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Allow</span><span class="delimiter">&quot;</span></span>,
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">Principal</span><span class="delimiter">&quot;</span></span>: {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">AWS</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">arn:aws:iam::&lt;MAIN_ACCOUNT_NUM&gt;:root</span><span class="delimiter">&quot;</span></span>
-      },
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">Action</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">sts:AssumeRole</span><span class="delimiter">&quot;</span></span>
-    }
-  ]
-}</code></pre>
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"AWS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:iam::&lt;MAIN_ACCOUNT_NUM&gt;:root"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sts:AssumeRole"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In my main account, I created proxy roles that do not have any other permission other then to assume roles in my <code>Demo</code> account with policy that looks like this:</p>
+<p>In my main account, I created proxy roles that do not have any permission, other then to assume roles in my <code>Demo</code> account, with policy that looks like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">{
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">Version</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2012-10-17</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">Statement</span><span class="delimiter">&quot;</span></span>: {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">Effect</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Allow</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">Action</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">sts:AssumeRole</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">Resource</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">arn:aws:iam::&lt;DEMO_ACCOUNT_NUM&gt;:role/&lt;DEMO_ROLE_NAME&gt;</span><span class="delimiter">&quot;</span></span>
-    }
-}</code></pre>
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sts:AssumeRole"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:iam::&lt;DEMO_ACCOUNT_NUM&gt;:role/&lt;DEMO_ROLE_NAME&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>I can then attach this role to users that I want to grant access to my <code>Demo</code> account.</p>
 </div>
 <div class="paragraph">
 <p>Finally, to prevent creation of users and access keys in the <code>Demo</code> account, I attached a service control policy like so to my <code>Demo</code> account:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">{
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">Version</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2012-10-17</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">Statement</span><span class="delimiter">&quot;</span></span>: [
-        {
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">Sid</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Statement1</span><span class="delimiter">&quot;</span></span>,
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">Effect</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Deny</span><span class="delimiter">&quot;</span></span>,
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">Action</span><span class="delimiter">&quot;</span></span>: [
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">iam:CreateUser</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">iam:CreateAccessKey</span><span class="delimiter">&quot;</span></span>
-            ],
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">Resource</span><span class="delimiter">&quot;</span></span>: [
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">*</span><span class="delimiter">&quot;</span></span>
-            ]
-        }
-    ]
-}</code></pre>
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Statement1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deny"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"iam:CreateUser"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"iam:CreateAccessKey"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"*"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -231,14 +234,14 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>[profile demo]
-region=ap-southeast-1
-role_arn=arn:aws:iam::&lt;DEMO_ACCT_NUM&gt;:role/&lt;DEMO_ROLE_NAME&gt;
-source_profile=demo
+<pre class="rouge highlight"><code data-lang="ini"><span class="nn">[profile demo]</span>
+<span class="py">region</span><span class="p">=</span><span class="s">ap-southeast-1</span>
+<span class="py">role_arn</span><span class="p">=</span><span class="s">arn:aws:iam::&lt;DEMO_ACCT_NUM&gt;:role/&lt;DEMO_ROLE_NAME&gt;</span>
+<span class="py">source_profile</span><span class="p">=</span><span class="s">demo</span>
 
-[profile main]
-region=us-west-2
-output=json</code></pre>
+<span class="nn">[profile main]</span>
+<span class="py">region</span><span class="p">=</span><span class="s">us-west-2</span>
+<span class="py">output</span><span class="p">=</span><span class="s">json</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -246,13 +249,13 @@ output=json</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>[demo]
-aws_access_key_id     = &lt;DEMO_PROXY_USER_ACCESS_KEY&gt;
-aws_secret_access_key = &lt;DEMO_PROXY_USER_SECRET_KEY&gt;
+<pre class="rouge highlight"><code data-lang="ini"><span class="nn">[demo]</span>
+<span class="py">aws_access_key_id</span>     <span class="p">=</span> <span class="s">&lt;DEMO_PROXY_USER_ACCESS_KEY&gt;</span>
+<span class="py">aws_secret_access_key</span> <span class="p">=</span> <span class="s">&lt;DEMO_PROXY_USER_SECRET_KEY&gt;</span>
 
-[main]
-aws_access_key_id     = &lt;MAIN_ACCESS_KEY&gt;
-aws_secret_access_key = &lt;MAIN_SECRET_KEY&gt;</code></pre>
+<span class="nn">[main]</span>
+<span class="py">aws_access_key_id</span>     <span class="p">=</span> <span class="s">&lt;MAIN_ACCESS_KEY&gt;</span>
+<span class="py">aws_secret_access_key</span> <span class="p">=</span> <span class="s">&lt;MAIN_SECRET_KEY&gt;</span></code></pre>
 </div>
 </div>
 </div>
@@ -261,38 +264,38 @@ aws_secret_access_key = &lt;MAIN_SECRET_KEY&gt;</code></pre>
 <h2 id="switching_between_profiles">switching between profiles</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>I deliberately not have a default profile to reduce the chance of targeting my scripts and ansible playbooks with the wrong profile. Instead, I added the following.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> to my <code>.zshrc</code> (and <code>.bashrc</code>) to allow me to quickly switch between profiles:</p>
+<p>I deliberately not have a default profile to reduce the chance of targeting my scripts and ansible playbooks at the wrong profile. Instead, I added the following.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> to my <code>.zshrc</code> (and <code>.bashrc</code>) to allow me to quickly switch between profiles:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code># working with AWS profiles
-function _aws_list_all {
-    credentialFileLocation=${AWS_SHARED_CREDENTIALS_FILE};
-    if [ -z $credentialFileLocation ]; then
-        credentialFileLocation=~/.aws/credentials
-    fi
+<pre class="rouge highlight"><code data-lang="sh"><span class="c"># working with AWS profiles</span>
+<span class="k">function </span>_aws_list_all <span class="o">{</span>
+    <span class="nv">credentialFileLocation</span><span class="o">=</span><span class="k">${</span><span class="nv">AWS_SHARED_CREDENTIALS_FILE</span><span class="k">}</span><span class="p">;</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="nt">-z</span> <span class="nv">$credentialFileLocation</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nv">credentialFileLocation</span><span class="o">=</span>~/.aws/credentials
+    <span class="k">fi
 
-    while read line; do
-        if [[ $line == &quot;[&quot;* ]]; then echo &quot;$line&quot;; fi;
-    done &lt; $credentialFileLocation;
-};
+    while </span><span class="nb">read </span>line<span class="p">;</span> <span class="k">do
+        if</span> <span class="o">[[</span> <span class="nv">$line</span> <span class="o">==</span> <span class="s2">"["</span><span class="k">*</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then </span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$line</span><span class="s2">"</span><span class="p">;</span> <span class="k">fi</span><span class="p">;</span>
+    <span class="k">done</span> &lt; <span class="nv">$credentialFileLocation</span><span class="p">;</span>
+<span class="o">}</span><span class="p">;</span>
 
-function _aws_switch_profile() {
-   if [ -z $1 ]; then  echo &quot;Usage: aws-profile profilename&quot;; return; fi
+<span class="k">function </span>_aws_switch_profile<span class="o">()</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">[</span> <span class="nt">-z</span> <span class="nv">$1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then  </span><span class="nb">echo</span> <span class="s2">"Usage: aws-profile profilename"</span><span class="p">;</span> <span class="k">return</span><span class="p">;</span> <span class="k">fi
 
-   exists=&quot;$(aws configure get aws_access_key_id --profile $1)&quot;
-   if [[ -n $exists ]]; then
-       export AWS_DEFAULT_PROFILE=$1;
-       export AWS_PROFILE=$1;
-       export AWS_REGION=$(aws configure get region --profile $1);
-       echo &quot;Switched to AWS Profile: $1&quot;;
+   </span><span class="nv">exists</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span>aws configure get aws_access_key_id <span class="nt">--profile</span> <span class="nv">$1</span><span class="si">)</span><span class="s2">"</span>
+   <span class="k">if</span> <span class="o">[[</span> <span class="nt">-n</span> <span class="nv">$exists</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+       </span><span class="nb">export </span><span class="nv">AWS_DEFAULT_PROFILE</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span>
+       <span class="nb">export </span><span class="nv">AWS_PROFILE</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span>
+       <span class="nb">export </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="si">$(</span>aws configure get region <span class="nt">--profile</span> <span class="nv">$1</span><span class="si">)</span><span class="p">;</span>
+       <span class="nb">echo</span> <span class="s2">"Switched to AWS Profile: </span><span class="nv">$1</span><span class="s2">"</span><span class="p">;</span>
        aws configure list
-   fi
-};
+   <span class="k">fi</span>
+<span class="o">}</span><span class="p">;</span>
 
-alias aws-all=&quot;_aws_list_all&quot;
-alias aws-profile=&quot;_aws_switch_profile&quot;
-alias aws-whoami=&quot;aws configure list&quot;</code></pre>
+<span class="nb">alias </span>aws-all<span class="o">=</span><span class="s2">"_aws_list_all"</span>
+<span class="nb">alias </span>aws-profile<span class="o">=</span><span class="s2">"_aws_switch_profile"</span>
+<span class="nb">alias </span>aws-whoami<span class="o">=</span><span class="s2">"aws configure list"</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -397,6 +400,13 @@ I can then switch profiles using the 3 aliases like so:</p>
 
   <div id="post-nav">
     
+    <div id="previous-post">
+        <a alt="{AWS} infrastructure as {Ansible} code" href="/blog/2020/07/03/ansible-aws-vpc.html">
+            <p>Previous post</p>
+            {AWS} infrastructure as {Ansible} code
+        </a>
+    </div>
+    
 
     
     <div id="next-post">
@@ -440,6 +450,15 @@ I can then switch profiles using the 3 aliases like so:</p>
 </li>
 
 
+
+<li>
+    <a href="mailto:bookian+github@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
 
 
 

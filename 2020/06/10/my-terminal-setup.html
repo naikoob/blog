@@ -27,7 +27,7 @@
 
     
     <!-- fontawesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.13.1/js/all.js" integrity="sha384-heKROmDHlJdBb+n64p+i+wLplNYUZPaZmp2HZ4J6KCqzmd33FJ8QClrOV3IdHZm5" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog==" crossorigin="anonymous"></script>    
   
     <!-- KaTeX 0.8.3 -->
     <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
@@ -53,7 +53,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-06-10T00:00:00+00:00" />
 <script type="application/ld+json">
-{"dateModified":"2020-06-10T00:00:00+00:00","datePublished":"2020-06-10T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html"},"@type":"BlogPosting","headline":"On zsh, prezto and nerd fonts…","url":"https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html","author":{"@type":"Person","name":"naikoob"},"description":"Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.","@context":"https://schema.org"}</script>
+{"description":"Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.","headline":"On zsh, prezto and nerd fonts…","dateModified":"2020-06-10T00:00:00+00:00","datePublished":"2020-06-10T00:00:00+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html"},"url":"https://naikoob.github.io/blog/2020/06/10/my-terminal-setup.html","author":{"@type":"Person","name":"naikoob"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
@@ -171,7 +171,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>brew cask install iterm2</code></pre>
+<pre class="rouge highlight"><code data-lang="sh">brew cask <span class="nb">install </span>iterm2</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -182,7 +182,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>git clone --recursive https://github.com/sorin-ionescu/prezto.git &quot;${ZDOTDIR:-$HOME}/.zprezto&quot;</code></pre>
+<pre class="rouge highlight"><code data-lang="sh">git clone <span class="nt">--recursive</span> https://github.com/sorin-ionescu/prezto.git <span class="s2">"</span><span class="k">${</span><span class="nv">ZDOTDIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="k">}</span><span class="s2">/.zprezto"</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -190,7 +190,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>git clone --recursive https://github.com/naikoob/prezto.git &quot;${ZDOTDIR:-$HOME}/.zprezto&quot;</code></pre>
+<pre class="rouge highlight"><code data-lang="sh">git clone <span class="nt">--recursive</span> https://github.com/naikoob/prezto.git <span class="s2">"</span><span class="k">${</span><span class="nv">ZDOTDIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="k">}</span><span class="s2">/.zprezto"</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -198,10 +198,10 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>setopt EXTENDED_GLOB
-for rcfile in &quot;${ZDOTDIR:-$HOME}&quot;/.zprezto/runcoms/^README.md(.N); do
-  ln -s &quot;$rcfile&quot; &quot;${ZDOTDIR:-$HOME}/.${rcfile:t}&quot;
-done</code></pre>
+<pre class="rouge highlight"><code data-lang="sh">setopt EXTENDED_GLOB
+<span class="k">for </span>rcfile <span class="k">in</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ZDOTDIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="k">}</span><span class="s2">"</span>/.zprezto/runcoms/^README.md<span class="o">(</span>.N<span class="o">)</span><span class="p">;</span> <span class="k">do
+  </span><span class="nb">ln</span> <span class="nt">-s</span> <span class="s2">"</span><span class="nv">$rcfile</span><span class="s2">"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ZDOTDIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="k">}</span><span class="s2">/.</span><span class="k">${</span><span class="nv">rcfile</span>:t<span class="k">}</span><span class="s2">"</span>
+<span class="k">done</span></code></pre>
 </div>
 </div>
 </div>
@@ -214,22 +214,22 @@ done</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code># Set the Prezto modules to load (browse modules).
+<pre class="rouge highlight"><code data-lang="conf"><span class="c"># Set the Prezto modules to load (browse modules).
 # The order matters.
-zstyle ':prezto:load' pmodule \
-  'environment' \
-  'terminal' \
-  'editor' \
-  'history' \
-  'directory' \
-  'spectrum' \
-  'utility' \
-  'ssh' \ <i class="conum" data-value="1"></i><b>(1)</b>
-  'completion' \
-  'git' \ <i class="conum" data-value="2"></i><b>(2)</b>
-  'syntax-highlighting' \ <i class="conum" data-value="3"></i><b>(3)</b>
-  'history-substring-search' \ <i class="conum" data-value="4"></i><b>(4)</b>
-  'prompt'</code></pre>
+</span><span class="n">zstyle</span> <span class="s1">':prezto:load'</span> <span class="n">pmodule</span> \
+  <span class="s1">'environment'</span> \
+  <span class="s1">'terminal'</span> \
+  <span class="s1">'editor'</span> \
+  <span class="s1">'history'</span> \
+  <span class="s1">'directory'</span> \
+  <span class="s1">'spectrum'</span> \
+  <span class="s1">'utility'</span> \
+  <span class="s1">'ssh'</span> \ <i class="conum" data-value="1"></i><b>(1)</b>
+  <span class="s1">'completion'</span> \
+  <span class="s1">'git'</span> \ <i class="conum" data-value="2"></i><b>(2)</b>
+  <span class="s1">'syntax-highlighting'</span> \ <i class="conum" data-value="3"></i><b>(3)</b>
+  <span class="s1">'history-substring-search'</span> \ <i class="conum" data-value="4"></i><b>(4)</b>
+  <span class="s1">'prompt'</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -276,10 +276,10 @@ zstyle ':prezto:load' pmodule \
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code># Set the prompt theme to load.
+<pre class="rouge highlight"><code data-lang="conf"><span class="c"># Set the prompt theme to load.
 # Setting it to 'random' loads a random theme.
 # Auto set to 'off' on dumb terminals.
-zstyle ':prezto:module:prompt' theme 'doxxed'</code></pre>
+</span><span class="n">zstyle</span> <span class="s1">':prezto:module:prompt'</span> <span class="n">theme</span> <span class="s1">'doxxed'</span></code></pre>
 </div>
 </div>
 </div>
@@ -446,6 +446,15 @@ zstyle ':prezto:module:prompt' theme 'doxxed'</code></pre>
 </li>
 
 
+
+<li>
+    <a href="mailto:bookian+github@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
 
 
 
