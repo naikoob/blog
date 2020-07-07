@@ -70,7 +70,7 @@ Finally, to prevent creation of users and access keys in the `Demo` account, I a
 
 == profiles, profiles
 AWS CLI and SDKs make use of `~/.aws/config` and `~/.aws/credentials` to manage AWS profiles and credentials. My `~/.aws/config` file looks like this:
-[source]
+[source, ini]
 ----
 [profile demo]
 region=ap-southeast-1
@@ -83,7 +83,7 @@ output=json
 ----
 
 and `~/.aws/credentials` looks like this:
-[source]
+[source, ini]
 ----
 [demo]
 aws_access_key_id     = <DEMO_PROXY_USER_ACCESS_KEY>
@@ -97,7 +97,7 @@ aws_secret_access_key = <MAIN_SECRET_KEY>
 == switching between profiles
 I deliberately not have a default profile to reduce the chance of targeting my scripts and ansible playbooks at the wrong profile. Instead, I added the following.footnote:[I got this off the Internet a while back, but can no longer find the source to give proper credit] to my `.zshrc` (and `.bashrc`) to allow me to quickly switch between profiles:
 
-[source]
+[source, sh]
 ----
 # working with AWS profiles
 function _aws_list_all {

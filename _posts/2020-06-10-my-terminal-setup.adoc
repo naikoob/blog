@@ -14,7 +14,7 @@ I'm sticking to https://www.iterm2.com/[iTerm2, window='_blank'] as my preferred
 
 == installing the tools
 Installing iterm2 is simple with https://brew.sh/[homebrew, window='_blank']:
-[source]
+[source, sh]
 ----
 brew cask install iterm2
 ----
@@ -22,18 +22,18 @@ brew cask install iterm2
 Zsh that comes with MacOS Catalina is quite current (v5.7.1), so I'll just use the OS supplied version. 
 
 Next, install prezto with the following commands:
-[source]
+[source, sh]
 ----
 git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
 ----
 Alternatively, you can install from my fork which contains my modified theme:
-[source]
+[source, sh]
 ----
 git clone --recursive https://github.com/naikoob/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
 ----
 
 followed by 
-[source]
+[source, sh]
 ----
 setopt EXTENDED_GLOB
 for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
@@ -44,7 +44,7 @@ done
 == tinkering 
 First, edit the modules section of `~/.zpreztorc` to enable the desired modules. I've added a couple of modules as highlighted below:
 
-[source]
+[source, conf]
 ----
 # Set the Prezto modules to load (browse modules).
 # The order matters.
