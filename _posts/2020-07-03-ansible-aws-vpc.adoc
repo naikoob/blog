@@ -31,7 +31,7 @@ ansible-playbook -i inventory/base_infra provision_infra.yml -e infra_state=abse
 . when in doubt, check out the https://github.com/naikoob/ansible-aws-vpc/blob/master/README.adoc[README] and the comments in the playbooks.
 
 == why? what?
-This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickily, but don't incur unnecessary costs when not in use. 
+This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickly, but don't incur unnecessary costs when not in use. 
 
 IMHO, if RTO allows, infrastructure as code is the most cost effective disaster recovery mechanism, and any non-trivial IT infrastructure should be deployed in this way.
 
@@ -153,7 +153,7 @@ ansible-playbook -i inventory/base_infra provision_infra.yml -e infra_state=abse
 * `delete_nat_gateway.yml`
 +
 --
-This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the base_infra.yml playbook. Note that this playbook looks for the var file `out/nat_gateway_id.var` that is created during VPC provisioning to know which NAT gateway should be deleted. If you're deleting NAT gateway from a different machine/directory, you should set the `nat_gateway_id` variable in a different manner, say on the command line (-e), like so:
+This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the `provision_infra.yml` playbook. Note that this playbook looks for the var file `out/nat_gateway_id.var` that is created during VPC provisioning to know which NAT gateway should be deleted. If you're deleting NAT gateway from a different machine/directory, you should set the `nat_gateway_id` variable in a different manner, say on the command line (-e), like so:
 [source, sh]
 ----
 ansible-playbook -i inventory/base_infra delete_nat_gateway.yml -e nat_gateway_id=<NAT_GATEWAY_ID>
