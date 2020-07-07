@@ -1,0 +1,164 @@
+---
+layout: post
+title: "{AWS} infrastructure as {Ansible} code"
+author: naikoob
+tags: [ansible, aws]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img
+:icons: font
+:iconfont-cdn: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css
+:page-liquid:
+
+I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.
+
+== tl;dr
+. Clone/download from https://github.com/naikoob/ansible-aws-vpc.git
+. Edit `<repo_root>/inventory/group_vars/aws_infra.yml` with AWS account and profile information
+. Provision/unprovision with:
++
+--
+[source, sh]
+----
+# provision
+ansible-playbook -i inventory/base_infra provision_infra.yml
+
+# unprovision
+ansible-playbook -i inventory/base_infra provision_infra.yml -e infra_state=absent
+----
+--
+
+. when in doubt, check out the https://github.com/naikoob/ansible-aws-vpc/blob/master/README.adoc[README] and the comments in the playbooks.
+
+== why? what?
+This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickily, but don't incur unnecessary costs when not in use. 
+
+IMHO, if RTO allows, infrastructure as code is the most cost effective disaster recovery mechanism, and any non-trivial IT infrastructure should be deployed in this way.
+
+Here's what my playbook provisions:
+
+* A VPC
+* Route 53 private hosted zone associated with the VPC
+* 3 public subnets across 3 AZs
+* 3 private subnets across 3 AZs
+* Internet Gateway and associated route table
+* NAT Gateway and associated route table
+
+== ansible . aws . boto
+Ansible is available on most Linux distributions, so you can install it with `apt`/`dnf`/`yum`/`pacman` etc. On the Mac, the recommended installation is via Python's package manager `pip`, but I use Homebrew:
+[source, sh]
+----
+brew install ansible
+----
+This should install Ansible and it's dependencies, including Python.
+
+One of the strength of Ansible is the extensive collection of modules, including a https://docs.ansible.com/ansible/latest/modules/list_of_cloud_modules.html#amazon[comprehensive list of AWS modules, window='_blank']. Most (all?) Ansible modules for AWS uses the AWS's boto3/boto SDK. So we install them with Python's package manager `pip`:
+[source, sh]
+----
+pip install boto3
+----
+
+Finally, you should have your AWS profiles and credentials configured (`~/.aws/config` and `~/.aws/credentials`) for your account.
+
+== ansible files
+Now, clone/download my repository - https://github.com/naikoob/ansible-aws-vpc.git
+
+=== account variables
+I've chosen to embed account and profile information (note: not keys!) in `vars` files instead of environment variables to minimize the chance of running the playbooks against the wrong account.
+
+Update `/inventory/group_vars/aws_infra.yml` with AWS account and profile information:
+[source, yaml]
+----
+# group_vars/aws_infra.yml
+# ---
+# specify infrastructure details and AWS credentials
+
+# aws account, role, profile and region
+aws_account: "<AWS_ACCOUNT_NUMBER>"
+aws_role: "<AWS_ROLE>"
+aws_profile: "<AWS_PROFILE>"                # assumed profile used for provisioning
+aws_source_profile: "<AWS_SOURCE_PROFILE>"  # profile used to assume role
+aws_region: "<AWS_REGION>"
+
+# truncated ...
+----
+
+Notice the `aws_source_profile` variable. This is because I've centralized my IAM users in my main account, and use role switching to access the other accounts (as mentioned in my link:{% post_url 2020-06-20-aws-cmdline %}[earlier post]).
+
+For example, if my profile is defined as such in `~/.aws/config`:
+[source, ini]
+----
+[profile demo]
+region=ap-southeast-1
+role_arn=arn:aws:iam::112233445566:role/DemoAdminRole
+source_profile=main
+----
+
+then the variables should be:
+[source, yaml]
+----
+aws_account: "112233445566"
+aws_role: "DemoAdminRole"
+aws_profile: "demo"                # assumed profile used for provisioning
+aws_source_profile: "main"         # profile used to assume role
+----
+
+=== vpc variables
+Next, review and customize the VPC configuration in `inventory/host_vars/demo_vpc.yml` if necessary.
+
+[source, yaml]
+----
+# host_vars/vpc.yml
+
+# general details
+vpc_name: demo.vpc
+vpc_dns_zone: demo.example.com.private
+
+# CIDR block
+vpc_cidr_block: 10.0.0.0/16
+
+# Private subnets
+vpc_private_subnets:
+  - { cidr: "10.0.21.0/24", az: "{{ '{{ aws_region '}}}}a" }
+  - { cidr: "10.0.22.0/24", az: "{{ '{{ aws_region '}}}}b" }
+  - { cidr: "10.0.23.0/24", az: "{{ '{{ aws_region '}}}}c" }
+
+vpc_public_subnets:
+  - { cidr: "10.0.201.0/24", az: "{{ '{{ aws_region '}}}}a" }
+  - { cidr: "10.0.202.0/24", az: "{{ '{{ aws_region '}}}}b" }
+  - { cidr: "10.0.203.0/24", az: "{{ '{{ aws_region '}}}}c" }
+----
+
+=== playbooks
+I've implemented 2 playbooks as follows:
+
+* `provision_infra.yml`
++
+--
+This playbook provision/unprovision the VPC and associated resources (set variable infra_state=absent to unprovision).
+
+To provision:
+[source, sh]
+----
+ansible-playbook -i inventory/base_infra provision_infra.yml
+----
+
+To unprovision:
+[source, sh]
+----
+ansible-playbook -i inventory/base_infra provision_infra.yml -e infra_state=absent
+----
+--
+
+* `delete_nat_gateway.yml`
++
+--
+This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the base_infra.yml playbook. Note that this playbook looks for the var file `out/nat_gateway_id.var` that is created during VPC provisioning to know which NAT gateway should be deleted. If you're deleting NAT gateway from a different machine/directory, you should set the `nat_gateway_id` variable in a different manner, say on the command line (-e), like so:
+[source, sh]
+----
+ansible-playbook -i inventory/base_infra delete_nat_gateway.yml -e nat_gateway_id=<NAT_GATEWAY_ID>
+----
+--
+
+== I can, should I?
+If you look into the https://github.com/naikoob/ansible-aws-vpc/blob/master/roles/infra/tasks/provision.yml[list of tasks, window='_blank'], you'll see that using Ansible to provision infrastructure of AWS is pretty fine grained. You provision the individual components that make up your VPC footnote:[There used to be an https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html[`ec2_var` module] in Ansible, but it's deprecated and removed since version 2.5]. To me, this is a good thing, as I like to understand what's going on under the covers. For others, you may look at provisioning tools like https://www.terraform.io/[Terraform, window='_blank'], and drive the automation with https://docs.ansible.com/ansible/latest/modules/terraform_module.html[Ansible Terraform module, window='_blank']. Maybe I'll write about this in a future post ;-).
