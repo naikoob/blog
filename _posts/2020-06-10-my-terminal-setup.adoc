@@ -78,7 +78,7 @@ image::zsh-prompt.png[prompt]
 It's based on the paradox theme that comes with the prezto distribution, and available on my fork https://github.com/naikoob/prezto/blob/master/modules/prompt/functions/prompt_doxxed_setup[here, window='_blank']
 
 To use this theme, copy it to `~/zprezto/modules/prompt/functions/prompt_doxxed_setup`, and edit `~/.zpreztorc` like so:
-[source]
+[source, conf]
 ----
 # Set the prompt theme to load.
 # Setting it to 'random' loads a random theme.
