@@ -2,12 +2,13 @@ session_name: blog
 start_directory: ./
 shell_command_before:
 - eval "$(rbenv init -)"
+- export PATH=~/.gem/ruby/2.7.0/bin:$PATH
+- clear
 windows:
 - window_name: blog-dev
   layout: main-vertical
   panes:
     - shell_command:
-      - clear
       focus: true
     - shell_command:
       - code .
