@@ -4,7 +4,7 @@ url: "https://naikoob.github.io"
 
 # THEME-SPECIFIC CONFIGURATION
 title: "@naikoob"                                       # site's title
-description: "A website with blog posts and pages"      # used by search engines
+description: "Stuff that matters ... and a littel indulgence"   # used by search engines
 avatar:                                                 # Empty for no avatar in navbar
 favicon: assets/img/favicon.png                         # Icon displayed in the tab
 
