@@ -13,7 +13,7 @@ tags: [ansible, aws]
 I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.
 
 == tl;dr
-. Clone/download from https://github.com/naikoob/ansible-aws-vpc.git
+. Clone/download from https://github.com/naikoob/ansible-aws-vpc.git[window='_blank']
 . Edit `<repo_root>/inventory/group_vars/aws_infra.yml` with AWS account and profile information
 . Provision/unprovision with:
 +

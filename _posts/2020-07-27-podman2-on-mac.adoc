@@ -1,0 +1,13 @@
+---
+layout: post
+title: "Podman (v2) on the Mac, in a hurry"
+author: naikoob
+tags: [containers, podman, macos]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img
+
+https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/06/29/podman-v2-announce.html[announced, window='_blank'] recently. With Podman v2, there are significant changes to remote client interaction. Here's how I setup Podman v2 on the Mac...
+
+== podman
+Podman is a drop-in replacement for Docker to build and run containers. It's daemonless, so you do not need a long running service (Docker daemon), and it supports a Pod concept, so it's easier to migrate to 
