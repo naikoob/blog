@@ -53,7 +53,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-03T00:00:00+00:00" />
 <script type="application/ld+json">
-{"headline":"{AWS} infrastructure as {Ansible} code","dateModified":"2020-07-03T00:00:00+00:00","datePublished":"2020-07-03T00:00:00+00:00","author":{"@type":"Person","name":"naikoob"},"description":"I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html"},"@type":"BlogPosting","url":"https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html","@context":"https://schema.org"}</script>
+{"url":"https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html","author":{"@type":"Person","name":"naikoob"},"description":"I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html"},"@type":"BlogPosting","headline":"{AWS} infrastructure as {Ansible} code","dateModified":"2020-07-03T00:00:00+00:00","datePublished":"2020-07-03T00:00:00+00:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
@@ -161,7 +161,7 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Clone/download from <a href="https://github.com/naikoob/ansible-aws-vpc.git" class="bare">https://github.com/naikoob/ansible-aws-vpc.git</a></p>
+<p>Clone/download from <a href="https://github.com/naikoob/ansible-aws-vpc.git" class="bare" target="_blank" rel="noopener">https://github.com/naikoob/ansible-aws-vpc.git</a></p>
 </li>
 <li>
 <p>Edit <code>&lt;repo_root&gt;/inventory/group_vars/aws_infra.yml</code> with AWS account and profile information</p>
@@ -193,7 +193,7 @@ ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra
 <h2 id="why_what">why? what?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickily, but don&#8217;t incur unnecessary costs when not in use.</p>
+<p>This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickly, but don&#8217;t incur unnecessary costs when not in use.</p>
 </div>
 <div class="paragraph">
 <p>IMHO, if RTO allows, infrastructure as code is the most cost effective disaster recovery mechanism, and any non-trivial IT infrastructure should be deployed in this way.</p>
@@ -375,7 +375,7 @@ ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the base_infra.yml playbook. Note that this playbook looks for the var file <code>out/nat_gateway_id.var</code> that is created during VPC provisioning to know which NAT gateway should be deleted. If you&#8217;re deleting NAT gateway from a different machine/directory, you should set the <code>nat_gateway_id</code> variable in a different manner, say on the command line (-e), like so:</p>
+<p>This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the <code>provision_infra.yml</code> playbook. Note that this playbook looks for the var file <code>out/nat_gateway_id.var</code> that is created during VPC provisioning to know which NAT gateway should be deleted. If you&#8217;re deleting NAT gateway from a different machine/directory, you should set the <code>nat_gateway_id</code> variable in a different manner, say on the command line (-e), like so:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -394,14 +394,14 @@ ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra
 <h2 id="i_can_should_i">I can, should I?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you look into the <a href="https://github.com/naikoob/ansible-aws-vpc/blob/master/roles/infra/tasks/provision.yml" target="_blank" rel="noopener">list of tasks</a>, you&#8217;ll see that using Ansible to provision infrastructure of AWS is pretty fine grained. You provision the individual components that make up your VPC <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>. To me, this is a good thing, as I like to understand what&#8217;s going on under the covers. For others, you may look at IoC tools such as <a href="https://www.terraform.io/" target="_blank" rel="noopener">Terraform</a>, and drive the automation with <a href="https://docs.ansible.com/ansible/latest/modules/terraform_module.html" target="_blank" rel="noopener">Ansible Terraform module</a>. Maybe I&#8217;ll write about this in a future post ;-).</p>
+<p>If you look into the <a href="https://github.com/naikoob/ansible-aws-vpc/blob/master/roles/infra/tasks/provision.yml" target="_blank" rel="noopener">list of tasks</a>, you&#8217;ll see that using Ansible to provision infrastructure on AWS is pretty granular. You provision the individual components that make up your VPC <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>. To me, this is a good thing, as I like to understand what&#8217;s going on under the covers. For others, you may look at provisioning tools like <a href="https://www.terraform.io/" target="_blank" rel="noopener">Terraform</a>, and drive the automation with <a href="https://docs.ansible.com/ansible/latest/modules/terraform_module.html" target="_blank" rel="noopener">Ansible Terraform module</a>. Maybe I&#8217;ll write about this in a future post ;-).</p>
 </div>
 </div>
 </div>
 <div id="footnotes">
 <hr>
 <div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. There used to be an <a href="https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html"><code>ec2_vpc</code> module</a> in Ansible, but it&#8217;s deprecated and removed since version 2.5
+<a href="#_footnoteref_1">1</a>. There used to be an <a href="https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html"><code>ec2_var</code> module</a> in Ansible, but it&#8217;s deprecated and removed since version 2.5
 </div>
 </div>
     
@@ -480,6 +480,13 @@ ansible-playbook <span class="nt">-i</span> inventory/base_infra provision_infra
 <!-- Post navigation -->
 
   <div id="post-nav">
+    
+    <div id="previous-post">
+        <a alt="Podman (v2) on the Mac, in a hurry" href="/blog/2020/07/27/podman2-on-mac.html">
+            <p>Previous post</p>
+            Podman (v2) on the Mac, in a hurry
+        </a>
+    </div>
     
 
     

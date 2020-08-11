@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<!--
+    Type on Strap jekyll theme v2.2.4
+    Copyright 2016-2019 Sylhare
+    Theme free for personal and commercial use under the MIT license
+    https://github.com/sylhare/Type-on-Strap/blob/master/LICENSE
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Main JS (navbar.js, katex_init.js and masonry_init.js)-->
+    <script defer src="/blog/assets/js/main.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/blog/assets/css/main.css">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="/blog/assets/img/favicon.png" type="image/x-icon">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="@naikoob" href="https://naikoob.github.io/blog/feed.xml"/>
+
+    
+    <!-- fontawesome -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog==" crossorigin="anonymous"></script>    
+  
+    <!-- KaTeX 0.8.3 -->
+    <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
+    
+    <script src="/blog/assets/js/vendor/katex.min.js"></script>
+    
+
+    <!-- Google Analytics -->
+    
+
+    <!-- seo tags -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Podman (v2) on the Mac, in a hurry | @naikoob</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Podman (v2) on the Mac, in a hurry" />
+<meta name="author" content="naikoob" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Podman v2 was announced recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac." />
+<meta property="og:description" content="Podman v2 was announced recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac." />
+<link rel="canonical" href="https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html" />
+<meta property="og:url" content="https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html" />
+<meta property="og:site_name" content="@naikoob" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-27T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html","author":{"@type":"Person","name":"naikoob"},"description":"Podman v2 was announced recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac.","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html"},"@type":"BlogPosting","headline":"Podman (v2) on the Mac, in a hurry","dateModified":"2020-07-27T00:00:00+00:00","datePublished":"2020-07-27T00:00:00+00:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
+</head>
+
+  <body>
+    <header class="site-header">
+
+    <!-- Logo and title -->
+	<div class="branding">
+        
+
+		<h1 class="site-title">
+			<a aria-label="@naikoob" href="/blog/">
+        @naikoob
+      </a>
+		</h1>
+	</div>
+
+    <!-- Toggle menu -->
+    <nav class="clear">
+    <a aria-label="pull" id="pull" class="toggle" href="#">
+    <i class="fas fa-bars fa-lg"></i>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hide">
+        
+
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Search" title="Search" href="/blog/search/">
+                     <i class="fa fas fa-search" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Tags" title="Tags" href="/blog/tags/">
+                     <i class="fa fas fa-tags" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    </ul>
+
+	</nav>
+</header>
+
+    <div class="content">
+      <article >
+  <header id="main" style="">
+    <div class="title-padder">
+      
+      <h1 id="Podman+%28v2%29+on+the+Mac%2C+in+a+hurry" class="title">Podman (v2) on the Mac, in a hurry</h1>
+      
+
+
+<div class="post-info">
+    <p class="meta">
+      July 27, 2020
+    </p></div>
+
+      
+    </div>
+  </header>
+
+  <section class="post-content">
+  
+      <div class="paragraph">
+<p><a href="https://podman.io/" target="_blank" rel="noopener">Podman</a> v2 was <a href="https://podman.io/blogs/2020/06/29/podman-v2-announce.html" target="_blank" rel="noopener">announced</a> recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac.</p>
+</div>
+<div class="sect1">
+<h2 id="tldr">tl;dr</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install podman, vagrant and virtualbox (I suggest via <a href="https://brew.sh/" target="_blank" rel="noopener">Homebrew</a>)</p>
+</li>
+<li>
+<p>Clone/download from <a href="https://github.com/naikoob/vagrant-podhost.git" class="bare" target="_blank" rel="noopener">https://github.com/naikoob/vagrant-podhost.git</a></p>
+</li>
+<li>
+<p>Bring VM (<code>vagrant up</code>)</p>
+</li>
+<li>
+<p>Add alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>brew cask <span class="nb">install </span>podman vagrant virtualbox
+<span class="nv">$ </span>git clone https://github.com/naikoob/vagrant-podhost.git
+<span class="nv">$ </span><span class="nb">cd </span>vagrant-podhost
+<span class="nv">$ </span>vagrant up
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock"</span> <span class="o">&gt;&gt;</span> ~/.zshrc
+<span class="nv">$ </span><span class="nb">source</span> ~/.zshrc</code></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Try it out:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>podman run <span class="nt">-d</span> <span class="nt">-p</span> 8080:80 nginx
+<span class="nv">$ </span>curl http://192.168.133.10:8080/</code></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="podman">podman</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Podman is a drop-in replacement for Docker to build and run containers. It&#8217;s daemonless, so you do not need a long running service (Docker daemon), and it supports a Pod concept, so it&#8217;s easier to migrate to Kubernetes when you&#8217;re ready to bring your containerised project into production. <strong><em>Update:</em></strong> Version 2 also <a href="https://www.redhat.com/sysadmin/podman-play-kube" target="_blank" rel="noopener">understands Kubernetes <code>Deployments</code></a></p>
+</div>
+<div class="sect2">
+<h3 id="podman_on_a_mac">podman on a mac</h3>
+<div class="paragraph">
+<p>The macOS does not support containers natively. Running containers on a Mac involves spinning up a Linux virtual machine and interact with the (Linux) container engine using client tools. With Docker, there are tools like Docker Toolbox and Docker Desktop that makes this transparent to the users. Such tools are not available for Podman v2 (&#8230;&#8203;yet). However, it&#8217;s pretty easy to provision a Fedora VM to act as the container/pod host.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preparing_the_host">preparing the host</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;m using <a href="https://www.vagrantup.com/">vagrant</a> + <a href="https://www.virtualbox.org/">virtualbox</a> to provision and run my Linux host. Both can be installed via <a href="https://brew.sh/">Homebrew</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>brew cask <span class="nb">install </span>virtualbox vagrant</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I&#8217;m using Fedora as the pod host, as it&#8217;s the easiest way to get the lastest podman binaries. I first provision a <a href="https://app.vagrantup.com/fedora/boxes/32-cloud-base" target="_blank" rel="noopener">Fedora 32 vagrant box</a> and <code>dnf install podman</code>.</p>
+</div>
+<div class="paragraph">
+<p>Podman provides a pair of systemd unit files for API access. Let&#8217;s have a look these systemd unit files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="c"># /lib/systemd/system/podman.socket</span>
+<span class="o">[</span>Unit]
+<span class="nv">Description</span><span class="o">=</span>Podman API Socket
+<span class="nv">Documentation</span><span class="o">=</span>man:podman-system-service<span class="o">(</span>1<span class="o">)</span>
+
+<span class="o">[</span>Socket]
+<span class="nv">ListenStream</span><span class="o">=</span>%t/podman/podman.sock <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="nv">SocketMode</span><span class="o">=</span>0660
+
+<span class="o">[</span>Install]
+<span class="nv">WantedBy</span><span class="o">=</span>sockets.target</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>specifies the location of the listening socket file. (<code>/run/podman/podman.sock</code> when run as <code>root</code>, or <code>/run/user/&lt;UID&gt;/podman/podman.sock</code> when running as normal user). When a request arrives at this socket, systemd will fire up <code>podman.service</code> below:</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="c"># /lib/systemd/system/podman.service</span>
+<span class="o">[</span>Unit]
+<span class="nv">Description</span><span class="o">=</span>Podman API Service
+<span class="nv">Requires</span><span class="o">=</span>podman.socket
+<span class="nv">After</span><span class="o">=</span>podman.socket
+<span class="nv">Documentation</span><span class="o">=</span>man:podman-system-service<span class="o">(</span>1<span class="o">)</span>
+<span class="nv">StartLimitIntervalSec</span><span class="o">=</span>0
+
+<span class="o">[</span>Service]
+<span class="nv">Type</span><span class="o">=</span>simple
+<span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/podman system service <i class="conum" data-value="1"></i><b>(1)</b>
+
+<span class="o">[</span>Install]
+<span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+<span class="nv">Also</span><span class="o">=</span>podman.socket</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The command <code>podman system service</code> starts the API service (<code>man podman-system-service</code>).</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By default, <code>podman system service</code> will timeout in 5 seconds (although the man page says 1 second) and exit. I found that this will terminate the containers as well. I&#8217;ll disable the timeout to workaround this behaviour (bug?) by adding the <code>-t 0</code> arguments:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span><span class="nb">sudo cp</span> /lib/systemd/system/podman.service /etc/systemd/system/podman.service
+<span class="nv">$ </span><span class="nb">sudo sed</span> <span class="nt">-i</span> <span class="s2">"s/^ExecStart=.*/ExecStart=</span><span class="se">\/</span><span class="s2">usr</span><span class="se">\/</span><span class="s2">bin</span><span class="se">\/</span><span class="s2">podman system service -t 0/"</span> /etc/systemd/system/podman.service</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>/etc/systemd/system/podman.service</code> should look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="o">[</span>Unit]
+<span class="nv">Description</span><span class="o">=</span>Podman API Service
+<span class="nv">Requires</span><span class="o">=</span>podman.socket
+<span class="nv">After</span><span class="o">=</span>podman.socket
+<span class="nv">Documentation</span><span class="o">=</span>man:podman-system-service<span class="o">(</span>1<span class="o">)</span>
+<span class="nv">StartLimitIntervalSec</span><span class="o">=</span>0
+
+<span class="o">[</span>Service]
+<span class="nv">Type</span><span class="o">=</span>simple
+<span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/podman system service <span class="nt">-t</span> 0
+
+<span class="o">[</span>Install]
+<span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+<span class="nv">Also</span><span class="o">=</span>podman.socket</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, enable the <code>podman.socket</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span><span class="nb">sudo </span>systemctl <span class="nb">enable</span> <span class="nt">--now</span> podman.socket</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="remote_as_in_from_another_ip_address">remote, as in from another IP address&#8230;&#8203;</h3>
+<div class="paragraph">
+<p>As the listening socket is on the host&#8217;s filesystem (<code>/var/run/podman/podman.sock</code>), we&#8217;ll access it remotely via SSH. Append your public key (usually <code>~/.ssh/id_rsa.pub</code>) on your Mac to the <code>/root/.ssh/authorized_keys</code> file on the virtual machine. Ensure the SSH configuration directory and file has the right permission:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span><span class="nb">sudo chmod </span>700 /root/.ssh
+<span class="nv">$ </span><span class="nb">sudo chmod </span>600 /root/.ssh/authorized_keys</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lets_podman">let&#8217;s podman</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We still need the podman-remote client. Easiest way to get it is via Homebrew:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>brew cask <span class="nb">install </span>podman</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once installed, we can invoke podman like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>podman <span class="nt">--url</span><span class="o">=</span>ssh://root@podhost/run/podman/podman.sock ps</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To save some typing, create an alias, for example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span><span class="nb">echo</span> <span class="sb">`</span><span class="se">\n</span><span class="nb">alias </span><span class="nv">podman</span><span class="o">=</span>podman <span class="nt">--url</span><span class="o">=</span>ssh://root@192.168.133.10/run/podman/podman.sock<span class="sb">`</span> <span class="o">&gt;&gt;</span> ~/.zshrc
+<span class="nv">$ </span><span class="nb">source</span> ~/.zshrc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can test out with an nginx image:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>podman <span class="nt">-d</span> <span class="nt">-p</span> 8080:80 nginx
+<span class="nv">$ </span>curl http://192.168.133.10:8080</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="thats_a_lot_of_work_lets_automate">that&#8217;s a lot of work, let&#8217;s automate!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>Vagrantfile</code> with provisioning scritpts are available on <a href="https://github.com/naikoob/vagrant-podhost">github</a>. Just clone/download and follow the <a href="https://github.com/naikoob/vagrant-podhost/blob/master/README.adoc">README</a>.</p>
+</div>
+</div>
+</div>
+    
+  </section>
+
+  <!-- Social media shares -->
+  
+
+<div class="share-buttons">
+    <ul class="share-buttons">
+        <div class="meta">Share</div>
+         
+        <li>
+            <a href="https://twitter.com/intent/tweet?text=Podman+%28v2%29+on+the+Mac%2C+in+a+hurry%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2020%2F07%2F27%2Fpodman2-on-mac.html" target="_blank" title="">
+			<i class="fab fa-twitter-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Tweet</span>
+		</a>
+        </li>
+            
+        <li>
+            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html&title=Podman+%28v2%29+on+the+Mac%2C+in+a+hurry%20%7C%20%40naikoob" target="_blank" title=" Reddit">
+			<i class="fab fa-reddit-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on Reddit</span>
+		</a>
+        </li>
+         
+        <li>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html&title=Podman+%28v2%29+on+the+Mac%2C+in+a+hurry%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html" target="_blank" title=" LinkedIn">
+			<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on LinkedIn</span>
+		</a>
+        </li>
+          
+        <li>
+            <a href="mailto:?subject=Podman+%28v2%29+on+the+Mac%2C+in+a+hurry%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html" target="_blank" title="">
+			<i class="fas fa-envelope-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Email</span>
+		</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+
+   <!-- Tag list -->
+  
+  
+
+
+<footer>
+  <div class="tag-list">
+    
+      <div class="meta">Tags</div>
+    
+
+    
+    <a class="button" href="/blog/tags#containers">
+      <p><i class="fas fa-tag fa-fw"></i> containers</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#macos">
+      <p><i class="fas fa-tag fa-fw"></i> macos</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#podman">
+      <p><i class="fas fa-tag fa-fw"></i> podman</p>
+    </a>
+    
+  </div>
+</footer>
+
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+  <div id="post-nav">
+    
+
+    
+    <div id="next-post">
+        <a alt="{AWS} infrastructure as {Ansible} code" href="/blog/2020/07/03/ansible-aws-vpc.html">
+            <p>Next post</p>
+            {AWS} infrastructure as {Ansible} code
+        </a>
+    </div>
+    
+</div>
+
+
+
+<!-- To change color of links in the page -->
+<style>
+  
+
+  header#main {
+    background-repeat:no-repeat;
+  
+  }
+</style>
+
+    </div>
+    <footer class="site-footer">
+    <p class="text">
+        Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+</p>
+            <div class="footer-icons">
+                <ul>
+                <!-- Social icons from Font Awesome, if enabled -->
+                
+<li>
+    <a feed.xml href="feed.xml"
+       title="Follow RSS feed">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+<li>
+    <a href="mailto:bookian+github@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a href="https://github.com/naikoob" title=" GitHub">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+<li>
+    <a href="https://www.linkedin.com/in/boo-kian-yeo-0663a410/" title=" LinkedIn">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-linkedin-in fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a class="type" href="https://twitter.com/naikoob"
+       title=" Twitter">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+                </ul>
+            </div>
+</footer>
+
+  </body>
+</html>
