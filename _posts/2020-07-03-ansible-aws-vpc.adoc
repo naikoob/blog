@@ -13,7 +13,7 @@ tags: [ansible, aws]
 I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.
 
 == tl;dr
-. Clone/download from https://github.com/naikoob/ansible-aws-vpc.git
+. Clone/download from https://github.com/naikoob/ansible-aws-vpc.git[window='_blank']
 . Edit `<repo_root>/inventory/group_vars/aws_infra.yml` with AWS account and profile information
 . Provision/unprovision with:
 +
@@ -31,7 +31,7 @@ ansible-playbook -i inventory/base_infra provision_infra.yml -e infra_state=abse
 . when in doubt, check out the https://github.com/naikoob/ansible-aws-vpc/blob/master/README.adoc[README] and the comments in the playbooks.
 
 == why? what?
-This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickily, but don't incur unnecessary costs when not in use. 
+This is my seed project for the demos and PoCs I deploy on AWS. I like to automate the provisioning (and unprovisioning) so that I can get the demos/PoCs up and running quickly, but don't incur unnecessary costs when not in use. 
 
 IMHO, if RTO allows, infrastructure as code is the most cost effective disaster recovery mechanism, and any non-trivial IT infrastructure should be deployed in this way.
 
@@ -153,7 +153,7 @@ ansible-playbook -i inventory/base_infra provision_infra.yml -e infra_state=abse
 * `delete_nat_gateway.yml`
 +
 --
-This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the base_infra.yml playbook. Note that this playbook looks for the var file `out/nat_gateway_id.var` that is created during VPC provisioning to know which NAT gateway should be deleted. If you're deleting NAT gateway from a different machine/directory, you should set the `nat_gateway_id` variable in a different manner, say on the command line (-e), like so:
+This playbook deletes the NAT gateway and releases the associated EIP when not in use (to save $$). To re-create the NAT gateway, just re-run the `provision_infra.yml` playbook. Note that this playbook looks for the var file `out/nat_gateway_id.var` that is created during VPC provisioning to know which NAT gateway should be deleted. If you're deleting NAT gateway from a different machine/directory, you should set the `nat_gateway_id` variable in a different manner, say on the command line (-e), like so:
 [source, sh]
 ----
 ansible-playbook -i inventory/base_infra delete_nat_gateway.yml -e nat_gateway_id=<NAT_GATEWAY_ID>
@@ -161,4 +161,4 @@ ansible-playbook -i inventory/base_infra delete_nat_gateway.yml -e nat_gateway_i
 --
 
 == I can, should I?
-If you look into the https://github.com/naikoob/ansible-aws-vpc/blob/master/roles/infra/tasks/provision.yml[list of tasks, window='_blank'], you'll see that using Ansible to provision infrastructure of AWS is pretty fine grained. You provision the individual components that make up your VPC footnote:[There used to be an https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html[`ec2_vpc` module] in Ansible, but it's deprecated and removed since version 2.5]. To me, this is a good thing, as I like to understand what's going on under the covers. For others, you may look at IoC tools such as https://www.terraform.io/[Terraform, window='_blank'], and drive the automation with https://docs.ansible.com/ansible/latest/modules/terraform_module.html[Ansible Terraform module, window='_blank']. Maybe I'll write about this in a future post ;-).
+If you look into the https://github.com/naikoob/ansible-aws-vpc/blob/master/roles/infra/tasks/provision.yml[list of tasks, window='_blank'], you'll see that using Ansible to provision infrastructure on AWS is pretty granular. You provision the individual components that make up your VPC footnote:[There used to be an https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html[`ec2_var` module] in Ansible, but it's deprecated and removed since version 2.5]. To me, this is a good thing, as I like to understand what's going on under the covers. For others, you may look at provisioning tools like https://www.terraform.io/[Terraform, window='_blank'], and drive the automation with https://docs.ansible.com/ansible/latest/modules/terraform_module.html[Ansible Terraform module, window='_blank']. Maybe I'll write about this in a future post ;-).

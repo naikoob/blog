@@ -1,0 +1,19 @@
+session_name: blog
+start_directory: ./
+shell_command_before:
+- eval "$(rbenv init -)"
+- export PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin":$PATH
+- clear
+windows:
+- window_name: blog-dev
+  layout: main-vertical
+  panes:
+    - shell_command:
+      focus: true
+    - shell_command:
+      - code .
+      - $BROWSER http://localhost:4000/blog/
+      - clear
+    - shell_command:
+      - bundle exec jekyll serve
+

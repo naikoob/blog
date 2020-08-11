@@ -1,0 +1,164 @@
+---
+layout: post
+title: "Podman (v2) on the Mac, in a hurry"
+author: naikoob
+tags: [containers, podman, macos]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img
+
+https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/06/29/podman-v2-announce.html[announced, window='_blank'] recently. With Podman v2, there are significant changes to remote client interaction. Here's how I setup Podman v2 on the Mac...
+
+== tl;dr
+. Install podman, vagrant and virtualbox (I suggest via https://brew.sh/[Homebrew, window='_blank'])
+. Clone/download from https://github.com/naikoob/vagrant-podhost.git[window='_blank']
+. Bring VM (`vagrant up`)
+. Add alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock
++
+--
+[source, sh]
+----
+$ brew cask install podman vagrant virtualbox
+$ git clone https://github.com/naikoob/vagrant-podhost.git
+$ cd vagrant-podhost
+$ vagrant up
+$ echo "\nalias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock" >> ~/.zshrc 
+$ source ~/.zshrc
+----
+--
+. Try it out:
++
+--
+[source, sh]
+----
+$ podman run -d -p 8080:80 nginx
+$ curl http://192.168.133.10:8080/
+----
+--
+
+== podman
+Podman is a drop-in replacement for Docker to build and run containers. It's daemonless, so you do not need a long running service (Docker daemon), and it supports a Pod concept, so it's easier to migrate to Kubernetes when you're ready to bring your containerised project into production. *_Update:_* Version 2 also https://www.redhat.com/sysadmin/podman-play-kube[understands Kubernetes `Deployments`, window='_blank']
+
+=== podman on a mac
+The macOS does not support containers natively. Running containers on a Mac involves spinning up a Linux virtual machine and interact with the (Linux) container engine using client tools. With Docker, there are tools like Docker Toolbox and Docker Desktop that makes this transparent to the users. Such tools are not available for Podman v2 (...yet). However, it's pretty easy to provision a Fedora VM to act as the container/pod host.
+
+== preparing the host
+I'm using https://www.vagrantup.com/[vagrant] + https://www.virtualbox.org/[virtualbox] to provision and run my Linux host. Both can be installed via https://brew.sh/[Homebrew]: 
+[source, sh]
+----
+$ brew cask install virtualbox vagrant
+----
+
+I'm using Fedora as the pod host, as it's the easiest way to get the lastest podman binaries. I first provision a https://app.vagrantup.com/fedora/boxes/32-cloud-base[Fedora 32 vagrant box, window='_blank'] and `dnf install podman`.
+
+Podman provides a pair of systemd unit files for API access. Let's have a look these systemd unit files:
+[source, sh]
+----
+# /lib/systemd/system/podman.socket
+[Unit]
+Description=Podman API Socket
+Documentation=man:podman-system-service(1)
+
+[Socket]
+ListenStream=%t/podman/podman.sock <1>
+SocketMode=0660
+
+[Install]
+WantedBy=sockets.target
+----
+
+<1> specifies the location of the listening socket file. (`/run/podman/podman.sock` when run as `root`, or `/run/user/<UID>/podman/podman.sock` when running as normal user). When a request arrives at this socket, systemd will fire up `podman.service` below:
+
+[source, sh]
+----
+# /lib/systemd/system/podman.service
+[Unit]
+Description=Podman API Service
+Requires=podman.socket
+After=podman.socket
+Documentation=man:podman-system-service(1)
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman system service <1>
+
+[Install]
+WantedBy=multi-user.target
+Also=podman.socket
+----
+
+<1> The command `podman system service` starts the API service (`man podman-system-service`).
+
+By default, `podman system service` will timeout in 5 seconds (although the man page says 1 second) and exit. I found that this will terminate the containers as well. I'll disable the timeout to workaround this behaviour (bug?) by adding the `-t 0` arguments:
+
+[source, sh]
+----
+$ sudo cp /lib/systemd/system/podman.service /etc/systemd/system/podman.service
+$ sudo sed -i "s/^ExecStart=.*/ExecStart=\/usr\/bin\/podman system service -t 0/" /etc/systemd/system/podman.service
+----
+
+`/etc/systemd/system/podman.service` should look like this:
+[source, sh]
+----
+[Unit]
+Description=Podman API Service
+Requires=podman.socket
+After=podman.socket
+Documentation=man:podman-system-service(1)
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman system service -t 0
+
+[Install]
+WantedBy=multi-user.target
+Also=podman.socket
+----
+
+Now, enable the `podman.socket`
+[source, sh]
+----
+$ sudo systemctl enable --now podman.socket
+----
+
+=== remote, as in from another IP address...
+As the listening socket is on the host's filesystem (`/var/run/podman/podman.sock`), we'll access it remotely via SSH. Append your public key (usually `~/.ssh/id_rsa.pub`) on your Mac to the `/root/.ssh/authorized_keys` file on the virtual machine. Ensure the SSH configuration directory and file has the right permission:
+[source, sh]
+----
+$ sudo chmod 700 /root/.ssh
+$ sudo chmod 600 /root/.ssh/authorized_keys
+----
+
+== let's podman
+We still need the podman-remote client. Easiest way to get it is via Homebrew:
+[source, sh]
+----
+$ brew cask install podman
+----
+
+Once installed, we can invoke podman like so:
+[source, sh]
+----
+$ podman --url=ssh://root@podhost/run/podman/podman.sock ps
+----
+To save some typing, create an alias, for example
+[source, sh]
+----
+$ echo `\nalias podman=podman --url=ssh://root@192.168.133.10/run/podman/podman.sock` >> ~/.zshrc
+$ source ~/.zshrc
+----
+
+Now we can test out with an nginx image:
+[source, sh]
+----
+$ podman -d -p 8080:80 nginx
+$ curl http://192.168.133.10:8080
+----
+
+== that's a lot of work, let's automate!
+The `Vagrantfile` with provisioning scritpts are available on https://github.com/naikoob/vagrant-podhost[github]. Just clone/download and follow the https://github.com/naikoob/vagrant-podhost/blob/master/README.adoc[README].
+
+
+
