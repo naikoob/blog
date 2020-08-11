@@ -7,7 +7,7 @@ tags: [containers, podman, macos]
 :source-highlighter: rouge
 :imagesdir: /blog/assets/img
 
-https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/06/29/podman-v2-announce.html[announced, window='_blank'] recently. With Podman v2, there are significant changes to remote client interaction. Here's how I setup Podman v2 on the Mac...
+https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/06/29/podman-v2-announce.html[announced, window='_blank'] recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac.
 
 == tl;dr
 . Install podman, vagrant and virtualbox (I suggest via https://brew.sh/[Homebrew, window='_blank'])
