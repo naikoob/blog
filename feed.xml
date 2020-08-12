@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="https://naikoob.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://naikoob.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-08-11T08:24:10+00:00</updated><id>https://naikoob.github.io/blog/feed.xml</id><title type="html">@naikoob</title><subtitle>Stuff that matters ... and a littel indulgence</subtitle><entry><title type="html">Podman (v2) on the Mac, in a hurry</title><link href="https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html" rel="alternate" type="text/html" title="Podman (v2) on the Mac, in a hurry" /><published>2020-07-27T00:00:00+00:00</published><updated>2020-07-27T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/07/27/podman2-on-mac</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html">&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;a href=&quot;https://podman.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Podman&lt;/a&gt; v2 was &lt;a href=&quot;https://podman.io/blogs/2020/06/29/podman-v2-announce.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;announced&lt;/a&gt; recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="https://naikoob.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://naikoob.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-08-12T03:15:50+00:00</updated><id>https://naikoob.github.io/blog/feed.xml</id><title type="html">@naikoob</title><subtitle>Stuff that matters ... and a littel indulgence</subtitle><entry><title type="html">Podman (v2) on the Mac, in a hurry</title><link href="https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html" rel="alternate" type="text/html" title="Podman (v2) on the Mac, in a hurry" /><published>2020-07-27T00:00:00+00:00</published><updated>2020-07-27T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/07/27/podman2-on-mac</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html">&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https://podman.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Podman&lt;/a&gt; v2 was &lt;a href=&quot;https://podman.io/blogs/2020/06/29/podman-v2-announce.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;announced&lt;/a&gt; recently. With Podman v2, there are breaking changes to remote client interaction. This post documents how I setup it up on a Mac.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;tldr&quot;&gt;tl;dr&lt;/h2&gt;
@@ -8,6 +8,13 @@
 &lt;ol class=&quot;arabic&quot;&gt;
 &lt;li&gt;
 &lt;p&gt;Install podman, vagrant and virtualbox (I suggest via &lt;a href=&quot;https://brew.sh/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Homebrew&lt;/a&gt;)&lt;/p&gt;
+&lt;div class=&quot;olist loweralpha&quot;&gt;
+&lt;ol class=&quot;loweralpha&quot; type=&quot;a&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;If you have an older version of podman installed, be sure to upgrade it to version 2.0.x&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Clone/download from &lt;a href=&quot;https://github.com/naikoob/vagrant-podhost.git&quot; class=&quot;bare&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://github.com/naikoob/vagrant-podhost.git&lt;/a&gt;&lt;/p&gt;
@@ -25,7 +32,7 @@
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://github.com/naikoob/vagrant-podhost.git
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;vagrant-podhost
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vagrant up
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.zshrc
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias podman='podman --url ssh://root@192.168.133.10/run/podman/podman.sock'&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.zshrc
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.zshrc&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -38,7 +45,7 @@
 &lt;div class=&quot;content&quot;&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;podman run &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8080:80 nginx
+&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;podman run &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8080:80 nginx
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl http://192.168.133.10:8080/&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -206,7 +213,7 @@
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;podman&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;podman &lt;span class=&quot;nt&quot;&gt;--url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ssh://root@192.168.133.10/run/podman/podman.sock&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.zshrc
+&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;alias podman='podman --url=ssh://root@192.168.133.10/run/podman/podman.sock'&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.zshrc
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.zshrc&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -215,7 +222,7 @@
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;podman &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8080:80 nginx
+&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;podman &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8080:80 nginx
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl http://192.168.133.10:8080&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -225,10 +232,59 @@
 &lt;h2 id=&quot;thats_a_lot_of_work_lets_automate&quot;&gt;that&amp;#8217;s a lot of work, let&amp;#8217;s automate!&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The &lt;code&gt;Vagrantfile&lt;/code&gt; with provisioning scritpts are available on &lt;a href=&quot;https://github.com/naikoob/vagrant-podhost&quot;&gt;github&lt;/a&gt;. Just clone/download and follow the &lt;a href=&quot;https://github.com/naikoob/vagrant-podhost/blob/master/README.adoc&quot;&gt;README&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;Vagrantfile&lt;/code&gt; with provisioning scripts are available on &lt;a href=&quot;https://github.com/naikoob/vagrant-podhost&quot;&gt;github&lt;/a&gt;. Just clone/download and follow the &lt;a href=&quot;https://github.com/naikoob/vagrant-podhost/blob/master/README.adoc&quot;&gt;README&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name>naikoob</name></author><category term="containers" /><category term="podman" /><category term="macos" /><summary type="html">Podman v2 was announced recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac.</summary></entry><entry><title type="html">{AWS} infrastructure as {Ansible} code</title><link href="https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html" rel="alternate" type="text/html" title="{AWS} infrastructure as {Ansible} code" /><published>2020-07-03T00:00:00+00:00</published><updated>2020-07-03T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html">&lt;div class=&quot;paragraph&quot;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;some_fine_tuning&quot;&gt;some fine tuning&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A couple of things we can do to fine tune the setup:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Add an entry to &lt;code&gt;/etc/hosts&lt;/code&gt; so we can use an intuitive hostname (e.g. podhost) instead of an IP address&lt;/p&gt;
+&lt;div class=&quot;openblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on the mac&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;192.168.133.10    podhost&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; /etc/hosts&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add SSH configuration to specify the user and key file when accessing the podhost. Add the following to &lt;code&gt;~/.ssh/config&lt;/code&gt; (create one if necessary):&lt;/p&gt;
+&lt;div class=&quot;openblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;c&quot;&gt;# this assumes podhost entry above has been added to /etc/hosts&lt;/span&gt;
+Host Podhost
+   HostName podhost
+   User root
+   Identityfile ~/.ssh/id_rsa&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With the above, we can simplify the podman command (and the alias) to:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;sh&quot;&gt;podman &lt;span class=&quot;nt&quot;&gt;--url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ssh://root@podhost/run/podman/podman.sock&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name>naikoob</name></author><category term="containers" /><category term="podman" /><category term="macos" /><summary type="html">Podman v2 was announced recently. With Podman v2, there are breaking changes to remote client interaction. This post documents how I setup it up on a Mac.</summary></entry><entry><title type="html">{AWS} infrastructure as {Ansible} code</title><link href="https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html" rel="alternate" type="text/html" title="{AWS} infrastructure as {Ansible} code" /><published>2020-07-03T00:00:00+00:00</published><updated>2020-07-03T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/07/03/ansible-aws-vpc.html">&lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
@@ -477,7 +533,7 @@ ansible-playbook &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; inventory/base
 &lt;div id=&quot;footnotes&quot;&gt;
 &lt;hr&gt;
 &lt;div class=&quot;footnote&quot; id=&quot;_footnotedef_1&quot;&gt;
-&lt;a href=&quot;#_footnoteref_1&quot;&gt;1&lt;/a&gt;. There used to be an &lt;a href=&quot;https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html&quot;&gt;&lt;code&gt;ec2_var&lt;/code&gt; module&lt;/a&gt; in Ansible, but it&amp;#8217;s deprecated and removed since version 2.5
+&lt;a href=&quot;#_footnoteref_1&quot;&gt;1&lt;/a&gt;. There used to be an &lt;a href=&quot;https://docs.ansible.com/ansible/2.6/modules/ec2_vpc_module.html&quot;&gt;&lt;code&gt;ec2_vpc&lt;/code&gt; module&lt;/a&gt; in Ansible, but it&amp;#8217;s deprecated and removed since version 2.5
 &lt;/div&gt;
 &lt;/div&gt;</content><author><name>naikoob</name></author><category term="ansible" /><category term="aws" /><summary type="html">I need to stand up (and tear down) AWS VPCs to try a few OpenShift installation scenarios. I also wanted a revision on Ansible. So I built a VPC with Ansible.</summary></entry><entry><title type="html">Working with multiple AWS accounts on the command line</title><link href="https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html" rel="alternate" type="text/html" title="Working with multiple AWS accounts on the command line" /><published>2020-06-20T00:00:00+00:00</published><updated>2020-06-20T00:00:00+00:00</updated><id>https://naikoob.github.io/blog/2020/06/20/aws-cmdline</id><content type="html" xml:base="https://naikoob.github.io/blog/2020/06/20/aws-cmdline.html">&lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;It is a good practice to organise AWS workloads in multiple accounts, be it for security, accounting, or just to maintain our sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.&lt;/p&gt;
