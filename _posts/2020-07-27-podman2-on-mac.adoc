@@ -7,10 +7,11 @@ tags: [containers, podman, macos]
 :source-highlighter: rouge
 :imagesdir: /blog/assets/img
 
-https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/06/29/podman-v2-announce.html[announced, window='_blank'] recently. With Podman v2, there are significant changes to remote client interaction. This post documents how I setup it up on a Mac.
+https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/06/29/podman-v2-announce.html[announced, window='_blank'] recently. With Podman v2, there are breaking changes to remote client interaction. This post documents how I setup it up on a Mac.
 
 == tl;dr
 . Install podman, vagrant and virtualbox (I suggest via https://brew.sh/[Homebrew, window='_blank'])
+.. If you have an older version of podman installed, be sure to upgrade it to version 2.0.x
 . Clone/download from https://github.com/naikoob/vagrant-podhost.git[window='_blank']
 . Bring VM (`vagrant up`)
 . Add alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock
@@ -22,7 +23,7 @@ $ brew cask install podman vagrant virtualbox
 $ git clone https://github.com/naikoob/vagrant-podhost.git
 $ cd vagrant-podhost
 $ vagrant up
-$ echo "\nalias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock" >> ~/.zshrc 
+$ echo "alias podman='podman --url ssh://root@192.168.133.10/run/podman/podman.sock'" >> ~/.zshrc 
 $ source ~/.zshrc
 ----
 --
@@ -31,7 +32,7 @@ $ source ~/.zshrc
 --
 [source, sh]
 ----
-$ podman run -d -p 8080:80 nginx
+$ podman run -d -rm -p 8080:80 nginx
 $ curl http://192.168.133.10:8080/
 ----
 --
@@ -146,19 +147,49 @@ $ podman --url=ssh://root@podhost/run/podman/podman.sock ps
 To save some typing, create an alias, for example
 [source, sh]
 ----
-$ echo `\nalias podman=podman --url=ssh://root@192.168.133.10/run/podman/podman.sock` >> ~/.zshrc
+$ echo "alias podman='podman --url=ssh://root@192.168.133.10/run/podman/podman.sock'" >> ~/.zshrc
 $ source ~/.zshrc
 ----
 
 Now we can test out with an nginx image:
 [source, sh]
 ----
-$ podman -d -p 8080:80 nginx
+$ podman -d -rm -p 8080:80 nginx
 $ curl http://192.168.133.10:8080
 ----
 
 == that's a lot of work, let's automate!
-The `Vagrantfile` with provisioning scritpts are available on https://github.com/naikoob/vagrant-podhost[github]. Just clone/download and follow the https://github.com/naikoob/vagrant-podhost/blob/master/README.adoc[README].
+The `Vagrantfile` with provisioning scripts are available on https://github.com/naikoob/vagrant-podhost[github]. Just clone/download and follow the https://github.com/naikoob/vagrant-podhost/blob/master/README.adoc[README].
 
+== some fine tuning
+A couple of things we can do to fine tune the setup:
 
+. Add an entry to `/etc/hosts` so we can use an intuitive hostname (e.g. podhost) instead of an IP address
++
+-- 
+[source, sh]
+----
+# on the mac
+$ sudo echo "192.168.133.10    podhost" >> /etc/hosts
+----
+--
++
+. Add SSH configuration to specify the user and key file when accessing the podhost. Add the following to `~/.ssh/config` (create one if necessary):
++
+--
+[source, sh]
+----
+# this assumes podhost entry above has been added to /etc/hosts
+Host Podhost
+   HostName podhost
+   User root
+   Identityfile ~/.ssh/id_rsa
+----
+--
+
+With the above, we can simplify the podman command (and the alias) to:
+[source, sh]
+----
+podman --url=ssh://root@podhost/run/podman/podman.sock
+----
 
