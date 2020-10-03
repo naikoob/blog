@@ -1,6 +1,16 @@
 [
   
   {
+    "title"    : "Sayonara, Prezto. Hello: dotfiles",
+    "category" : "",
+    "tags"     : " command line, stow, zsh",
+    "url"      : "/blog/2020/10/02/hello-dotfiles.html",
+    "date"     : "October 2, 2020",
+    "excerpt"  : "\nSo I tried Prezto for a couple of months as documented in my earlier post. It works well except that it takes like 2 seconds to get my command prompt after opening a new terminal window (on a Macbook Pro 16). Not a deal breaker, but there must be...",
+  "content"  : "\nSo I tried Prezto for a couple of months as documented in my earlier post. It works well except that it takes like 2 seconds to get my command prompt after opening a new terminal window (on a Macbook Pro 16). Not a deal breaker, but there must be something more efficient out there.\n\n\npowerline, dotfiles\n\n\nScouring through the Internet, I finally settled on writing (plagiarizing) my own zsh config files and powerline (cos I still want a fancy prompt).\n\n\n\n\nstow\n\n\nAnd then I found this dotfiles project on Github. It uses GNU stow to manage a hierarcy of dotfiles. The solution is so simple and elegant, it brings tears to my eyes.\n\n\n\n\nyay\n\n\nHere&amp;#8217;s my resulting dotfiles repo. I think it&amp;#8217;ll keep me happy for a while.\n\n\n"
+} ,
+  
+  {
     "title"    : "Podman (v2) on the Mac, in a hurry",
     "category" : "",
     "tags"     : " containers, podman, macos",

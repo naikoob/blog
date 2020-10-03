@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<!--
+    Type on Strap jekyll theme v2.2.4
+    Copyright 2016-2019 Sylhare
+    Theme free for personal and commercial use under the MIT license
+    https://github.com/sylhare/Type-on-Strap/blob/master/LICENSE
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Main JS (navbar.js, katex_init.js and masonry_init.js)-->
+    <script defer src="/blog/assets/js/main.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/blog/assets/css/main.css">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="/blog/assets/img/favicon.png" type="image/x-icon">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="@naikoob" href="https://naikoob.github.io/blog/feed.xml"/>
+
+    
+    <!-- fontawesome -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog==" crossorigin="anonymous"></script>    
+  
+    <!-- KaTeX 0.8.3 -->
+    <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
+    
+    <script src="/blog/assets/js/vendor/katex.min.js"></script>
+    
+
+    <!-- Google Analytics -->
+    
+
+    <!-- seo tags -->
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Sayonara, Prezto. Hello: dotfiles | @naikoob</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Sayonara, Prezto. Hello: dotfiles" />
+<meta name="author" content="naikoob" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="So I tried Prezto for a couple of months as documented in my earlier post. It works well except that it takes like 2 seconds to get my command prompt after opening a new terminal window (on a Macbook Pro 16). Not a deal breaker, but there must be something more efficient out there." />
+<meta property="og:description" content="So I tried Prezto for a couple of months as documented in my earlier post. It works well except that it takes like 2 seconds to get my command prompt after opening a new terminal window (on a Macbook Pro 16). Not a deal breaker, but there must be something more efficient out there." />
+<link rel="canonical" href="https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html" />
+<meta property="og:url" content="https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html" />
+<meta property="og:site_name" content="@naikoob" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-02T00:00:00+00:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"Sayonara, Prezto. Hello: dotfiles","dateModified":"2020-10-02T00:00:00+00:00","url":"https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html","datePublished":"2020-10-02T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html"},"author":{"@type":"Person","name":"naikoob"},"description":"So I tried Prezto for a couple of months as documented in my earlier post. It works well except that it takes like 2 seconds to get my command prompt after opening a new terminal window (on a Macbook Pro 16). Not a deal breaker, but there must be something more efficient out there.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
+</head>
+
+  <body>
+    <header class="site-header">
+
+    <!-- Logo and title -->
+	<div class="branding">
+        
+
+		<h1 class="site-title">
+			<a aria-label="@naikoob" href="/blog/">
+        @naikoob
+      </a>
+		</h1>
+	</div>
+
+    <!-- Toggle menu -->
+    <nav class="clear">
+    <a aria-label="pull" id="pull" class="toggle" href="#">
+    <i class="fas fa-bars fa-lg"></i>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hide">
+        
+
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Search" title="Search" href="/blog/search/">
+                     <i class="fa fas fa-search" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Tags" title="Tags" href="/blog/tags/">
+                     <i class="fa fas fa-tags" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    </ul>
+
+	</nav>
+</header>
+
+    <div class="content">
+      <article >
+  <header id="main" style="">
+    <div class="title-padder">
+      
+      <h1 id="Sayonara%2C+Prezto.+Hello%3A+dotfiles" class="title">Sayonara, Prezto. Hello: dotfiles</h1>
+      
+
+
+<div class="post-info">
+    <p class="meta">
+      October 2, 2020
+    </p></div>
+
+      
+    </div>
+  </header>
+
+  <section class="post-content">
+  
+      <div class="paragraph">
+<p>So I tried Prezto for a couple of months as documented in my <a href="/blog/2020/06/10/my-terminal-setup.html">earlier post</a>. It works well except that it takes like 2 seconds to get my command prompt after opening a new terminal window (on a Macbook Pro 16). Not a deal breaker, but there must be something more efficient out there.</p>
+</div>
+<div class="sect1">
+<h2 id="powerline_dotfiles">powerline, dotfiles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Scouring through the Internet, I finally settled on writing (plagiarizing) my own zsh config files and <a href="https://github.com/powerline/powerline">powerline</a> (cos I still want a fancy prompt).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="stow">stow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>And then I found <a href="https://github.com/xero/dotfiles">this dotfiles project</a> on Github. It uses <a href="https://www.gnu.org/software/stow/">GNU stow</a> to manage a hierarcy of dotfiles. The solution is so simple and elegant, it brings tears to my eyes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="yay">yay</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here&#8217;s my resulting <a href="https://github.com/naikoob/dotfiles">dotfiles repo</a>. I think it&#8217;ll keep me happy for a while.</p>
+</div>
+</div>
+</div>
+    
+  </section>
+
+  <!-- Social media shares -->
+  
+
+<div class="share-buttons">
+    <ul class="share-buttons">
+        <div class="meta">Share</div>
+         
+        <li>
+            <a href="https://twitter.com/intent/tweet?text=Sayonara%2C+Prezto.+Hello%3A+dotfiles%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2020%2F10%2F02%2Fhello-dotfiles.html" target="_blank" title="">
+			<i class="fab fa-twitter-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Tweet</span>
+		</a>
+        </li>
+            
+        <li>
+            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html&title=Sayonara%2C+Prezto.+Hello%3A+dotfiles%20%7C%20%40naikoob" target="_blank" title=" Reddit">
+			<i class="fab fa-reddit-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on Reddit</span>
+		</a>
+        </li>
+         
+        <li>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html&title=Sayonara%2C+Prezto.+Hello%3A+dotfiles%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html" target="_blank" title=" LinkedIn">
+			<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on LinkedIn</span>
+		</a>
+        </li>
+          
+        <li>
+            <a href="mailto:?subject=Sayonara%2C+Prezto.+Hello%3A+dotfiles%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2020/10/02/hello-dotfiles.html" target="_blank" title="">
+			<i class="fas fa-envelope-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Email</span>
+		</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+
+   <!-- Tag list -->
+  
+  
+
+
+<footer>
+  <div class="tag-list">
+    
+      <div class="meta">Tags</div>
+    
+
+    
+    <a class="button" href="/blog/tags#command+line">
+      <p><i class="fas fa-tag fa-fw"></i> command line</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#stow">
+      <p><i class="fas fa-tag fa-fw"></i> stow</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#zsh">
+      <p><i class="fas fa-tag fa-fw"></i> zsh</p>
+    </a>
+    
+  </div>
+</footer>
+
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+  <div id="post-nav">
+    
+
+    
+    <div id="next-post">
+        <a alt="Podman (v2) on the Mac, in a hurry" href="/blog/2020/07/27/podman2-on-mac.html">
+            <p>Next post</p>
+            Podman (v2) on the Mac, in a hurry
+        </a>
+    </div>
+    
+</div>
+
+
+
+<!-- To change color of links in the page -->
+<style>
+  
+
+  header#main {
+    background-repeat:no-repeat;
+  
+  }
+</style>
+
+    </div>
+    <footer class="site-footer">
+    <p class="text">
+        Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+</p>
+            <div class="footer-icons">
+                <ul>
+                <!-- Social icons from Font Awesome, if enabled -->
+                
+<li>
+    <a feed.xml href="feed.xml"
+       title="Follow RSS feed">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+<li>
+    <a href="mailto:bookian+github@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a href="https://github.com/naikoob" title=" GitHub">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+<li>
+    <a href="https://www.linkedin.com/in/boo-kian-yeo-0663a410/" title=" LinkedIn">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-linkedin-in fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a class="type" href="https://twitter.com/naikoob"
+       title=" Twitter">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+                </ul>
+            </div>
+</footer>
+
+  </body>
+</html>
