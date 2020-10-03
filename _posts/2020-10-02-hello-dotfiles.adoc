@@ -1,0 +1,22 @@
+---
+layout: post
+title: "Sayonara, Prezto. Hello: dotfiles"
+author: naikoob
+tags: [command line, stow, zsh]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img
+:page-liquid:
+
+So I tried Prezto for a couple of months as documented in my link:{% post_url 2020-06-10-my-terminal-setup %}[earlier post]. It works well except that it takes like 2 seconds to get my command prompt after opening a new terminal window (on a Macbook Pro 16). Not a deal breaker, but there must be something more efficient out there.
+
+== powerline, dotfiles
+
+Scouring through the Internet, I finally settled on writing (plagiarizing) my own zsh config files and https://github.com/powerline/powerline[powerline] (cos I still want a fancy prompt).
+
+== stow
+
+And then I found https://github.com/xero/dotfiles[this dotfiles project] on Github. It uses https://www.gnu.org/software/stow/[GNU stow] to manage a hierarcy of dotfiles. The solution is so simple and elegant, it brings tears to my eyes.
+
+== yay 
+Here's my resulting https://github.com/naikoob/dotfiles[dotfiles repo]. I think it'll keep me happy for a while.
