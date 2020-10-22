@@ -1,0 +1,125 @@
+---
+layout: post
+title: "Developing for JBoss EAP"
+author: naikoob
+tags: [eap, jboss, maven, wildfly]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img
+:page-liquid:
+
+While the developers gravitate to cloud native languages and frameworks, there are still plenty of perfectly functioning Java code that are running in a lot of enterprises that may not be due for a rewrite/overhaul for one reason or another. These often run on a Java application server such Red Hat JBoss Enterprise Application Platform (JBoss EAP). Here is a simple tip on developing for JBoss EAP that may not be obvious for developers coming from other application servers.
+
+== Maven
+
+Developers coming from other app servers may not know that Red Hat offers a Maven repository of Java components shipped with Red Hat middlewares. These also include Red Hat QC'ed version of frameworks such as Hibernate, Slf4j, etc. 
+
+Subscribers of JBoss EAP can add this Maven repo to their build by adding the following to their Maven ```settings.xml``` or in the project POM files.
+
+[source, xml]
+----
+<repositories>
+    <repository>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+        <id>jboss-enterprise-maven-repository</id>
+        <url>https://maven.repository.redhat.com/ga/</url>
+    </repository>
+</repositories>
+<pluginRepositories>
+    <pluginRepository>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+        <id>jboss-enterprise-maven-repository</id>
+        <url>https://maven.repository.redhat.com/ga/</url>
+    </pluginRepository>
+</pluginRepositories>
+----
+
+You can find a sample ```settings.xml``` https://gist.github.com/naikoob/204e974e08cffe5efe4d1fb7d2ace56b#file-settings-xml[here].
+
+== BOM
+
+In addition, Red Hat supplies Bill of Material (BOM) POMs that aggregates the different libaries used in a product so that they can be consumed easily.
+
+Specifically, for JBoss EAP, the following BOMs are provided:
+
+[cols=2*,options="header"]
+|===
+| BOM Artifact ID | Use Case
+| eap-runtime-artifacts | Supported JBoss EAP runtime artifacts.
+| jboss-eap-jakartaee8 | Supported JBoss EAP Jakarta EE 8 APIs plus additional JBoss EAP API JARs.
+| jboss-eap-jakartaee8-with-spring4 | jboss-eap-jakartaee8 plus recommended Spring 4 versions.
+| jboss-eap-jakartaee8-with-tools | jboss-eap-jakartaee8 plus development tools such as Arquillian.
+|===
+
+See the documentation https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.3/html/development_guide/using_maven_with_eap#manage_project_dependencies[here] for details.
+
+To make use of these BOMs, add a dependencyManagement entry in the project's POM file:
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <!-- 
+            importing the jakartaee8-with-tools BOM adds specs and other useful 
+            artifacts as managed dependencies
+        -->
+        <dependency>
+            <groupId>org.jboss.bom</groupId>
+            <artifactId>jboss-eap-jakartaee8-with-tools</artifactId>
+            <version>${version.jboss.eap}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<properties>
+    <version.jboss.eap>7.3.3.GA</version.jboss.eap>
+</properties>
+----
+
+With this in place, we can refer to dependencies that are contained in the BOM without having to specify the version:
+[source,xml]
+----
+<dependencies>
+    <!-- Import the CDI API, we use provided scope as the API is included in JBoss EAP -->
+    <dependency>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        <scope>provided</scope>
+    </dependency>
+    <!--
+        Import the Common Annotations API (JSR-250), we use provided
+        scope as the API is included in JBoss EAP.
+    -->
+    <dependency>
+        <groupId>org.jboss.spec.javax.annotation</groupId>
+        <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+        <scope>provided</scope>
+    </dependency>
+    <!-- Import the JAX-RS API, we use provided scope as the API is included in JBoss EAP. -->
+    <dependency>
+        <groupId>org.jboss.spec.javax.ws.rs</groupId>
+        <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+----
+
+Notice we can use the ```provided``` scope to make use of the JARs included in JBoss EAP and reduce the size of our deployables.
+
+We can organize this in parent/child projects POMs as well, as found in the sample project https://github.com/naikoob/eap-samples[here].
+
+This approach ensure we use of as much of the Red Hat tested/certified JARs as possible, and take advantage of any bug/security fixes that Red Hat provides.
+
+Make full use of your Red Hat subscription :-)
+
