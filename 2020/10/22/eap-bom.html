@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<!--
+    Type on Strap jekyll theme v2.2.4
+    Copyright 2016-2019 Sylhare
+    Theme free for personal and commercial use under the MIT license
+    https://github.com/sylhare/Type-on-Strap/blob/master/LICENSE
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Main JS (navbar.js, katex_init.js and masonry_init.js)-->
+    <script defer src="/blog/assets/js/main.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/blog/assets/css/main.css">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="/blog/assets/img/favicon.png" type="image/x-icon">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://naikoob.github.io/blog/2020/10/22/eap-bom.html">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="@naikoob" href="https://naikoob.github.io/blog/feed.xml"/>
+
+    
+    <!-- fontawesome -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog==" crossorigin="anonymous"></script>    
+  
+    <!-- KaTeX 0.8.3 -->
+    <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
+    
+    <script src="/blog/assets/js/vendor/katex.min.js"></script>
+    
+
+    <!-- Google Analytics -->
+    
+
+    <!-- seo tags -->
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Developing for JBoss EAP | @naikoob</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Developing for JBoss EAP" />
+<meta name="author" content="naikoob" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="While the developers gravitate to cloud native languages and frameworks, there are still plenty of perfectly functioning Java code that are running in a lot of enterprises that may not be due for a rewrite/overhaul for one reason or another. These often run on a Java application server such Red Hat JBoss Enterprise Application Platform (JBoss EAP). Here is a simple tip on developing for JBoss EAP that may not be obvious for developers coming from other application servers." />
+<meta property="og:description" content="While the developers gravitate to cloud native languages and frameworks, there are still plenty of perfectly functioning Java code that are running in a lot of enterprises that may not be due for a rewrite/overhaul for one reason or another. These often run on a Java application server such Red Hat JBoss Enterprise Application Platform (JBoss EAP). Here is a simple tip on developing for JBoss EAP that may not be obvious for developers coming from other application servers." />
+<link rel="canonical" href="https://naikoob.github.io/blog/2020/10/22/eap-bom.html" />
+<meta property="og:url" content="https://naikoob.github.io/blog/2020/10/22/eap-bom.html" />
+<meta property="og:site_name" content="@naikoob" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-22T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Developing for JBoss EAP" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","dateModified":"2020-10-22T00:00:00+00:00","datePublished":"2020-10-22T00:00:00+00:00","headline":"Developing for JBoss EAP","author":{"@type":"Person","name":"naikoob"},"description":"While the developers gravitate to cloud native languages and frameworks, there are still plenty of perfectly functioning Java code that are running in a lot of enterprises that may not be due for a rewrite/overhaul for one reason or another. These often run on a Java application server such Red Hat JBoss Enterprise Application Platform (JBoss EAP). Here is a simple tip on developing for JBoss EAP that may not be obvious for developers coming from other application servers.","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/10/22/eap-bom.html"},"url":"https://naikoob.github.io/blog/2020/10/22/eap-bom.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
+</head>
+
+  <body>
+    <header class="site-header">
+
+    <!-- Logo and title -->
+	<div class="branding">
+        
+
+		<h1 class="site-title">
+			<a aria-label="@naikoob" href="/blog/">
+        @naikoob
+      </a>
+		</h1>
+	</div>
+
+    <!-- Toggle menu -->
+    <nav class="clear">
+    <a aria-label="pull" id="pull" class="toggle" href="#">
+    <i class="fas fa-bars fa-lg"></i>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hide">
+        
+
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Search" title="Search" href="/blog/search/">
+                     <i class="fa fas fa-search" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Tags" title="Tags" href="/blog/tags/">
+                     <i class="fa fas fa-tags" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    </ul>
+
+	</nav>
+</header>
+
+    <div class="content">
+      <article >
+  <header id="main" style="">
+    <div class="title-padder">
+      
+      <h1 id="Developing+for+JBoss+EAP" class="title">Developing for JBoss EAP</h1>
+      
+
+
+<div class="post-info">
+    <p class="meta">
+      October 22, 2020
+    </p></div>
+
+      
+    </div>
+  </header>
+
+  <section class="post-content">
+  
+      <div class="paragraph">
+<p>While the developers gravitate to cloud native languages and frameworks, there are still plenty of perfectly functioning Java code that are running in a lot of enterprises that may not be due for a rewrite/overhaul for one reason or another. These often run on a Java application server such Red Hat JBoss Enterprise Application Platform (JBoss EAP). Here is a simple tip on developing for JBoss EAP that may not be obvious for developers coming from other application servers.</p>
+</div>
+<div class="sect1">
+<h2 id="maven">Maven</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Developers coming from other app servers may not know that Red Hat offers a Maven repository of Java components shipped with Red Hat middlewares. These also include Red Hat QC&#8217;ed version of frameworks such as Hibernate, Slf4j, etc.</p>
+</div>
+<div class="paragraph">
+<p>Subscribers of JBoss EAP can add this Maven repo to their build by adding the following to their Maven <code><code>settings.xml</code></code> or in the project POM files.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;repositories&gt;</span>
+    <span class="nt">&lt;repository&gt;</span>
+        <span class="nt">&lt;releases&gt;</span>
+            <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+        <span class="nt">&lt;/releases&gt;</span>
+        <span class="nt">&lt;snapshots&gt;</span>
+            <span class="nt">&lt;enabled&gt;</span>false<span class="nt">&lt;/enabled&gt;</span>
+        <span class="nt">&lt;/snapshots&gt;</span>
+        <span class="nt">&lt;id&gt;</span>jboss-enterprise-maven-repository<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;url&gt;</span>https://maven.repository.redhat.com/ga/<span class="nt">&lt;/url&gt;</span>
+    <span class="nt">&lt;/repository&gt;</span>
+<span class="nt">&lt;/repositories&gt;</span>
+<span class="nt">&lt;pluginRepositories&gt;</span>
+    <span class="nt">&lt;pluginRepository&gt;</span>
+        <span class="nt">&lt;releases&gt;</span>
+            <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+        <span class="nt">&lt;/releases&gt;</span>
+        <span class="nt">&lt;snapshots&gt;</span>
+            <span class="nt">&lt;enabled&gt;</span>false<span class="nt">&lt;/enabled&gt;</span>
+        <span class="nt">&lt;/snapshots&gt;</span>
+        <span class="nt">&lt;id&gt;</span>jboss-enterprise-maven-repository<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;url&gt;</span>https://maven.repository.redhat.com/ga/<span class="nt">&lt;/url&gt;</span>
+    <span class="nt">&lt;/pluginRepository&gt;</span>
+<span class="nt">&lt;/pluginRepositories&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can find a sample <code><code>settings.xml</code></code> <a href="https://gist.github.com/naikoob/204e974e08cffe5efe4d1fb7d2ace56b#file-settings-xml">here</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bom">BOM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In addition, Red Hat supplies Bill of Material (BOM) POMs that aggregates the different libaries used in a product so that they can be consumed easily.</p>
+</div>
+<div class="paragraph">
+<p>Specifically, for JBoss EAP, the following BOMs are provided:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">BOM Artifact ID</th>
+<th class="tableblock halign-left valign-top">Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eap-runtime-artifacts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported JBoss EAP runtime artifacts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jboss-eap-jakartaee8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported JBoss EAP Jakarta EE 8 APIs plus additional JBoss EAP API JARs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jboss-eap-jakartaee8-with-spring4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jboss-eap-jakartaee8 plus recommended Spring 4 versions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jboss-eap-jakartaee8-with-tools</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jboss-eap-jakartaee8 plus development tools such as Arquillian.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>See the documentation <a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.3/html/development_guide/using_maven_with_eap#manage_project_dependencies">here</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>To make use of these BOMs, add a dependencyManagement entry in the project&#8217;s POM file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;dependencyManagement&gt;</span>
+    <span class="nt">&lt;dependencies&gt;</span>
+        <span class="c">&lt;!--
+            importing the jakartaee8-with-tools BOM adds specs and other useful
+            artifacts as managed dependencies
+        --&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.jboss.bom<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>jboss-eap-jakartaee8-with-tools<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${version.jboss.eap}<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>import<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/dependencyManagement&gt;</span>
+
+<span class="nt">&lt;properties&gt;</span>
+    <span class="nt">&lt;version.jboss.eap&gt;</span>7.3.3.GA<span class="nt">&lt;/version.jboss.eap&gt;</span>
+<span class="nt">&lt;/properties&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this in place, we can refer to dependencies that are contained in the BOM without having to specify the version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;dependencies&gt;</span>
+    <span class="c">&lt;!-- Import the CDI API, we use provided scope as the API is included in JBoss EAP --&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>jakarta.enterprise<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>jakarta.enterprise.cdi-api<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+    <span class="c">&lt;!--
+        Import the Common Annotations API (JSR-250), we use provided
+        scope as the API is included in JBoss EAP.
+    --&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.jboss.spec.javax.annotation<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>jboss-annotations-api_1.3_spec<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+    <span class="c">&lt;!-- Import the JAX-RS API, we use provided scope as the API is included in JBoss EAP. --&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.jboss.spec.javax.ws.rs<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>jboss-jaxrs-api_2.1_spec<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice we can use the <code><code>provided</code></code> scope to make use of the JARs included in JBoss EAP and reduce the size of our deployables.</p>
+</div>
+<div class="paragraph">
+<p>We can organize this in parent/child projects POMs as well, as found in the sample project <a href="https://github.com/naikoob/eap-samples">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>This approach ensure we use of as much of the Red Hat tested/certified JARs as possible, and take advantage of any bug/security fixes that Red Hat provides.</p>
+</div>
+<div class="paragraph">
+<p>Make full use of your Red Hat subscription :-)</p>
+</div>
+</div>
+</div>
+    
+  </section>
+
+  <!-- Social media shares -->
+  
+
+<div class="share-buttons">
+    <ul class="share-buttons">
+        <div class="meta">Share</div>
+         
+        <li>
+            <a href="https://twitter.com/intent/tweet?text=Developing+for+JBoss+EAP%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2020%2F10%2F22%2Feap-bom.html" target="_blank" title="">
+			<i class="fab fa-twitter-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Tweet</span>
+		</a>
+        </li>
+            
+        <li>
+            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2020/10/22/eap-bom.html&title=Developing+for+JBoss+EAP%20%7C%20%40naikoob" target="_blank" title=" Reddit">
+			<i class="fab fa-reddit-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on Reddit</span>
+		</a>
+        </li>
+         
+        <li>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2020/10/22/eap-bom.html&title=Developing+for+JBoss+EAP%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2020/10/22/eap-bom.html" target="_blank" title=" LinkedIn">
+			<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on LinkedIn</span>
+		</a>
+        </li>
+          
+        <li>
+            <a href="mailto:?subject=Developing+for+JBoss+EAP%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2020/10/22/eap-bom.html" target="_blank" title="">
+			<i class="fas fa-envelope-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Email</span>
+		</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+
+   <!-- Tag list -->
+  
+  
+
+
+<footer>
+  <div class="tag-list">
+    
+      <div class="meta">Tags</div>
+    
+
+    
+    <a class="button" href="/blog/tags#eap">
+      <p><i class="fas fa-tag fa-fw"></i> eap</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#jboss">
+      <p><i class="fas fa-tag fa-fw"></i> jboss</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#maven">
+      <p><i class="fas fa-tag fa-fw"></i> maven</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#wildfly">
+      <p><i class="fas fa-tag fa-fw"></i> wildfly</p>
+    </a>
+    
+  </div>
+</footer>
+
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+  <div id="post-nav">
+    
+
+    
+    <div id="next-post">
+        <a alt="Sayonara, Prezto. Hello: dotfiles" href="/blog/2020/10/02/hello-dotfiles.html">
+            <p>Next post</p>
+            Sayonara, Prezto. Hello: dotfiles
+        </a>
+    </div>
+    
+</div>
+
+
+
+<!-- To change color of links in the page -->
+<style>
+  
+
+  header#main {
+    background-repeat:no-repeat;
+  
+  }
+</style>
+
+    </div>
+    <footer class="site-footer">
+    <p class="text">
+        Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+</p>
+            <div class="footer-icons">
+                <ul>
+                <!-- Social icons from Font Awesome, if enabled -->
+                
+<li>
+    <a feed.xml href="feed.xml"
+       title="Follow RSS feed">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+<li>
+    <a href="mailto:bookian+github@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a href="https://github.com/naikoob" title=" GitHub">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+<li>
+    <a href="https://www.linkedin.com/in/boo-kian-yeo-0663a410/" title=" LinkedIn">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-linkedin-in fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a class="type" href="https://twitter.com/naikoob"
+       title=" Twitter">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+                </ul>
+            </div>
+</footer>
+
+  </body>
+</html>
