@@ -13,7 +13,7 @@ https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/
 . Install podman, vagrant and virtualbox (I suggest via https://brew.sh/[Homebrew, window='_blank'])
 .. If you have an older version of podman installed, be sure to upgrade it to version 2.0.x
 . Clone/download from https://github.com/naikoob/vagrant-podhost.git[window='_blank']
-. Bring VM (`vagrant up`)
+. Bring VM up (`vagrant up`)
 . Add alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock
 +
 --
