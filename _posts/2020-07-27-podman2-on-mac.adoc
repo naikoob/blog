@@ -14,7 +14,7 @@ https://podman.io/[Podman, window='_blank'] v2 was https://podman.io/blogs/2020/
 .. If you have an older version of podman installed, be sure to upgrade it to version 2.0.x
 . Clone/download from https://github.com/naikoob/vagrant-podhost.git[window='_blank']
 . Bring VM up (`vagrant up`)
-. Add alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock
+. Add alias podman=podman --identity=<path/to/ssh/key> --url=ssh://root@192.168.133.10/run/podman/podman.sock
 +
 --
 [source, sh]
@@ -23,7 +23,7 @@ $ brew cask install podman vagrant virtualbox
 $ git clone https://github.com/naikoob/vagrant-podhost.git
 $ cd vagrant-podhost
 $ vagrant up
-$ echo "alias podman='podman --url ssh://root@192.168.133.10/run/podman/podman.sock'" >> ~/.zshrc 
+$ echo "alias podman='podman --identity=<path/to/ssh/key> --url=ssh://root@192.168.133.10/run/podman/podman.sock'" >> ~/.zshrc 
 $ source ~/.zshrc
 ----
 --
@@ -142,12 +142,12 @@ $ brew cask install podman
 Once installed, we can invoke podman like so:
 [source, sh]
 ----
-$ podman --url=ssh://root@podhost/run/podman/podman.sock ps
+$ podman --identity=</path/to/ssh/key> --url=ssh://root@podhost/run/podman/podman.sock ps
 ----
 To save some typing, create an alias, for example
 [source, sh]
 ----
-$ echo "alias podman='podman --url=ssh://root@192.168.133.10/run/podman/podman.sock'" >> ~/.zshrc
+$ echo "alias podman='podman --identity=</path/to/ssh/key> --url=ssh://root@192.168.133.10/run/podman/podman.sock'" >> ~/.zshrc
 $ source ~/.zshrc
 ----
 
