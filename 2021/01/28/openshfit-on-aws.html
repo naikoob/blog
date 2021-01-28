@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<!--
+    Type on Strap jekyll theme v2.2.4
+    Copyright 2016-2019 Sylhare
+    Theme free for personal and commercial use under the MIT license
+    https://github.com/sylhare/Type-on-Strap/blob/master/LICENSE
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Main JS (navbar.js, katex_init.js and masonry_init.js)-->
+    <script defer src="/blog/assets/js/main.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/blog/assets/css/main.css">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="/blog/assets/img/favicon.png" type="image/x-icon">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html">
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="@naikoob" href="https://naikoob.github.io/blog/feed.xml"/>
+
+    
+    <!-- fontawesome -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha512-M+hXwltZ3+0nFQJiVke7pqXY7VdtWW2jVG31zrml+eteTP7im25FdwtLhIBTWkaHRQyPrhO2uy8glLMHZzhFog==" crossorigin="anonymous"></script>    
+  
+    <!-- KaTeX 0.8.3 -->
+    <!-- if you have any issue check https://github.com/KaTeX/KaTeX -->
+    
+    <script src="/blog/assets/js/vendor/katex.min.js"></script>
+    
+
+    <!-- Google Analytics -->
+    
+
+    <!-- seo tags -->
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>OpenShift IPI on AWS, for the paranoids | @naikoob</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="OpenShift IPI on AWS, for the paranoids" />
+<meta name="author" content="naikoob" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let&#39;s take a look." />
+<meta property="og:description" content="The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let&#39;s take a look." />
+<link rel="canonical" href="https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" />
+<meta property="og:url" content="https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" />
+<meta property="og:site_name" content="@naikoob" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-01-28T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="OpenShift IPI on AWS, for the paranoids" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html"},"datePublished":"2021-01-28T00:00:00+00:00","author":{"@type":"Person","name":"naikoob"},"headline":"OpenShift IPI on AWS, for the paranoids","dateModified":"2021-01-28T00:00:00+00:00","description":"The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let&#39;s take a look.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
+</head>
+
+  <body>
+    <header class="site-header">
+
+    <!-- Logo and title -->
+	<div class="branding">
+        
+
+		<h1 class="site-title">
+			<a aria-label="@naikoob" href="/blog/">
+        @naikoob
+      </a>
+		</h1>
+	</div>
+
+    <!-- Toggle menu -->
+    <nav class="clear">
+    <a aria-label="pull" id="pull" class="toggle" href="#">
+    <i class="fas fa-bars fa-lg"></i>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hide">
+        
+
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Search" title="Search" href="/blog/search/">
+                     <i class="fa fas fa-search" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            <li class="separator"> | </li>
+            <li>
+                <a class="clear" aria-label="Tags" title="Tags" href="/blog/tags/">
+                     <i class="fa fas fa-tags" aria-hidden="true"></i>
+                    
+                </a>
+            </li>
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+        
+    </ul>
+
+	</nav>
+</header>
+
+    <div class="content">
+      <article >
+  <header id="main" style="">
+    <div class="title-padder">
+      
+      <h1 id="OpenShift+IPI+on+AWS%2C+for+the+paranoids" class="title">OpenShift IPI on AWS, for the paranoids</h1>
+      
+
+
+<div class="post-info">
+    <p class="meta">
+      January 28, 2021
+    </p></div>
+
+      
+    </div>
+  </header>
+
+  <section class="post-content">
+  
+      <div class="paragraph">
+<p>The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let<em>'</em>s take a look.</p>
+</div>
+<div class="sect1">
+<h2 id="installation_inputs">installation inputs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you have a Red Hat Developer&#8217;s account (<a href="http://developers.redhat.com" class="bare">http://developers.redhat.com</a>), just follow this link to download the OpenShift installer for AWS (IPI) &#8594; <a href="https://cloud.redhat.com/openshift/install/aws/installer-provisioned" class="bare">https://cloud.redhat.com/openshift/install/aws/installer-provisioned</a>, as well as the pull secret. For this article, I&#8217;m using OpenShift version 4.6.13.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll need to have the necessary AWS account (and access keys) to run the installer. We also need to prepare a SSH public key, and a Route 53 public hosted zone. Once we have all these, we can create the cluster using</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code>./openshift-installer create cluster --dir=&lt;working-dir&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The installer will prompt for a couple of information as shown below:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/blog/assets/img/2021-01-28-openshift-on-aws/install-inputs.png" alt="install inputs">
+</div>
+</div>
+<div class="paragraph">
+<p><em>&#8230;&#8203;</em> and after around 40 minutes, you should get your OpenShift cluster.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="but_what_actually_happened">but what actually happened?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The installation process uses terraform to provision the VPC and other AWS resources. EC2 instances with base OpenShift images are then launched to form the cluster and install the core OpenShift operators.</p>
+</div>
+<div class="paragraph">
+<p>Post installation, you&#8217;ll see a few files created in the installation working directory (in my case <code>ipi</code>, including <code>terraform.tfstate</code> that describes the resources created by the installation process. In addition, there are also a few other IAM users being provisioned by OpenShift operators (e.g. the <em>openshift-image-registry</em> operator)</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a graphical representation of the results:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/blog/assets/img/2021-01-28-openshift-on-aws/ocp-aws-ipi.png" alt="ocp aws ipi">
+</div>
+</div>
+<div class="sect2">
+<h3 id="users_roles">users, roles</h3>
+<div class="paragraph">
+<p>Let&#8217;s start with IAM resources (remember paranoid?). Head over to the AWS IAM console, we see the following IAM resources created:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name*</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Created By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aws-ebs-csi-driver-operator*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-storage-operator_red-hat-operators">Cluster Storage Operator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cloud-credential-operator-iam-ro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators">Cloud Credential Operator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cloud-credential-operator-s3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators">Cloud Credential Operator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">openshift-image-registry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-image-registry-operator_red-hat-operators">Cluster Image Registry Operator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">openshift-ingress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#ingress-operator_red-hat-operators">Ingress Operator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">openshift-machine-api-aws</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#machine-api-operator_red-hat-operators">Machine API Operator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">master-role</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Installer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worker-role</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Installer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><em>* there will be a prefix and suffix to the user/role names, for example <code>`ocp46-pj42g-aws-ebs-csi-driver-operator-djdvq</code>`</em></p>
+</div>
+<div class="paragraph">
+<p>Each of the user/role above has attached inline policy that grant access to necessary AWS resources. We can use <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">AWS IAM permission boundaries</a> to apply more restrictive permissions if desired. Do consult Red Hat&#8217;s support if you plan to do this.</p>
+</div>
+<div class="paragraph">
+<p>For instance, the policy for the image registry user is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"s3:CreateBucket"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:DeleteBucket"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutBucketTagging"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetBucketTagging"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutBucketPublicAccessBlock"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetBucketPublicAccessBlock"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutEncryptionConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetEncryptionConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutLifecycleConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetLifecycleConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetBucketLocation"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:ListBucket"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:HeadBucket"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetObject"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutObject"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:DeleteObject"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:ListBucketMultipartUploads"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:AbortMultipartUpload"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"iam:GetUser"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;registry-user-arn&gt;"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can define a permission boundary like below to restrict operations like <code>GetObject</code>, <code>PutObject</code> to only the image registry S3 bucket (instead of any buckets in the account):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RegistryPermBoundary"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"s3:GetBucketPublicAccessBlock"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetLifecycleConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:ListBucketMultipartUploads"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetBucketTagging"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutBucketPublicAccessBlock"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutEncryptionConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutObject"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetObject"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetEncryptionConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:AbortMultipartUpload"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutBucketTagging"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:PutLifecycleConfiguration"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:GetBucketLocation"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:DeleteObject"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"&lt;bucket-arn&gt;"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"&lt;bucket-arn&gt;/*"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"s3:ListBucket"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"s3:HeadBucket"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"iam:GetUser"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;registry-user-arn&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deny"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3:DeleteBucket"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>First create a policy from the above JSON, using</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code>aws iam create-policy --policy-name &lt;policy-name&gt; --policy-document file://&lt;path-to-policy-file&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>then, attach the permission boundary to the image registry user:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code>aws iam put-user-permissions-boundary --permissions-boundary &lt;policy-arn&gt; --user-name &lt;openshift-image-registry-user-name&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="vpc">vpc</h3>
+<div class="paragraph">
+<p>Next, we&#8217;ll examine the VPC resources created. The installation process creates a public and a private subnet in each availability zone of selected AWS region. All master and worker nodes are launched in the private subnets. The nodes can reach out to the Internet via the NAT gateways that are launched in the public subnet in the same AZ.</p>
+</div>
+<div class="sect3">
+<h4 id="load_balancers">load balancers</h4>
+<div class="paragraph">
+<p>Two separate network load balancers are provisioned to serve internal (ports 6443, 22623) and external (port 6443) API requests to the masters.</p>
+</div>
+<div class="paragraph">
+<p>A third, classic load balancer is provisioned to serve application ingress (ports 80, 443).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="dns">dns</h4>
+<div class="paragraph">
+<p>The installation process will create a private hosted zone for the cluster. In my case, the cluster name is <code>ocp46</code> and my base domain is <code>demo.xcdc.io</code>, so the private hosted zone is <code>ocp46.demo.xcdc.io</code>. This hosted zone contains DNS entries for the internal and external API endpoints, as well as the wildcard entry for application ingress.</p>
+</div>
+<div class="paragraph">
+<p>DNS entries are also created in the supplied public hosted zone (<code>demo.xcdc.io</code> in my case), to publish the dns names for API end point (<code>api.ocp4.demo.xcdc.io</code>), as well as the wildcard entry (<code>*.apps.ocp4.demo.xcdc.io</code>) to the respective load balancers above.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="security_groups">security groups</h4>
+<div class="paragraph">
+<p>A security groups is attached to the application ingress load balancer to allow only HTTP and HTTPS traffic.</p>
+</div>
+<div class="paragraph">
+<p>Worker nodes security group allows network traffic from the ingress load balancers, and selected traffic from the master nodes as well as other worker nodes below.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">ports</th>
+<th class="tableblock halign-left valign-top">protocols</th>
+<th class="tableblock halign-left valign-top">source</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingress load balancers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingress traffic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">icmp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ICMP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSH</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4789</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vxlan packets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6081</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GENEVE packets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9000 - 9999</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp, udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal cluster communication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10250</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes kubelet, scheduler and controller manager</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30000 - 32767</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp, udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes ingress services</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Master nodes security groups allows selected traffic from workers and other master nodes:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">ports</th>
+<th class="tableblock halign-left valign-top">protocols</th>
+<th class="tableblock halign-left valign-top">source</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingress load balancers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingress traffic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">icmp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ICMP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSH</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2379 - 2380</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">etcd</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4789</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vxlan packets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6081</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GENEVE packets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6443</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">api access</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6641 - 6642</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OVN packets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9000 - 9999</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp, udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal cluster communication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10250</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes kubelet, scheduler and controller manager</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10257</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes kubelet, scheduler and controller manager</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10259</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes kubelet, scheduler and controller manager</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">22623</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">machine config service</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30000 - 32767</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tcp, udp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes ingress services</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="whats_next">what&#8217;s next?</h3>
+<div class="paragraph">
+<p>This post describes the default infrastucture setup by OpenShift installer. It is possible to apply customizations such as CIDR ranges, machine instance types, etc. Red Hat&#8217;s documentation has a good section on this <a href="https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-customizations" target="_blank" rel="noopener">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>It is also possible to perform and <a href="https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-vpc" target="_blank" rel="noopener">OpenShift IPI installation into an existing VPC</a>.</p>
+</div>
+<div class="paragraph">
+<p>Finally, OpenShift will be available as a managed service on AWS soon! Here&#8217;s the <a href="https://aws.amazon.com/blogs/containers/announcing-red-hat-openshift-service-on-aws/" target="_blank" rel="noopener">announcement</a> for Red Hat OpenShift Service on AWS.</p>
+</div>
+</div>
+</div>
+</div>
+    
+  </section>
+
+  <!-- Social media shares -->
+  
+
+<div class="share-buttons">
+    <ul class="share-buttons">
+        <div class="meta">Share</div>
+         
+        <li>
+            <a href="https://twitter.com/intent/tweet?text=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2021%2F01%2F28%2Fopenshfit-on-aws.html" target="_blank" title="">
+			<i class="fab fa-twitter-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Tweet</span>
+		</a>
+        </li>
+            
+        <li>
+            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html&title=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob" target="_blank" title=" Reddit">
+			<i class="fab fa-reddit-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on Reddit</span>
+		</a>
+        </li>
+         
+        <li>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html&title=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" target="_blank" title=" LinkedIn">
+			<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Share on LinkedIn</span>
+		</a>
+        </li>
+          
+        <li>
+            <a href="mailto:?subject=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" target="_blank" title="">
+			<i class="fas fa-envelope-square fa-lg" aria-hidden="true"></i>
+			<span class="sr-only">Email</span>
+		</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+
+   <!-- Tag list -->
+  
+  
+
+
+<footer>
+  <div class="tag-list">
+    
+      <div class="meta">Tags</div>
+    
+
+    
+    <a class="button" href="/blog/tags#aws">
+      <p><i class="fas fa-tag fa-fw"></i> aws</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#cloud">
+      <p><i class="fas fa-tag fa-fw"></i> cloud</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#kubernetes">
+      <p><i class="fas fa-tag fa-fw"></i> kubernetes</p>
+    </a>
+    
+    <a class="button" href="/blog/tags#openshift">
+      <p><i class="fas fa-tag fa-fw"></i> openshift</p>
+    </a>
+    
+  </div>
+</footer>
+
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+  <div id="post-nav">
+    
+
+    
+    <div id="next-post">
+        <a alt="Developing for JBoss EAP" href="/blog/2020/10/22/eap-bom.html">
+            <p>Next post</p>
+            Developing for JBoss EAP
+        </a>
+    </div>
+    
+</div>
+
+
+
+<!-- To change color of links in the page -->
+<style>
+  
+
+  header#main {
+    background-repeat:no-repeat;
+  
+  }
+</style>
+
+    </div>
+    <footer class="site-footer">
+    <p class="text">
+        Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
+</p>
+            <div class="footer-icons">
+                <ul>
+                <!-- Social icons from Font Awesome, if enabled -->
+                
+<li>
+    <a feed.xml href="feed.xml"
+       title="Follow RSS feed">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+<li>
+    <a href="mailto:bookian+github@gmail.com" title="">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a href="https://github.com/naikoob" title=" GitHub">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+<li>
+    <a href="https://www.linkedin.com/in/boo-kian-yeo-0663a410/" title=" LinkedIn">
+		<span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-linkedin-in fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+    <a class="type" href="https://twitter.com/naikoob"
+       title=" Twitter">
+        <span class="fa-stack fa-lg">
+            <i class="fas fa-circle fa-stack-2x"></i>
+            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+        </span>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+                </ul>
+            </div>
+</footer>
+
+  </body>
+</html>

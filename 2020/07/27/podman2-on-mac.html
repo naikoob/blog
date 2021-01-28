@@ -41,7 +41,7 @@
     <!-- seo tags -->
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Podman (v2) on the Mac, in a hurry | @naikoob</title>
-<meta name="generator" content="Jekyll v4.1.1" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Podman (v2) on the Mac, in a hurry" />
 <meta name="author" content="naikoob" />
 <meta property="og:locale" content="en_US" />
@@ -55,7 +55,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Podman (v2) on the Mac, in a hurry" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","dateModified":"2020-07-27T00:00:00+00:00","datePublished":"2020-07-27T00:00:00+00:00","headline":"Podman (v2) on the Mac, in a hurry","author":{"@type":"Person","name":"naikoob"},"description":"Podman v2 was announced recently. With Podman v2, there are breaking changes to remote client interaction. This post documents how I setup it up on a Mac.","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html"},"url":"https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","url":"https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2020/07/27/podman2-on-mac.html"},"datePublished":"2020-07-27T00:00:00+00:00","author":{"@type":"Person","name":"naikoob"},"headline":"Podman (v2) on the Mac, in a hurry","dateModified":"2020-07-27T00:00:00+00:00","description":"Podman v2 was announced recently. With Podman v2, there are breaking changes to remote client interaction. This post documents how I setup it up on a Mac.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
@@ -179,10 +179,10 @@
 <p>Clone/download from <a href="https://github.com/naikoob/vagrant-podhost.git" class="bare" target="_blank" rel="noopener">https://github.com/naikoob/vagrant-podhost.git</a></p>
 </li>
 <li>
-<p>Bring VM (<code>vagrant up</code>)</p>
+<p>Bring VM up (<code>vagrant up</code>)</p>
 </li>
 <li>
-<p>Add alias podman=podman --url ssh://root@192.168.133.10/run/podman/podman.sock</p>
+<p>Add alias podman=podman --identity=&lt;path/to/ssh/key&gt; --url=ssh://root@192.168.133.10/run/podman/podman.sock</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
@@ -191,7 +191,7 @@
 <span class="nv">$ </span>git clone https://github.com/naikoob/vagrant-podhost.git
 <span class="nv">$ </span><span class="nb">cd </span>vagrant-podhost
 <span class="nv">$ </span>vagrant up
-<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"alias podman='podman --url ssh://root@192.168.133.10/run/podman/podman.sock'"</span> <span class="o">&gt;&gt;</span> ~/.zshrc
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"alias podman='podman --identity=&lt;path/to/ssh/key&gt; --url=ssh://root@192.168.133.10/run/podman/podman.sock'"</span> <span class="o">&gt;&gt;</span> ~/.zshrc
 <span class="nv">$ </span><span class="nb">source</span> ~/.zshrc</code></pre>
 </div>
 </div>
@@ -364,7 +364,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>podman <span class="nt">--url</span><span class="o">=</span>ssh://root@podhost/run/podman/podman.sock ps</code></pre>
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span>podman <span class="nt">--identity</span><span class="o">=</span>&lt;/path/to/ssh/key&gt; <span class="nt">--url</span><span class="o">=</span>ssh://root@podhost/run/podman/podman.sock ps</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -372,7 +372,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"alias podman='podman --url=ssh://root@192.168.133.10/run/podman/podman.sock'"</span> <span class="o">&gt;&gt;</span> ~/.zshrc
+<pre class="rouge highlight"><code data-lang="sh"><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"alias podman='podman --identity=&lt;/path/to/ssh/key&gt; --url=ssh://root@192.168.133.10/run/podman/podman.sock'"</span> <span class="o">&gt;&gt;</span> ~/.zshrc
 <span class="nv">$ </span><span class="nb">source</span> ~/.zshrc</code></pre>
 </div>
 </div>
