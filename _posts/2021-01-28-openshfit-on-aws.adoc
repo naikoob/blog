@@ -9,13 +9,18 @@ tags: [aws, cloud, kubernetes, openshift]
 :page-liquid:
 :icons: font
 
-The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift itself onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let__'__s take a look.
+The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let__'__s take a look.
 
 == installation inputs
 
-If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this link to download the OpenShift installer for AWS (IPI) -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned (For this article, I'm using OpenShift version 4.6.13.)
+If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this link to download the OpenShift installer for AWS (IPI) -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned, as well as the pull secret. For this article, I'm using OpenShift version 4.6.13.
 
-You'll need to have the necessary AWS account (and access keys) to run the installer. It will prompt for a couple of information as shown below:
+We'll need to have the necessary AWS account (and access keys) to run the installer. We also need to prepare a SSH public key, and a Route 53 public hosted zone. Once we have all these, we can create the cluster using
+[source]
+----
+./openshift-installer create cluster --dir=<working-dir>
+----
+The installer will prompt for a couple of information as shown below:
 
 image::install-inputs.png[]
 
@@ -25,7 +30,7 @@ __...__ and after around 40 minutes, you should get your OpenShift cluster.
 
 The installation process uses terraform to provision the VPC and other AWS resources. EC2 instances with base OpenShift images are then launched to form the cluster and install the core OpenShift operators.
 
-Post installation, you'll see a few files created in the installation directory (in my case ```ipi```), including ```terraform.tfstate``` that describes most of the resources created by the installation process. In addition, there are also a few other IAM users being provisioned by OpenShift operators (e.g. the openshift-image-registry operator)
+Post installation, you'll see a few files created in the installation working directory (in my case `ipi`, including `terraform.tfstate` that describes the resources created by the installation process. In addition, there are also a few other IAM users being provisioned by OpenShift operators (e.g. the __openshift-image-registry__ operator)
 
 Here's a graphical representation of the results:
 
@@ -36,9 +41,9 @@ image::ocp-aws-ipi.png[]
 Let's start with IAM resources (remember paranoid?). Head over to the AWS IAM console, we see the following IAM resources created:
 
 |===
-| Name | Type | Created By
+| Name* | Type | Created By
 
-| aws-ebs-csi-driver-operator | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-storage-operator_red-hat-operators[Cluster Storage Operator]
+| aws-ebs-csi-driver-operator* | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-storage-operator_red-hat-operators[Cluster Storage Operator]
 | cloud-credential-operator-iam-ro | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
 | cloud-credential-operator-s3 | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
 | openshift-image-registry | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-image-registry-operator_red-hat-operators[Cluster Image Registry Operator]
@@ -48,7 +53,9 @@ Let's start with IAM resources (remember paranoid?). Head over to the AWS IAM co
 | worker-role | Role | Installer
 |===
 
-Each of the user/role above has attached inline policy grant the permission to access the necessary AWS resources. We can use https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[AWS IAM permission boundaries] to apply more restrictive permissions if necessary. (Do consult Red Hat's support if you plan to do this).
+__* there will be a prefix and suffix to the user/role names, for example ```ocp46-pj42g-aws-ebs-csi-driver-operator-djdvq```__
+
+Each of the user/role above has attached inline policy that grant access to necessary AWS resources. We can use https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[AWS IAM permission boundaries] to apply more restrictive permissions if desired. Do consult Red Hat's support if you plan to do this.
 
 For instance, the policy for the image registry user is as follows:
 [source, json]
@@ -91,7 +98,7 @@ For instance, the policy for the image registry user is as follows:
 }
 ----
 
-We can define a permission boundary like so:
+We can define a permission boundary like below to restrict operations like `GetObject`, `PutObject` to only the image registry S3 bucket (instead of any buckets in the account):
 [source,json]
 ----
 {
@@ -170,9 +177,9 @@ A third, classic load balancer is provisioned to serve application ingress (port
 
 ==== dns
 
-The installation process will create a private hosted zone for the cluster. In my case, the cluster name is ```ocp46``` and my base domain is ```demo.xcdc.io```, so the private hosted zone is ```ocp46.demo.xcdc.io```. This hosted zone contains DNS entries for the internal and external API endpoints, as well as the wildcard entry for application ingress.
+The installation process will create a private hosted zone for the cluster. In my case, the cluster name is `ocp46` and my base domain is `demo.xcdc.io`, so the private hosted zone is `ocp46.demo.xcdc.io`. This hosted zone contains DNS entries for the internal and external API endpoints, as well as the wildcard entry for application ingress.
 
-DNS entries are also created in the supplied public hosted zone (demo.xcdc.io in my case), to publish the dns names for API end point (api.ocp4.demo.xcdc.io), as well as the wildcard entry (*.apps.ocp4.demo.xcdc.io) to the respective load balancers above.
+DNS entries are also created in the supplied public hosted zone (`demo.xcdc.io` in my case), to publish the dns names for API end point (`api.ocp4.demo.xcdc.io`), as well as the wildcard entry (`*.apps.ocp4.demo.xcdc.io`) to the respective load balancers above.
 
 ==== security groups
 
