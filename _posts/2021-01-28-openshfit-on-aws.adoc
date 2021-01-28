@@ -13,9 +13,8 @@ The simplest way to install OpenShift on AWS is to make use of the IPI (Installe
 
 == installation inputs
 
-If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this link to download the OpenShift installer for AWS (IPI) -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned, as well as the pull secret. For this article, I'm using OpenShift version 4.6.13.
-
-We'll need to have the necessary AWS account (and access keys) to run the installer. We also need to prepare a SSH public key, and a Route 53 public hosted zone. Once we have all these, we can create the cluster using
+For this article, I'm using OpenShift version 4.6.13. If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this https://cloud.redhat.com/openshift/install/aws/installer-provisioned[link, window='_blank'] to download the OpenShift installer for AWS (IPI), as well as the pull secret -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned[,window='_blank']
+We'll need to have the necessary AWS account (and access keys) to run the installer. We also need to prepare a SSH public key, and a Route 53 public hosted zone (the base domain). Once we have all these, we can create the cluster using
 [source]
 ----
 ./openshift-installer create cluster --dir=<working-dir>
@@ -30,7 +29,7 @@ __...__ and after around 40 minutes, you should get your OpenShift cluster.
 
 The installation process uses terraform to provision the VPC and other AWS resources. EC2 instances with base OpenShift images are then launched to form the cluster and install the core OpenShift operators.
 
-Post installation, you'll see a few files created in the installation working directory (in my case `ipi`, including `terraform.tfstate` that describes the resources created by the installation process. In addition, there are also a few other IAM users being provisioned by OpenShift operators (e.g. the __openshift-image-registry__ operator)
+Post installation, you'll see a few files created in the installation working directory (in my case `ipi`), including `terraform.tfstate` that describes the resources created by the installation process. In addition, there are also a few other IAM users being provisioned by OpenShift operators (e.g. the __openshift-image-registry__ operator)
 
 Here's a graphical representation of the results:
 
@@ -183,7 +182,7 @@ DNS entries are also created in the supplied public hosted zone (`demo.xcdc.io` 
 
 ==== security groups
 
-A security groups is attached to the application ingress load balancer to allow only HTTP and HTTPS traffic.
+A security group is attached to the application ingress load balancer to allow only HTTP and HTTPS traffic.
 
 Worker nodes security group allows network traffic from the ingress load balancers, and selected traffic from the master nodes as well as other worker nodes below.
 
@@ -200,7 +199,7 @@ Worker nodes security group allows network traffic from the ingress load balance
 | 30000 - 32767 | tcp, udp | workers, masters | Kubernetes ingress services
 |===
 
-Master nodes security groups allows selected traffic from workers and other master nodes:
+Master nodes security group allows selected traffic from workers and other master nodes:
 
 |===
 | ports | protocols | source | description
@@ -226,6 +225,6 @@ Master nodes security groups allows selected traffic from workers and other mast
 
 This post describes the default infrastucture setup by OpenShift installer. It is possible to apply customizations such as CIDR ranges, machine instance types, etc. Red Hat's documentation has a good section on this https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-customizations[here, window='_blank'].
 
-It is also possible to perform and https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-vpc[OpenShift IPI installation into an existing VPC, window='_blank'].
+It is also possible to perform an https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-vpc[OpenShift IPI installation into an existing VPC, window='_blank'].
 
-Finally, OpenShift will be available as a managed service on AWS soon! Here's the https://aws.amazon.com/blogs/containers/announcing-red-hat-openshift-service-on-aws/[announcement, window='_blank'] for Red Hat OpenShift Service on AWS.
+Last but not least, OpenShift will be available as a managed service on AWS soon! Here's the https://aws.amazon.com/blogs/containers/announcing-red-hat-openshift-service-on-aws/[announcement for Red Hat OpenShift Service on AWS, window='_blank'].
