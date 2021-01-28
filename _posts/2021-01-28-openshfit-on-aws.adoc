@@ -1,0 +1,224 @@
+---
+layout: post
+title: "OpenShift IPI on AWS, for the paranoids"
+author: naikoob
+tags: [aws, cloud, kubernetes, openshift]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img/2021-01-28-openshift-on-aws
+:page-liquid:
+:icons: font
+
+The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift itself onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let__'__s take a look.
+
+== installation inputs
+
+If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this link to download the OpenShift installer for AWS (IPI) -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned (For this article, I'm using OpenShift version 4.6.13.)
+
+You'll need to have the necessary AWS account (and access keys) to run the installer. It will prompt for a couple of information as shown below:
+
+image::install-inputs.png[]
+
+__...__ and after around 40 minutes, you should get your OpenShift cluster.
+
+== but what actually happened?
+
+The installation process uses terraform to provision the VPC and other AWS resources. EC2 instances with base OpenShift images are then launched to form the cluster and install the core OpenShift operators.
+
+Post installation, you'll see a few files created in the installation directory (in my case ```ipi```), including ```terraform.tfstate``` that describes most of the resources created by the installation process. In addition, there are also a few other IAM users being provisioned by OpenShift operators (e.g. the openshift-image-registry operator)
+
+Here's a graphical representation of the results:
+
+image::ocp-aws-ipi.png[]
+
+=== users, roles
+
+Let's start with IAM resources (remember paranoid?). Head over to the AWS IAM console, we see the following IAM resources created:
+
+|===
+| Name | Type | Created By
+
+| aws-ebs-csi-driver-operator | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-storage-operator_red-hat-operators[Cluster Storage Operator]
+| cloud-credential-operator-iam-ro | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
+| cloud-credential-operator-s3 | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
+| openshift-image-registry | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-image-registry-operator_red-hat-operators[Cluster Image Registry Operator]
+| openshift-ingress | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#ingress-operator_red-hat-operators[Ingress Operator]
+| openshift-machine-api-aws | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#machine-api-operator_red-hat-operators[Machine API Operator]
+| master-role | Role | Installer
+| worker-role | Role | Installer
+|===
+
+Each of the user/role above has attached inline policy grant the permission to access the necessary AWS resources. We can use https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[AWS IAM permission boundaries] to apply more restrictive permissions if necessary. (Do consult Red Hat's support if you plan to do this).
+
+For instance, the policy for the image registry user is as follows:
+[source, json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "s3:DeleteBucket",
+                "s3:PutBucketTagging",
+                "s3:GetBucketTagging",
+                "s3:PutBucketPublicAccessBlock",
+                "s3:GetBucketPublicAccessBlock",
+                "s3:PutEncryptionConfiguration",
+                "s3:GetEncryptionConfiguration",
+                "s3:PutLifecycleConfiguration",
+                "s3:GetLifecycleConfiguration",
+                "s3:GetBucketLocation",
+                "s3:ListBucket",
+                "s3:HeadBucket",
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:DeleteObject",
+                "s3:ListBucketMultipartUploads",
+                "s3:AbortMultipartUpload"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetUser"
+            ],
+            "Resource": "<registry-user-arn>"
+        }
+    ]
+}
+----
+
+We can define a permission boundary like so:
+[source,json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "RegistryPermBoundary",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketPublicAccessBlock",
+                "s3:GetLifecycleConfiguration",
+                "s3:ListBucketMultipartUploads",
+                "s3:GetBucketTagging",
+                "s3:PutBucketPublicAccessBlock",
+                "s3:PutEncryptionConfiguration",
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetEncryptionConfiguration",
+                "s3:AbortMultipartUpload",
+                "s3:PutBucketTagging",
+                "s3:PutLifecycleConfiguration",
+                "s3:GetBucketLocation",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "<bucket-arn>",
+                "<bucket-arn>/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:HeadBucket"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetUser"
+            ],
+            "Resource": "<registry-user-arn>"
+        },
+
+        {
+            "Effect": "Deny",
+            "Action": "s3:DeleteBucket",
+            "Resource": "*"
+        }
+    ]
+}
+----
+
+First create a policy from the above JSON, using 
+[source]
+----
+aws iam create-policy --policy-name <policy-name> --policy-document file://<path-to-policy-file>
+----
+
+then, attach the permission boundary to the image registry user:
+[source]
+----
+aws iam put-user-permissions-boundary --permissions-boundary <policy-arn> --user-name <openshift-image-registry-user-name>
+----
+
+=== vpc
+
+Next, we'll examine the VPC resources created. The installation process creates a public and a private subnet in each availability zone of selected AWS region. All master and worker nodes are launched in the private subnets. The nodes can reach out to the Internet via the NAT gateways that are launched in the public subnet in the same AZ.
+
+==== load balancers
+
+Two separate network load balancers are provisioned to serve internal (ports 6443, 22623) and external (port 6443) API requests to the masters. 
+
+A third, classic load balancer is provisioned to serve application ingress (ports 80, 443).
+
+==== dns
+
+The installation process will create a private hosted zone for the cluster. In my case, the cluster name is ```ocp46``` and my base domain is ```demo.xcdc.io```, so the private hosted zone is ```ocp46.demo.xcdc.io```. This hosted zone contains DNS entries for the internal and external API endpoints, as well as the wildcard entry for application ingress.
+
+DNS entries are also created in the supplied public hosted zone (demo.xcdc.io in my case), to publish the dns names for API end point (api.ocp4.demo.xcdc.io), as well as the wildcard entry (*.apps.ocp4.demo.xcdc.io) to the respective load balancers above.
+
+==== security groups
+
+A security groups is attached to the application ingress load balancer to allow only HTTP and HTTPS traffic.
+
+Worker nodes security group allows network traffic from the ingress load balancers, and selected traffic from the master nodes as well as other worker nodes below.
+
+|===
+| ports | protocols | source | description
+
+| all | all | ingress load balancers | ingress traffic
+| all | icmp | vpc | ICMP
+| 22 | tcp | vpc | SSH
+| 4789 | udp | workers, masters | Vxlan packets
+| 6081 | udp | workers, masters | GENEVE packets
+| 9000 - 9999 | tcp, udp | workers, masters | Internal cluster communication
+| 10250 | tcp | workers, masters | Kubernetes kubelet, scheduler and controller manager
+| 30000 - 32767 | tcp, udp | workers, masters | Kubernetes ingress services
+|===
+
+Master nodes security groups allows selected traffic from workers and other master nodes:
+
+|===
+| ports | protocols | source | description
+
+| all | all | ingress load balancers | ingress traffic
+| all | icmp | vpc | ICMP
+| 22 | tcp | vpc | SSH
+| 2379 - 2380 | tcp | masters | etcd
+| 4789 | udp | workers, masters | Vxlan packets
+| 6081 | udp | workers, masters | GENEVE packets
+| 6443 | tcp | vpc | api access
+| 6641 - 6642 | tcp | workers, masters | OVN packets
+| 9000 - 9999 | tcp, udp | workers, masters | Internal cluster communication
+| 10250 | tcp | workers, masters | Kubernetes kubelet, scheduler and controller manager
+| 10257 | tcp | workers, masters | Kubernetes kubelet, scheduler and controller manager
+| 10259 | tcp | workers, masters | Kubernetes kubelet, scheduler and controller manager
+| 22623 | tcp | vpc | machine config service
+| 30000 - 32767 | tcp, udp | workers, masters | Kubernetes ingress services
+|===
+
+
+=== what's next?
+
+This post describes the default infrastucture setup by OpenShift installer. It is possible to apply customizations such as CIDR ranges, machine instance types, etc. Red Hat's documentation has a good section on this https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-customizations[here, window='_blank'].
+
+It is also possible to perform and https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-vpc[OpenShift IPI installation into an existing VPC, window='_blank'].
+
+Finally, OpenShift will be available as a managed service on AWS soon! Here's the https://aws.amazon.com/blogs/containers/announcing-red-hat-openshift-service-on-aws/[announcement, window='_blank'] for Red Hat OpenShift Service on AWS.
