@@ -43,7 +43,7 @@ image::ocp-aws-ipi.png[]
 Let's start with IAM resources (remember paranoid?). Head over to the AWS IAM console, we see the following IAM resources created:
 
 |===
-| Name* | Type | Created By
+| Name* | Type | Created/Used By
 
 | aws-ebs-csi-driver-operator* | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-storage-operator_red-hat-operators[Cluster Storage Operator]
 | cloud-credential-operator-iam-ro | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
