@@ -5,7 +5,7 @@ author: naikoob
 tags: [terminal, zsh, prezto, iterm2, command line]
 ---
 :source-highlighter: rouge
-:imagesdir: /blog/assets/img
+:imagesdir: /blog/assets/img/2020-06-10-my-terminal-setup
 
 Yay! So I switched job and got a new MacBook Pro. Good excuse to refresh my development (and terminal) setup. I have been using bash along with completion and git-prompt for as long as I can remember, this time I decided to cast my net wider and see what that world has been up to since I last spend time on this.
 
