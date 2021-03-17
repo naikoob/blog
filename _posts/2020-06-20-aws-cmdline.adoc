@@ -6,7 +6,7 @@ tags: [aws, command line, cloud, security]
 ---
 :source-highlighter: rouge
 :rouge-css: style
-:imagesdir: /blog/assets/img
+:imagesdir: /blog/assets/img/2020-06-20-aws-cmdline
 
 It is a good practice to organise AWS workloads in multiple accounts, be it for security, accounting, or just to maintain our sanity. Here is how I work with multiple accounts in my AWS Organization from the command line.
 
