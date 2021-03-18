@@ -13,7 +13,7 @@ The simplest way to install OpenShift on AWS is to make use of the IPI (Installe
 
 == installation inputs
 
-For this article, I'm using OpenShift version 4.6.13. 
+For this article, I'm using OpenShift version 4.7.2. 
 
 If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this https://cloud.redhat.com/openshift/install/aws/installer-provisioned[link, window='_blank'] to download the OpenShift installer for AWS (IPI), as well as the pull secret -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned[,window='_blank']
 
@@ -45,12 +45,11 @@ Let's start with IAM resources (remember paranoid?). Head over to the AWS IAM co
 |===
 | Name* | Type | Created/Used By
 
-| aws-ebs-csi-driver-operator* | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-storage-operator_red-hat-operators[Cluster Storage Operator]
-| cloud-credential-operator-iam-ro | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
-| cloud-credential-operator-s3 | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
-| openshift-image-registry | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-image-registry-operator_red-hat-operators[Cluster Image Registry Operator]
-| openshift-ingress | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#ingress-operator_red-hat-operators[Ingress Operator]
-| openshift-machine-api-aws | User | https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#machine-api-operator_red-hat-operators[Machine API Operator]
+| aws-ebs-csi-driver-operator* | User | https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#cluster-storage-operator_red-hat-operators[Cluster Storage Operator]
+| cloud-credential-operator-iam-ro | User | https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#cloud-credential-operator_red-hat-operators[Cloud Credential Operator]
+| openshift-image-registry | User | https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#cluster-image-registry-operator_red-hat-operators[Cluster Image Registry Operator]
+| openshift-ingress | User | https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#ingress-operator_red-hat-operators[Ingress Operator]
+| openshift-machine-api-aws | User | https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#machine-api-operator_red-hat-operators[Machine API Operator]
 | master-role | Role | Installer
 | worker-role | Role | Installer
 |===
