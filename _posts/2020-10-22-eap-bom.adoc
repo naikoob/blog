@@ -14,7 +14,7 @@ While developers gravitate towards cloud native languages and frameworks, there 
 
 Developers coming from other app servers may not know that Red Hat offers a Maven repository of Java components shipped with Red Hat middlewares. These also include Red Hat QC'ed version of frameworks such as Hibernate, Slf4j, etc. 
 
-Subscribers of JBoss EAP can add this Maven repo to their build by adding the following to their Maven ```settings.xml``` or in the project POM files.
+Subscribers of JBoss EAP can add this Maven repo to their build by adding the following to their Maven `settings.xml` or in the project POM files.
 
 [source, xml]
 ----
@@ -44,7 +44,7 @@ Subscribers of JBoss EAP can add this Maven repo to their build by adding the fo
 </pluginRepositories>
 ----
 
-You can find a sample ```settings.xml``` https://gist.github.com/naikoob/204e974e08cffe5efe4d1fb7d2ace56b#file-settings-xml[here].
+You can find a sample `settings.xml` https://gist.github.com/naikoob/204e974e08cffe5efe4d1fb7d2ace56b#file-settings-xml[here].
 
 == bom
 
@@ -115,7 +115,7 @@ With this in place, we can refer to dependencies that are contained in the BOM w
 </dependencies>
 ----
 
-Notice we can use the ```provided``` scope to make use of the JARs included in JBoss EAP and reduce the size of our deployables.
+Notice we can use the `provided` scope to make use of the JARs included in JBoss EAP and reduce the size of our deployables.
 
 We can organize this in parent/child projects POMs as well, as found in the sample project https://github.com/naikoob/eap-samples[here].
 
