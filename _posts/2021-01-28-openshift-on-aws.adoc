@@ -13,7 +13,7 @@ The simplest way to install OpenShift on AWS is to make use of the IPI (Installe
 
 == installation inputs
 
-For this article, I'm using OpenShift version 4.7.2. 
+_[UPDATE - 18-March-2021] - This article has been updated to use OpenShift version 4.7.2_
 
 If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this https://cloud.redhat.com/openshift/install/aws/installer-provisioned[link, window='_blank'] to download the OpenShift installer for AWS (IPI), as well as the pull secret -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned[,window='_blank']
 
@@ -193,6 +193,8 @@ Worker nodes security group allows network traffic from the ingress load balance
 
 | all | all | ingress load balancers | ingress traffic
 | all | icmp | vpc | ICMP
+| all | ESP (50) | workers, masters | IPSec
+| 500,4500 | UDP | workers, masters | IPSec
 | 22 | tcp | vpc | SSH
 | 4789 | udp | workers, masters | Vxlan packets
 | 6081 | udp | workers, masters | GENEVE packets
@@ -206,8 +208,9 @@ Master nodes security group allows selected traffic from workers and other maste
 |===
 | ports | protocols | source | description
 
-| all | all | ingress load balancers | ingress traffic
 | all | icmp | vpc | ICMP
+| all | ESP (50) | workers, masters | IPSec
+| 500,4500 | UDP | workers, masters | IPSec
 | 22 | tcp | vpc | SSH
 | 2379 - 2380 | tcp | masters | etcd
 | 4789 | udp | workers, masters | Vxlan packets
@@ -225,8 +228,8 @@ Master nodes security group allows selected traffic from workers and other maste
 
 === what's next?
 
-This post describes the default infrastucture setup by OpenShift installer. It is possible to apply customizations such as CIDR ranges, machine instance types, etc. Red Hat's documentation has a good section on this https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-customizations[here, window='_blank'].
+This post describes the default infrastucture setup by OpenShift installer. It is possible to apply customizations such as CIDR ranges, machine instance types, etc. Red Hat's documentation has a good section on this https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-customizations.html[here, window='_blank'].
 
-It is also possible to perform an https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-vpc[OpenShift IPI installation into an existing VPC, window='_blank'].
+It is also possible to perform an https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-vpc.html[OpenShift IPI installation into an existing VPC, window='_blank'].
 
 Last but not least, OpenShift will be available as a managed service on AWS soon! Here's the https://aws.amazon.com/blogs/containers/announcing-red-hat-openshift-service-on-aws/[announcement for Red Hat OpenShift Service on AWS, window='_blank'].
