@@ -20,7 +20,7 @@
     <link rel="shortcut icon" href="/blog/assets/img/favicon.png" type="image/x-icon">
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html">
+    <link rel="canonical" href="https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html">
 
     <!-- RSS -->
     <link rel="alternate" type="application/atom+xml" title="@naikoob" href="https://naikoob.github.io/blog/feed.xml"/>
@@ -47,15 +47,15 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let&#39;s take a look." />
 <meta property="og:description" content="The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let&#39;s take a look." />
-<link rel="canonical" href="https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" />
-<meta property="og:url" content="https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" />
+<link rel="canonical" href="https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html" />
+<meta property="og:url" content="https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html" />
 <meta property="og:site_name" content="@naikoob" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-01-28T00:00:00+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="OpenShift IPI on AWS, for the paranoids" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"OpenShift IPI on AWS, for the paranoids","dateModified":"2021-01-28T00:00:00+00:00","datePublished":"2021-01-28T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html"},"author":{"@type":"Person","name":"naikoob"},"description":"The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let&#39;s take a look.","url":"https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"OpenShift IPI on AWS, for the paranoids","dateModified":"2021-01-28T00:00:00+00:00","datePublished":"2021-01-28T00:00:00+00:00","author":{"@type":"Person","name":"naikoob"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html"},"description":"The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let&#39;s take a look.","url":"https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta property="og:image" content="https://naikoob.github.io/blog/assets/img/pexels/keyboard.jpeg " />
@@ -164,7 +164,7 @@
 <h2 id="installation_inputs">installation inputs</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For this article, I&#8217;m using OpenShift version 4.6.13.</p>
+<p><em>[UPDATE - 18-March-2021] - This article has been updated to use OpenShift version 4.7.2</em></p>
 </div>
 <div class="paragraph">
 <p>If you have a Red Hat Developer&#8217;s account (<a href="http://developers.redhat.com" class="bare">http://developers.redhat.com</a>), just follow this <a href="https://cloud.redhat.com/openshift/install/aws/installer-provisioned" target="_blank" rel="noopener">link</a> to download the OpenShift installer for AWS (IPI), as well as the pull secret &#8594; <a href="https://cloud.redhat.com/openshift/install/aws/installer-provisioned" class="bare" target="_blank" rel="noopener">https://cloud.redhat.com/openshift/install/aws/installer-provisioned</a></p>
@@ -229,32 +229,27 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">aws-ebs-csi-driver-operator*</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-storage-operator_red-hat-operators">Cluster Storage Operator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#cluster-storage-operator_red-hat-operators">Cluster Storage Operator</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cloud-credential-operator-iam-ro</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators">Cloud Credential Operator</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">cloud-credential-operator-s3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cloud-credential-operator_red-hat-operators">Cloud Credential Operator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#cloud-credential-operator_red-hat-operators">Cloud Credential Operator</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">openshift-image-registry</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#cluster-image-registry-operator_red-hat-operators">Cluster Image Registry Operator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#cluster-image-registry-operator_red-hat-operators">Cluster Image Registry Operator</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">openshift-ingress</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#ingress-operator_red-hat-operators">Ingress Operator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#ingress-operator_red-hat-operators">Ingress Operator</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">openshift-machine-api-aws</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.6/operators/operator-reference.html#machine-api-operator_red-hat-operators">Machine API Operator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.openshift.com/container-platform/4.7/operators/operator-reference.html#machine-api-operator_red-hat-operators">Machine API Operator</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">master-role</p></td>
@@ -451,6 +446,18 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">ICMP</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ESP (50)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPSec</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">500,4500</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UDP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPSec</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">tcp</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
@@ -509,15 +516,21 @@
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ingress load balancers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ingress traffic</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">icmp</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">vpc</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ICMP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ESP (50)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPSec</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">500,4500</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UDP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workers, masters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPSec</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
@@ -598,10 +611,10 @@
 <div class="sect2">
 <h3 id="whats_next">what&#8217;s next?</h3>
 <div class="paragraph">
-<p>This post describes the default infrastucture setup by OpenShift installer. It is possible to apply customizations such as CIDR ranges, machine instance types, etc. Red Hat&#8217;s documentation has a good section on this <a href="https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-customizations" target="_blank" rel="noopener">here</a>.</p>
+<p>This post describes the default infrastucture setup by OpenShift installer. It is possible to apply customizations such as CIDR ranges, machine instance types, etc. Red Hat&#8217;s documentation has a good section on this <a href="https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-customizations.html" target="_blank" rel="noopener">here</a>.</p>
 </div>
 <div class="paragraph">
-<p>It is also possible to perform an <a href="https://access.redhat.com/documentation/en-us/openshift_container_platform/4.6/html/installing_on_aws/installing-on-aws#installing-aws-vpc" target="_blank" rel="noopener">OpenShift IPI installation into an existing VPC</a>.</p>
+<p>It is also possible to perform an <a href="https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-vpc.html" target="_blank" rel="noopener">OpenShift IPI installation into an existing VPC</a>.</p>
 </div>
 <div class="paragraph">
 <p>Last but not least, OpenShift will be available as a managed service on AWS soon! Here&#8217;s the <a href="https://aws.amazon.com/blogs/containers/announcing-red-hat-openshift-service-on-aws/" target="_blank" rel="noopener">announcement for Red Hat OpenShift Service on AWS</a>.</p>
@@ -620,28 +633,28 @@
         <div class="meta">Share</div>
          
         <li>
-            <a href="https://twitter.com/intent/tweet?text=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2021%2F01%2F28%2Fopenshfit-on-aws.html" target="_blank" title="">
+            <a href="https://twitter.com/intent/tweet?text=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20https%3A%2F%2Fnaikoob.github.io%2Fblog%2F2021%2F01%2F28%2Fopenshift-on-aws.html" target="_blank" title="">
 			<i class="fab fa-twitter-square fa-lg" aria-hidden="true"></i>
 			<span class="sr-only">Tweet</span>
 		</a>
         </li>
             
         <li>
-            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html&title=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob" target="_blank" title=" Reddit">
+            <a href="http://www.reddit.com/submit?url=https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html&title=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob" target="_blank" title=" Reddit">
 			<i class="fab fa-reddit-square fa-lg" aria-hidden="true"></i>
 			<span class="sr-only">Share on Reddit</span>
 		</a>
         </li>
          
         <li>
-            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html&title=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" target="_blank" title=" LinkedIn">
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html&title=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob&summary=&source=https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html" target="_blank" title=" LinkedIn">
 			<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
 			<span class="sr-only">Share on LinkedIn</span>
 		</a>
         </li>
           
         <li>
-            <a href="mailto:?subject=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2021/01/28/openshfit-on-aws.html" target="_blank" title="">
+            <a href="mailto:?subject=OpenShift+IPI+on+AWS%2C+for+the+paranoids%20%7C%20%40naikoob&body=:%20https://naikoob.github.io/blog/2021/01/28/openshift-on-aws.html" target="_blank" title="">
 			<i class="fas fa-envelope-square fa-lg" aria-hidden="true"></i>
 			<span class="sr-only">Email</span>
 		</a>
@@ -694,12 +707,19 @@
 
   <div id="post-nav">
     
+    <div id="previous-post">
+        <a alt="Developing for JBoss EAP" href="/blog/2020/10/22/eap-bom.html">
+            <p>Previous post</p>
+            Developing for JBoss EAP
+        </a>
+    </div>
+    
 
     
     <div id="next-post">
-        <a alt="Developing for JBoss EAP" href="/blog/2020/10/22/eap-bom.html">
+        <a alt="OpenShift and (AWS) IAM" href="/blog/2021/03/19/openshift-cloud-credentials.html">
             <p>Next post</p>
-            Developing for JBoss EAP
+            OpenShift and (AWS) IAM
         </a>
     </div>
     
@@ -775,7 +795,7 @@
 
 
 <li>
-    <a href="https://www.linkedin.com/in/boo-kian-yeo-0663a410/" title=" LinkedIn">
+    <a href="https://www.linkedin.com/in/bookian/" title=" LinkedIn">
 		<span class="fa-stack fa-lg">
             <i class="fas fa-circle fa-stack-2x"></i>
             <i class="fab fa-linkedin-in fa-stack-1x fa-inverse"></i>
