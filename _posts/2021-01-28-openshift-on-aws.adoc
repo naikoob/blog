@@ -12,8 +12,9 @@ tags: [aws, cloud, kubernetes, openshift]
 The simplest way to install OpenShift on AWS is to make use of the IPI (Installer Provisioned Infrastructure) method. With IPI, the installation process will provision the necessary VPC and other infrastructure resources, and then install OpenShift onto the provisioned infrastructure. Sounds good, but to the curious (and paranoids), exactly what AWS resources were created by the installer? Let__'__s take a look.
 
 == installation inputs
+_[UPDATE: 24-March-2021] - Red Hat OpenShift for AWS (ROSA) https://aws.amazon.com/blogs/aws/red-hat-openshift-service-on-aws-now-generally-availably/[is now generally available!]_
 
-_[UPDATE - 18-March-2021] - This article has been updated to use OpenShift version 4.7.2_
+_[UPDATE: 18-March-2021] - This article has been updated to use OpenShift version 4.7.2_
 
 If you have a Red Hat Developer's account (http://developers.redhat.com), just follow this https://cloud.redhat.com/openshift/install/aws/installer-provisioned[link, window='_blank'] to download the OpenShift installer for AWS (IPI), as well as the pull secret -> https://cloud.redhat.com/openshift/install/aws/installer-provisioned[,window='_blank']
 
