@@ -1,0 +1,115 @@
+---
+layout: post
+title: "Developing with Windows Subsystem for Linux"
+author: naikoob
+tags: [development, windows]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img/2023-12-30-developing-on-wsl
+:page-liquid:
+:icons: font
+
+More and more developer are relying on open source tools and libraries that are UNIX/Linux native. This is especially true for web and other applications that are deployed on public cloud. While I recommends a dedicated Linux development environment, this may not be possible for a lot of developers working on company issued Windows desktop/laptops. For these developers, Windows Subsystem for Linux (https://learn.microsoft.com/en-us/windows/wsl/[WSL]) provides a Linux VM that is tightly integrated with the familiar Windows experience. Using the https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl[WSL extension] for Visual Studio Code further simplifies the experience.
+
+== setting up
+
+=== windows subsystem for linux
+
+The first step is to install WSL. If you are running Windows 10 version 2004 or higher, or Windows 11, just open a PowerShell or Command Prompt in administrator mode and issue the following command:
+
+[source,powershell]
+----
+wsl --install
+----
+
+This will install the default Linux distribution (Ubuntu) for WSL. Check https://learn.microsoft.com/en-us/windows/wsl/install[official documentation] more installation options.
+
+=== visual studio code
+
+Next, install https://code.visualstudio.com/[Visual Studio Code]. Either download the installer from the https://code.visualstudio.com/Download[official site],  install from the https://apps.microsoft.com/detail/XP9KHM4BK9FZ7Q?hl=en-US&gl=US[Microsoft Store] or with https://learn.microsoft.com/en-us/windows/package-manager/winget/[winget].
+
+[source,powershell]
+----
+winget install -e --id Microsoft.VisualStudioCode
+----
+
+Finally, install the https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl[WSL extension].  If you work with remote UNIX/Linux machine(s) as well, install the https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh[Remote - SSH extension].
+
+Now, fire up a WSL shell by selecting the WSL (Ubuntu in my case) profile.
+
+image::invoke-wsl.png[]
+
+From within WSL shell, create a project directory and launch Visual Studio Code on the newly created project directory. I prefer to create my working directories in WSL so that they observe native UNIX/Linux permissions, case-sensitivities and not to mention the bypass the Windows CRLF mess.
+
+[source,bash]
+----
+mkdir ~/project1
+code ~/project1
+----
+
+On this first invocation, VSCode + WSL extension will automatically trigger the installation of Code Server in the WSL environment. Once this is completed, you'll see a WSL indicator in the bottom left corner, and we can now use Code as you would normally.
+
+image::wsl-indicator.png[]
+
+Subsequently, we can also connect to the WSL development session from the Code UI directly using the **Remote Explorer**  
+
+image::remote-session.png[]
+
+### git, powerline and other common tools
+
+At this point we have a WSL environment setup and accessible either via Windows Terminal or Visual Studio Code. It's time to install/setup some common development tools, starting with Git:
+
+[source,bash]
+----
+sudo apt install git
+----
+
+I prefer working with `zsh` so I have a common shell when working on my Linux and MacOS boxes. I've adapted my dotfiles repo for my Debian box for WSL https://github.com/naikoob/dotfiles.wsl[here]. This setup give me `zsh`, `tmux` and `vim` with https://github.com/powerline/powerline[`powerline`] integration.
+
+First install the pre-reqs:
+
+[source,bash]
+----
+sudo apt install zsh stow
+sudo apt install powerline-status powerline-gitstatus
+# optional, if using powerline with tmux and vim
+sudo apt install tmux vim-nox
+----
+
+Next, clone dotfiles repository and install the config files using `stow`:
+
+[source,bash]
+----
+cd ~
+git clone --recursive https://github.com/naikoob/dotfiles.wsl.git .dotfiles
+cd ~/.dotfiles
+for dir in *; do [ -d $dir ] && stow $dir; done;
+----
+
+Now I can switch to `zsh`:
+
+[source,bash]
+----
+# switch user shell to zsh
+sudo usermod -s /usr/bin/zsh <replace-with-wsl-userid>
+----
+
+==== powerline font 
+
+For the best experience with Powerline, install a font that supports powerline characters. There are many fonts available https://github.com/powerline/fonts[here].  Personally, I use the excellent https://github.com/tonsky[FiraCode] by https://github.com/tonsky[Nikita Prokopov]. There are https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions[detailed instructions] available on his GitHub repo, but essentially :-
+
+- Download the https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip[font]
+- Unzip or open the downloaded zip file. In the ttf folder, open each font (double-click) and the click on "Install" to install the font.
+- In Terminal, open "Settings" from the dropdown menu or with `ctrl+,`
+- Select "Defaults" profile, and navigate to "Appearance" to update the font face: 
+
+image::terminal-settings-appearance.png[]
+
+- In VSCode, open the Settings window by selecting the gear icon at the bottom left corner and select "Settings" from the pop-up menu. !
+
+image::vscode-open-settings.png[]
+
+- In the "Settings" window, navigate to "Text Editor -> Font", and update the "Font Family":  
+
+image::vscode-font-family-setting.png[]
+
