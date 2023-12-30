@@ -113,3 +113,7 @@ image::vscode-open-settings.png[]
 
 image::vscode-font-family-setting.png[]
 
+== closing
+
+At this point we have a development environment with nice git status prompt via powerline. In my next article, I'll write about developing for Google Cloud.
+
