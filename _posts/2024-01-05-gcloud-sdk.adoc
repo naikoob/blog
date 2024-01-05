@@ -1,0 +1,85 @@
+---
+layout: post
+title: "Google Cloud SDK on Windows Subsystem for Linux"
+author: naikoob
+tags: [development, windows, google cloud]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img/2024-01-05-gcloud-sdk
+:page-liquid:
+:icons: font
+
+In my link:{% post_url 2023-12-30-developing-on-wsl %}[previous post], I showed how I've setup my development environment on Windows with Visual Studio Code and Windows Subsystem for Linux. Here I'll document how to setup Google Cloud SDK in WSL environment.
+
+== installing Google Cloud SDK on WSL
+
+The default Linux distro for WSL is Ubuntu. Google Cloud SDK can be installed using Debian packages or Snap on Ubuntu. I'm using Debian packages because I'll be using `kubectl` to interact with Kubernetes clusters.
+
+=== installation
+
+Open a WSL terminal, and make sure package index are up-to-date with
+[source,bash]
+----
+sudo apt update
+----
+
+Install some necessary packages to be able to download and add the Google Cloud deb repository keys
+[source,bash]
+----
+sudo apt install apt-transport-https ca-certificates gnupg curl
+----
+
+Import the Google Cloud public key
+[source,bash]
+----
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+----
+
+Add the deb repository to the source list
+[source,bash]
+----
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+----
+
+Install the CLI, and `kubectl` to work with Kubernetes clusters
+[source,bash]
+----
+sudo apt update && sudo apt install google-cloud-cli kubectl
+----
+
+=== configuration
+
+Initialize the gcloud cli. 
+[source,bash]
+----
+gcloud init
+----
+
+You'll be asked to login to your Google Cloud account. However, in WSL, there will not be a browser opened automatically. Instead, `ctrl-click` on the URL shown on the terminal window (something similar to below). To open the browser.
+
+image::gcloud-init.png[]
+
+In the browser, sign in to Google Cloud account.
+
+Upon successful login, the `gcloud init` commands will continue. Follow the prompts to select the Google Cloud project to use, as well as the default compute region and zone.
+
+==== auto completion
+
+Using the steps above, Google Cloud SDK will be installed in `/usr/lib/google-cloud-sdk`. In addition to that, there will be auto-completion scripts for `bash` and `zsh` installed in `/usr/share/google-cloud-sdk` directory, named `completion.bash.inc` and `completion.zsh.inc` respectively.
+
+Depending on the shell you're using, just `source` the respective completion script in the shell rc script or on-demand. 
+
+For Zsh, add the following to the `.zshrc` script.
+[source,bash]
+----
+[[ -f /usr/share/google-cloud-sdk/completion.zsh.inc ]] && source /usr/share/google-cloud-sdk/completion.zsh.inc
+----
+
+*shameless plug*
+
+Alternatively, my https://github.com/naikoob/dotfiles.wsl[WSL dotfiles repo] as shared in my link:{% post_url 2023-12-30-developing-on-wsl %}[previous post] has a Zsh configuration that includes `gcloud` auto-completion in addition to syntax highlighting and powerline integration.
+
+
+== references
+
+- Google Cloud CLI https://cloud.google.com/sdk/docs/install#deb[installation documentation, window='_blank']
