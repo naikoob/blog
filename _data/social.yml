@@ -18,7 +18,7 @@ stack_overflow:
 stack_exchange:       # Full URL
 steam:
 tumblr: 
-twitter: "naikoob"    # "twitter username"
+twitter: # "naikoob"    # "twitter username"
 vimeo:
 wordpress:
 youtube:         # Youtube channel token like: UCqECaJ8Gagnn7YCbPEzWH6g
