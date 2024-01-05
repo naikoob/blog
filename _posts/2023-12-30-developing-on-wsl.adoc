@@ -64,7 +64,7 @@ At this point we have a WSL environment setup and accessible either via Windows 
 sudo apt install git
 ----
 
-I prefer working with `zsh` so I have a common shell when working on my Linux and MacOS boxes. I've adapted my dotfiles repo for my Debian box for WSL https://github.com/naikoob/dotfiles.wsl[here]. This setup give me `zsh`, `tmux` and `vim` with https://github.com/powerline/powerline[`powerline`] integration.
+I prefer working with `zsh` so I have a common shell when working on my Linux and MacOS boxes. I've adapted my dotfiles repo for my Debian box for WSL https://github.com/naikoob/dotfiles.wsl[here]. This setup give me `zsh` with syntax highlighting, `tmux` and `vim` with https://github.com/powerline/powerline[`powerline`] integration.
 
 First install the pre-reqs:
 
