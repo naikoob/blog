@@ -207,3 +207,7 @@ Gemfile.lock
 .history
 
 # End of https://www.toptal.com/developers/gitignore/api/ruby,macos,git,jekyll,node,visualstudiocode
+
+# asdf
+.tool-versions
+
