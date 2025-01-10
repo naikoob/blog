@@ -9,7 +9,7 @@ tags: [development, windows, google cloud]
 :page-liquid:
 :icons: font
 
-In my link:{% post_url 2024-01-05-gcloud-sdk %}[previous post], I installed Google Cloud SDK in a Windows Subsystem for Linux environment. Here I'll document setting up Cloud Code extension for Visual Studio Code so that we can easily interact with Google Cloud from within the IDE.
+In my link:{% post_url 2024-01-05-gcloud-sdk %}[previous post], I installed Google Cloud SDK in a Windows Subsystem for Linux environment. Here I__'__ll document setting up Cloud Code extension for Visual Studio Code so that we can easily interact with Google Cloud from within the IDE.
 
 == cloud code on vscode + wsl
 
