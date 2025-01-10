@@ -9,7 +9,7 @@ tags: [development, windows, google cloud]
 :page-liquid:
 :icons: font
 
-In my link:{% post_url 2023-12-30-developing-on-wsl %}[previous post], I showed how I've setup my development environment on Windows with Visual Studio Code and Windows Subsystem for Linux. Here I'll document how to setup Google Cloud SDK in WSL environment.
+In my link:{% post_url 2023-12-30-developing-on-wsl %}[previous post], I showed how I__'__ve setup my development environment on Windows with Visual Studio Code and Windows Subsystem for Linux. Here I__'__ll document how to setup Google Cloud SDK in WSL environment.
 
 == installing Google Cloud SDK on WSL
 
