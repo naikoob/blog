@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
+gem 'bigdecimal'
 gem 'json'
 gem 'jekyll'
 gem 'rake-jekyll'
