@@ -1,0 +1,115 @@
+---
+layout: post
+title: "AWS Identity Center with Google Workspace"
+author: naikoob
+tags: [cloud identity, aws, google cloud]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img/2025-04-30-identity-center-gws
+:page-liquid:
+:icons: font
+
+A digital native customer recently approached me to help them align their identity management for they multi-cloud (Google Cloud and AWS) environments. The goal is to use a single identity provider to sign in to both AWS and Google Cloud. They are already using Google Workspace (GWS) as their collaboration and productivity suite, and as the identity provider for Google Cloud access. Therefore it most sense to also use GWS as the IDP for AWS.
+
+Unlike on Google Cloud, where organization resources and Identity and Acccess Management (IAM) have a hierarchical structure, it is common, and a best practice, to have AWS resources in multiple accounts.  The trouble is, each account has it's own IAM. This makes managing accounts more complicated and troublesome. AWS's solution to this is the Identity Center (formerly AWS SSO).  Identity Center allows users to access multiple accounts using a single credential, and it supports external identity providers such as Google Workspace. 
+
+Here are the steps to enable AWS Identity Center integration with Google Workspace.
+
+== Create GWS Application
+
+The first step is to create a Google Workspace (or Cloud Identity) "App". In this context, the `App` is a connected service that allow your users to sign in with their managed Google account. There are pre-configured templates for common apps, and AWS is one of them.
+
+To begin, open the admin console to add an app. Search for `Amazon Web Services`
+
+image::20250412-gws-create-saml-app.png[]
+
+and download the metadata
+
+image::20250412-download-metadata.png[]
+
+leave the admin console open, we'll come back to it later. Now open a new browser tab for the AWS end.
+
+== Enable IAM Identity Center
+
+On the AWS console, navigate to the Identity Center page. Ensure that you select the primary region before enabling the service.
+
+image::20250412-enable-identity-center.png[]
+
+=== Change Identity Source
+
+Next, go into the `Settings` section and select `Change identity source` under the `Action` menu
+
+image::20250412-change-identity-source.png[]
+
+Here, you want to configure `External identity provider`
+
+image::20250412-external-idp.png[]
+
+and upload the metadata file we downloaded from the Google Workspace / Cloud Identity console
+
+image::20250412-upload-metadata.png[]
+
+review, and confirm
+
+image::20250412-confirm-change.png[]
+
+=== Mapping the SAML Urls
+
+After we changed the identity source, go to `Settings` and select `Manage authentication` from the `Actions` menu.
+
+image::20250412-manage-auth.png[]
+
+this will bring up the page with a couple of URLs that we'll use to configure the Google end:
+
+image::20250412-saml-urls.png[]
+
+AWS and Google Workspace uses different terms for the URLs, below is the mapping
+
+|===
+| AWS                                                      | Google Workspace
+
+| AWS access portal sign-in URL                            | Start URL
+| IAM Identity Center Assertion Consumer Service (ACS) URL | ACS URL
+| IAM Identity Center issuer URL                           | Entity ID
+|===
+
+Populate the URLs on the GWS admin console
+
+image::20250412-map-nameid.png[]
+
+Next, configure which group of users can access the AWS Identity Center. In the example below, I've enabled for everyone in the organization.
+
+image::20250412-turn-on-app.png[]
+
+=== Automatic Provisioning
+
+Auto provisioning allows automatic synchronization of user information from Google Workspace to Identity Center. 
+
+On the AWS console, enable Automatic provisioning
+
+image::20250412-automatic-provisioning.png[]
+
+A popup page will show the `SCIM endpoint` and `Access token` information. Copy them down. 
+If you close the page, you can find those information by selecting `Manage provisioning` on the settings page
+
+image::20250412-manage-provisioning.png[]
+
+On the GWS admin, select `Configure autoprovisioning`
+
+image::20250412-gws-autoprovisioning.png[]
+
+Fill in the `SCIM Endpoint` and `Access Token` information, and verify the attribute mapping between Identity Center and Google Directory.
+
+Verify and adjust the deprovisioning settings and finally ensure that Autoprovisioning toggle is on
+
+image::20250412-toggle-autoprovisioning.png[]
+
+== Login 
+
+On AWS console, locate the `AWS access portal URL` on the IAM Identity Center settings page
+
+image::20250412-final.png[]
+
+Open the link on a new browser tab, and it should redirect you to login to your Google Workspace account.
+
+With these steps, my customer can leverage their existing Google Workspace identities for accessing AWS (and Google Cloud) resources via AWS Identity Center. This integration streamlines the login process for end-users through single sign-on (SSO) and simplifies identity lifecycle management for administrators by centralizing user provisioning and access control, effectively bridging the identity management gap in a multi-cloud environment.
