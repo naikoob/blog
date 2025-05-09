@@ -53,7 +53,7 @@ review, and confirm
 
 image::20250412-confirm-change.png[]
 
-=== aapping the SAML urls
+=== mapping the SAML urls
 
 After we changed the identity source, go to `Settings` and select `Manage authentication` from the `Actions` menu.
 
