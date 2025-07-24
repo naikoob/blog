@@ -110,8 +110,8 @@ On AWS console, locate the `AWS access portal URL` on the IAM Identity Center se
 
 image::20250412-final.png[]
 
-Open the link on a new browser tab, and it should redirect you to login to your Google Workspace account.
+Open the link on a new browser tab, and it should redirect you to login to your Google Workspace account.After successful authentication, you will land on the AWS access portal, confirming that the SAML integration is working correctly.
 
 == wrap up
 
-With these steps, my customer can leverage their existing Google Workspace identities for accessing AWS (and Google Cloud) resources via AWS Identity Center. This integration streamlines the login process for end-users through single sign-on (SSO) and simplifies identity lifecycle management for administrators by centralizing user provisioning and access control, effectively bridging the identity management gap in a multi-cloud environment.
+With single sign-on and user provisioning configured, you have successfully centralized your identity management. The next critical step is to manage permissions within AWS Identity Center by creating *Permission Sets* — collections of IAM policies—and assigning them to your synchronized Google Workspace users and groups. This ensures that your users have the appropriate, least-privilege access to the various AWS accounts managed by the Identity Center, completing the setup for a secure and streamlined multi-cloud environment.
