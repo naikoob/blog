@@ -1,0 +1,142 @@
+---
+layout: post
+title: "Google Cloud Workforce Identity Federation with Entra ID"
+author: naikoob
+tags: [gcp, iam, entra-id, federation]
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img/2025-10-27-google-cloud-workforce-identity-federation-with-entra-id
+:page-liquid:
+:icons: font
+
+Workforce Identity Federation is a feature of Google Cloud Identity and Access Management (IAM) that allows you to use an external identity provider (IdP) to authenticate and authorize users to access Google Cloud resources. This means you can manage your users and groups in your existing IdP, such as Microsoft Entra ID, and grant them access to Google Cloud without having to create and manage separate Google accounts for each user.
+
+In this post, I will walk you through the process of configuring Workforce Identity Federation between Google Cloud and Microsoft Entra ID. By the end of this guide, you will be able to sign in to Google Cloud using your Entra ID credentials.
+
+== Prerequisites
+
+Before we begin, you will need the following:
+
+*   A Google Cloud organization.
+*   A user with the Organization Administrator role in your Google Cloud organization.
+*   A Microsoft Entra ID tenant.
+*   A user with the Global Administrator role in your Entra ID tenant.
+*   The `gcloud` command-line tool installed and configured.
+
+== Create Workforce Identity Pool
+
+=== Create Microsoft Entra ID Application and Secret
+
+First, we create a Microsoft Entra ID application using the Microsoft Entra admin portal.
+
+image::entra-new-app.png[]
+
+Register a Web application. The redirect URI will be https://auth.cloud.google/signin-callback/locations/global/workforcePools/$WORKFORCE_POOL_ID/providers/$WORKFORCE_PROVIDER_ID. For the purpose of this walkthrough, we define them as follows: 
+
+[cols="1,1"]
+|===
+| Variable | Value 
+
+| WORKFORCE_POOL_ID | entra-id-oidc-pool-203040
+| WORKFORCE_PROVIDER_ID | entra-id-oidc-provider
+|===
+
+* Note that $WORKFORCE_POOL_ID has to be globally unique
+
+resulting in the following redirect URI:
+`https://auth.cloud.google/signin-callback/locations/global/workforcePools/entra-id-oidc-pool-203040/providers/entra-id-oidc-provider`
+
+Fill up the application registration as shown below and click `Register`.
+
+image::google-cloud-entra-app.png[]
+
+=== Create Application Secret
+
+On the `Google Cloud` application on Entra ID admin, select `Certificates and Secrets` and click `New Client Secret`
+
+image::entra-create-client-secret.png[]
+
+Create a secret named `GoogleCloudWIP`. 
+
+image::entra-client-secret.png[]
+
+Note the secret value, it will be needed later.
+
+=== Create Workforce Identity Pool on Google Cloud
+
+On Google Cloud console, navigate to `IAM & Admin` > `Workforce Identity Federation`. Click on `Create Pool` and fill in the information below. Note that you need to click `Edit` to reveal the textbox for the `Pool ID`. Be sure to select the correct Google Cloud Organization if you have access to multiple Organizations.
+
+image::create-workforce-id-pool.png[]
+
+Click `Next` to continue. You will be prompted to create the Workforce Identity Pool Provider. Select `OpenID Connect (OIDC)` protocol. We need to provide the `Issuer URL` and `Client ID` from Entra ID.
+
+On Entra ID admin, navigate to the `Google Cloud` Web application we created earlier. You can find the `Client ID` on the details page. 
+
+image::entra-app-config.png[]
+
+Next, click in `Endpoints` near the top of the same page.
+
+You will be presented with a list of URLs. Locate the `OpenID Connect metadata document` on the page and open the corresponding URL in a new browser page. It should be similar to below:
+
+image::entra-openid-config.png[]
+
+Fill in the information on the Google Cloud create provider page as shown below:
+
+image::create-provider.png[]
+
+Click `Next` and fill in the flow type information. The `Client Secret` is the secret we created on Entra ID above.
+
+image::create-provider-2.png[]
+
+Click `Next` and fill in the attribute mapping as follows:
+
+[cols="1,1"]
+|===
+| Google | OIDC 
+
+| google.subject | assertion.email
+| google.groups | assertion.groups
+| google.display_name | assertion.preferred_username
+| google.email | assertion.email
+|===
+
+On Google Cloud Console, it should appear similar to below:
+
+image::configure-mapping.png[]
+
+Optionally, enable logging and click `Submit`
+
+== Testing Federated Access
+
+=== Granting Permission
+
+The following table shows the principal identifiers that you use to grant roles to a single user, a group of users, users carrying a particular claim, or all users from a workforce pool.
+
+[cols="1,1"]
+|===
+|Identities	| Identifier format
+|Single identity in a workforce identity pool | principal://iam.googleapis.com/locations/global/workforcePools/POOL_ID/subject/SUBJECT_ATTRIBUTE_VALUE
+|All workforce identities in a group | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/group/GROUP_ID
+| All workforce identities with a specific attribute value | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/attribute.ATTRIBUTE_NAME/ATTRIBUTE_VALUE
+| All identities in a workforce identity pool | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/*
+|===
+
+As an example, we'll create an IAM access policy for a single user. On Google Cloud console, navigate to the IAM page of the specific project.
+
+image::grant-access.png[]
+
+=== Signing-in
+
+With the permission granted, we can now navigate to the sign in URL. You can find the sign in URL on the Workforce Identity Pool details page:
+
+image::sign-in-url.png[]
+
+Copy the URL and paste it in a new browser tab. You should be redirected to login via your Entra ID, and you should be directed back to Google Cloud console upon successful login. 
+
+Confirm your credentials by clicking on the icon on the top-right of the console.
+
+image::sign-in-success.png[]
+
+== Conclusion
+
+In this post, you learned how to configure Workforce Identity Federation between Google Cloud and Microsoft Entra ID. This allows you to leverage your existing identity provider to manage access to Google Cloud resources, streamlining user management and improving security. By following these steps, you have enabled a seamless and secure single sign-on (SSO) experience for your users, allowing them to access Google Cloud with their familiar Entra ID credentials.
