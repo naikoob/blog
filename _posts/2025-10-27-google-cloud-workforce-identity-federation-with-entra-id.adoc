@@ -2,7 +2,7 @@
 layout: post
 title: "Google Cloud Workforce Identity Federation with Entra ID"
 author: naikoob
-tags: [gcp, iam, entra-id, federation]
+tags: [google cloud, iam, entra-id, federation]
 ---
 :source-highlighter: rouge
 :imagesdir: /blog/assets/img/2025-10-27-google-cloud-workforce-identity-federation-with-entra-id
@@ -13,7 +13,7 @@ Workforce Identity Federation is a feature of Google Cloud Identity and Access M
 
 In this post, I will walk you through the process of configuring Workforce Identity Federation between Google Cloud and Microsoft Entra ID. By the end of this guide, you will be able to sign in to Google Cloud using your Entra ID credentials.
 
-== Prerequisites
+== prerequisites
 
 Before we begin, you will need the following:
 
@@ -23,9 +23,9 @@ Before we begin, you will need the following:
 *   A user with the Global Administrator role in your Entra ID tenant.
 *   The `gcloud` command-line tool installed and configured.
 
-== Create Workforce Identity Pool
+== create workforce identity pool
 
-=== Create Microsoft Entra ID Application and Secret
+=== create Microsoft Entra ID application and secret
 
 First, we create a Microsoft Entra ID application using the Microsoft Entra admin portal.
 
@@ -50,7 +50,7 @@ Fill up the application registration as shown below and click `Register`.
 
 image::google-cloud-entra-app.png[]
 
-=== Create Application Secret
+=== create application secret
 
 On the `Google Cloud` application on Entra ID admin, select `Certificates and Secrets` and click `New Client Secret`
 
@@ -62,7 +62,7 @@ image::entra-client-secret.png[]
 
 Note the secret value, it will be needed later.
 
-=== Create Workforce Identity Pool on Google Cloud
+=== create workforce identity pool on Google Cloud
 
 On Google Cloud console, navigate to `IAM & Admin` > `Workforce Identity Federation`. Click on `Create Pool` and fill in the information below. Note that you need to click `Edit` to reveal the textbox for the `Pool ID`. Be sure to select the correct Google Cloud Organization if you have access to multiple Organizations.
 
@@ -94,10 +94,9 @@ Click `Next` and fill in the attribute mapping as follows:
 |===
 | Google | OIDC 
 
-| google.subject | assertion.email
+| google.subject |assertion.email.lowerAscii()
 | google.groups | assertion.groups
-| google.display_name | assertion.preferred_username
-| google.email | assertion.email
+| google.display_name | assertion.given_name
 |===
 
 On Google Cloud Console, it should appear similar to below:
@@ -106,9 +105,11 @@ image::configure-mapping.png[]
 
 Optionally, enable logging and click `Submit`
 
-== Testing Federated Access
+NOTE: Note that we are using email as the assertion subject. Therefore it is essential that email is defined for all users that will be accessing Google Cloud resources in Entra ID.
 
-=== Granting Permission
+== testing federated access
+
+=== granting permission
 
 The following table shows the principal identifiers that you use to grant roles to a single user, a group of users, users carrying a particular claim, or all users from a workforce pool.
 
@@ -125,7 +126,7 @@ As an example, we'll create an IAM access policy for a single user. On Google Cl
 
 image::grant-access.png[]
 
-=== Signing-in
+=== signing in
 
 With the permission granted, we can now navigate to the sign in URL. You can find the sign in URL on the Workforce Identity Pool details page:
 
@@ -137,6 +138,13 @@ Confirm your credentials by clicking on the icon on the top-right of the console
 
 image::sign-in-success.png[]
 
-== Conclusion
+== how to do this using the command line?
+
+I demonstrated creating WIP using the console. Please refer to official documentation on how to perform the same task using the `gcloud` CLI.
+
+*   https://cloud.google.com/iam/docs/workforce-sign-in-microsoft-entra-id[Workforce Identity Federation with Entra ID]
+
+== wrap up
 
 In this post, you learned how to configure Workforce Identity Federation between Google Cloud and Microsoft Entra ID. This allows you to leverage your existing identity provider to manage access to Google Cloud resources, streamlining user management and improving security. By following these steps, you have enabled a seamless and secure single sign-on (SSO) experience for your users, allowing them to access Google Cloud with their familiar Entra ID credentials.
+
