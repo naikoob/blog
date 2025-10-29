@@ -118,11 +118,13 @@ The following table shows the principal identifiers that you use to grant roles 
 |Identities	| Identifier format
 |Single identity in a workforce identity pool | principal://iam.googleapis.com/locations/global/workforcePools/POOL_ID/subject/SUBJECT_ATTRIBUTE_VALUE
 |All workforce identities in a group | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/group/GROUP_ID
-| All workforce identities with a specific attribute value | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/attribute.ATTRIBUTE_NAME/ATTRIBUTE_VALUE
-| All identities in a workforce identity pool | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/*
+|All workforce identities with a specific attribute value | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/attribute.ATTRIBUTE_NAME/ATTRIBUTE_VALUE
+|All identities in a workforce identity pool | principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/*
 |===
 
-As an example, we'll create an IAM access policy for a single user. On Google Cloud console, navigate to the IAM page of the specific project.
+As an example, we'll create an IAM access policy for a group. As above, the format is `principalSet://iam.googleapis.com/locations/global/workforcePools/POOL_ID/group/GROUP_ID`. The `GROUP_ID` is the Entra ID group's `Object ID`. 
+
+On Google Cloud console, navigate to the IAM page of the specific project.
 
 image::grant-access.png[]
 
