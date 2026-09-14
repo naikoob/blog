@@ -123,7 +123,7 @@ Every mutation command supports `--dry-run` so you (or your agent) can preview c
 
 '''
 
-== 3. subagents & the plumbing shield
+== 3. subagents
 
 To prevent context bloat, the vault defines two specialized agent personas that Antigravity orchestrates behind the scenes:
 
