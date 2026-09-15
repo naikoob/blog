@@ -17,7 +17,7 @@ Fast forward six months, and the vault is a graveyard.
 
 Directory indexes fall out of date. Broken links multiply. Then we connect an LLM or AI coding agent to our notes, hoping for leverage—only to discover a worse problem: the agent hallucinates configuration flags, invents internal links to non-existent notes, or silently overwrites curated knowledge with generic corporate boilerplate.
 
-I built (vibe coded) https://github.com/naikoob/grey-matter[*Grey Matter*] to fix this friction. It is an open-source, reproducible second-brain framework designed specifically for humans and AI agents thinking together. 
+I built (and vibe-coded) https://github.com/naikoob/grey-matter[*Grey Matter*] to fix this friction. It is an open-source, reproducible second-brain framework designed specifically for humans and AI agents thinking together. 
 
 In this setup, *Obsidian is the UI*—the visual workspace for reading, graph exploration, and manual edits. *Antigravity is the AI companion*—the autonomous thinking partner that scaffolds notes, triages the inbox, grounds answers in verified facts, and keeps the engine healthy via Model Context Protocol (MCP).
 
@@ -33,11 +33,11 @@ When you let AI agents read and write directly into a standard Markdown vault, t
 . *Metadata Drift*: Humans hate maintaining YAML frontmatter and directory tables by hand. When agents try to do it without guardrails, they invent arbitrary schemas and break index formats.
 . *Plumbing Bloat*: When an AI has to navigate scripts, build hooks, templates, and actual knowledge all in one flat space, its context window gets clogged with mechanics rather than synthesis.
 
-To solve this, Grey Matter combines *PARA* (Projects, Areas, Resources, Archive) with the *Open Knowledge Format (OKF v0.2)*, backed by a zero-dependency Python engine.
+To solve this, Grey Matter combines *PARA* (4Projects, Areas, Resources, Archive) with the *Open Knowledge Format (OKF v0.2)*, backed by a zero-dependency Python engine.
 
 '''
 
-== 2 realms
+== the two realms
 
 Grey Matter splits the repository into two strictly isolated domains:
 
@@ -134,7 +134,7 @@ Antigravity acts as the executive Second Brain—keeping its context window focu
 
 '''
 
-== the daily workflow: obsidian as the UI, antigravity as the companion
+== the daily workflow: obsidian as the ui, antigravity as the companion
 
 Here is how the collaboration works in practice: Obsidian sits open on one screen as your visual interface, while Antigravity runs as your pair programmer and thinking partner.
 
@@ -162,7 +162,7 @@ Once the note is ready to be filed into your permanent PARA structure:
 ____
 _Triage the Tailscale note._
 ____
-* Antigravity invokes `vault_triage` via MCP. The engine moves the file to `03 -Resources/linux`, updates the `topic` frontmatter, regenerates `00 - Inbox/index.md` and `03 - Resources/linux/index.md`, and appends an entry to `log.md`.
+* Antigravity invokes `vault_triage` via MCP. The engine moves the file to `03 - Resources/`, updates the `topic` frontmatter, regenerates `00 - Inbox/index.md` and `03 - Resources/index.md`, and appends an entry to `log.md`.
 * In Obsidian, the note smoothly transitions into its new folder and the index tables refresh in real time.
 
 === step 3: grounded recall & graph traversal
@@ -220,7 +220,7 @@ The installer configures git hooks (`core.hooksPath = 99 - System/hooks`), sets 
 === step 2: open in obsidian and connect antigravity
 
 . *Obsidian*: Select _Open folder as vault_ and choose your `my-brain` directory.
-. *Antigravity*: Open `my-brain` in Antigravity, Add the grey-matter server to your ~/.gemini/config/mcp_config.json:
+. *Antigravity*: Open `my-brain` in Antigravity, Add the grey-matter server to your `~/.gemini/config/mcp_config.json``:
 
 [source,json]
 ----
