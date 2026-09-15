@@ -37,7 +37,7 @@ To solve this, Grey Matter combines *PARA* (Projects, Areas, Resources, Archive)
 
 '''
 
-== the 2 distinct realms
+== 2 realms
 
 Grey Matter splits the repository into two strictly isolated domains:
 
