@@ -67,7 +67,7 @@ This is the software engine (`brain.py`), git hooks, and test suite. Realm 2 is 
 
 '''
 
-== 1. trust tiers
+== trust tiers
 
 One of the biggest issues with AI-assisted knowledge management is hallucination creep. In Grey Matter, every note carries an explicit trust tier based on signed verification blocks:
 
@@ -92,7 +92,7 @@ When *Antigravity* is asked about past infrastructure decisions or personal setu
 
 '''
 
-== 2. write prose, call tools for everything else
+== write prose, call tools for everything else
 
 In Grey Matter, humans and agents write prose. *Tools handle all structural mutations.*
 
@@ -123,7 +123,7 @@ Every mutation command supports `--dry-run` so you (or your agent) can preview c
 
 '''
 
-== 3. subagents
+== the agents
 
 To prevent context bloat, the vault defines two specialized agent personas that Antigravity orchestrates behind the scenes:
 
