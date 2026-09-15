@@ -11,6 +11,7 @@ favicon: assets/img/favicon.png                         # Icon displayed in the 
 # Header and footer text
 header_text: Stuff that matters ... and a little indulgence  # Change Blog header text
 header_feature_image: assets/img/pexels/keyboard.jpeg
+footer_disclaimer: "Opinions and code are my own and do not represent an official product or endorsement."
 footer_text: >
   Powered by <a href="https://jekyllrb.com/">Jekyll</a> with <a href="https://github.com/sylhare/Type-on-Strap">Type on Strap</a>
 
