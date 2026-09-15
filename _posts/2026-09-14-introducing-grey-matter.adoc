@@ -17,7 +17,7 @@ Fast forward six months, and the vault is a graveyard.
 
 Directory indexes fall out of date. Broken links multiply. Then we connect an LLM or AI coding agent to our notes, hoping for leverage—only to discover a worse problem: the agent hallucinates configuration flags, invents internal links to non-existent notes, or silently overwrites curated knowledge with generic corporate boilerplate.
 
-I built https://github.com/naikoob/grey-matter[*Grey Matter*] to fix this friction. It is an open-source, reproducible second-brain framework designed specifically for humans and AI agents thinking together. 
+I built (vibe coded) https://github.com/naikoob/grey-matter[*Grey Matter*] to fix this friction. It is an open-source, reproducible second-brain framework designed specifically for humans and AI agents thinking together. 
 
 In this setup, *Obsidian is the UI*—the visual workspace for reading, graph exploration, and manual edits. *Antigravity is the AI companion*—the autonomous thinking partner that scaffolds notes, triages the inbox, grounds answers in verified facts, and keeps the engine healthy via Model Context Protocol (MCP).
 
