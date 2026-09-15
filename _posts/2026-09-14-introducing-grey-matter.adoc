@@ -88,7 +88,15 @@ One of the biggest issues with AI-assisted knowledge management is hallucination
 | Ground truth; established personal knowledge.
 |===
 
-When *Antigravity* is asked about past infrastructure decisions or personal setup, it doesn't guess. It calls `vault_ground` over MCP, inspects the 1-hop graph neighbors, and explicitly cites the trust tier of each source note.
+YAML example in the notes' frontmatter:
+[source,yaml]
+----
+verified:
+  - by: human:bookian
+    date: 2026-09-14
+----
+
+When *Antigravity* is asked about past infrastructure decisions or personal setup, it doesn't guess. It calls `vault_ground` over MCP, inspects the 1-hop graph neighbors, and explicitly cites the trust tier of each source note. 
 
 '''
 
@@ -280,3 +288,5 @@ The template seed is open-source under the MIT license:
 * *Repository*: https://github.com/naikoob/grey-matter
 
 Clone it, run `./install.sh`, open it in Obsidian and Antigravity, and start building your own augmented second brain.
+
+* Opinions and code are my own and do not represent an official product or endorsement.
