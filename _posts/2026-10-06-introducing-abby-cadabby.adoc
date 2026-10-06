@@ -1,0 +1,160 @@
+---
+layout: post
+title: "Introducing Abby Cadabby: From PARA to LLM Wiki"
+author: naikoob
+categories: [second-brain, ai, architecture]
+tags: [obsidian, okf, mcp, antigravity, llm-wiki, speckit, abby, cadabby]
+description: "How building Abby with speckit and spec-driven development exposed the heavy plumbing tax of PARA folder hierarchies, and why Cadabby embraces a flat LLM Wiki structure."
+---
+:source-highlighter: rouge
+:imagesdir: /blog/assets/img/2026-10-06-introducing-abby-cadabby
+:page-liquid:
+:icons: font
+
+In my link:{% post_url 2026-09-14-introducing-grey-matter %}[previous post], I introduced Grey Matter—a deterministic second-brain architecture that pairs Obsidian as the visual workspace with Antigravity as the AI companion, backed by the Open Knowledge Format (OKF v0.2).
+
+The core promise was simple: humans write prose, and tools handle all the mechanical mutations. To make that real, I set out to build dedicated tooling and autonomous AI agents around the vault. 
+
+I decided to try spec-driven development using *speckit* to build https://github.com/naikoob/abby[*Abby*]. But when I sat down to analyze what I had actually built, the code held up a mirror to an uncomfortable truth: a significant portion of the codebase existed solely to shuttle Markdown files from one folder to another.
+
+That realization led to https://github.com/naikoob/cadabby[*Cadabby*]—and a fundamental pivot away from rigid folder hierarchies toward a flat structure designed around how LLMs actually think.
+
+'''
+
+== building abby with speckit
+
+When engineering tools that AI agents will invoke via protocols like MCP (Model Context Protocol), loose specifications are a recipe for hallucinated parameters and corrupted files.
+
+Rather than vibe-coding the agent tools into existence, I used *speckit* to test-drive formal spec-driven development. Speckit enforces a structured, specification-first workflow: writing specifications, user stories, acceptance criteria, and explicit tool schemas before writing a single line of application code:
+
+* `note_capture`: frictionless ingestion into an inbox.
+* `note_move`: relocating notes across the PARA hierarchy.
+* `note_archive`: safely retiring completed projects.
+* `vault_lint` & `vault_check`: verifying links and schema compliance.
+
+The speckit workflow worked remarkably well. The tools had unambiguous contracts, edge cases were nailed down upfront, and the agent harnesses could implement and invoke vault mutations with high determinism.
+
+Then I ran an audit on the codebase.
+
+'''
+
+== the revelation: the folder tax
+
+Looking at the distribution of logic across Abby, one pattern jumped out immediately: *the folder tax*.
+
+A significant amount of code, state handling, and test suites existed solely to manage physical directory movements:
+
+. *Path migrations*: Moving a file from `00 - Inbox/` to `01 - Projects/`, or later to `04 - Archive/`.
+. *Backlink repairs*: When a note's physical filesystem path changes, every single wikilink pointing to that note in Obsidian risks breaking unless every referencing file is parsed and updated.
+. *Index synchronizations*: Maintaining parent `index.md` tables for every folder whenever a file was added, renamed, or moved.
+. *Taxonomy dilemmas*: Is a note about a cloud migration a *Project* (because it has an active deadline), an *Area* (because it touches core infrastructure), or a *Resource* (because it contains evergreen architecture reference)?
+
+[cols="1,2", options="header"]
+|===
+| The Promise of Folders | The Reality in Practice
+
+| "Everything has a neat, tidy home."
+| You spend mental energy deliberating which folder a note belongs in today, and more energy moving it tomorrow.
+
+| "Folders make navigation intuitive."
+| AI agents don't browse folders by visual tree inspection—they search full-text, query metadata, and traverse links.
+
+| "Lifecycle is tracked by location."
+| Moving files churns git histories, alters relative paths, and creates unnecessary filesystem churn.
+|===
+
+PARA (Projects, Areas, Resources, Archive) is a brilliant organizational system for human beings visually scanning a file tree or a physical filing cabinet. However, when applied to human-AI collaborative knowledge bases, physical folders become unnecessary friction. We were spending valuable context tokens and tool calls acting as automated digital file clerks.
+
+'''
+
+== enter cadabby: the llm wiki paradigm
+
+If an AI agent can instantly retrieve notes by BM25 full-text search and follow semantic link graphs, why are we forcing knowledge into nested directory buckets?
+
+This led to https://github.com/naikoob/cadabby[*Cadabby*]. Instead of managing file lifecycles through physical folder relocations, Cadabby leans directly into the *LLM Wiki* pattern popularized by Andrej Karpathy.
+
+The core insight of an LLM Wiki is elegant: you separate raw, unprocessed inputs from synthesized, evergreen knowledge. Rather than sorting notes across a multi-stage folder pipeline, you have an ingest layer and a curated wiki layer. Articles do not move between directories as they mature; an article exists at a permanent identifier, and its relationships, maturity, and topics are expressed through *wikilinks, Maps of Content (MOCs), and metadata*.
+
+Cadabby replaces physical movement with conceptual graph traversal:
+
+[cols="1,2,2", options="header"]
+|===
+| Dimension | Abby (PARA Hierarchy) | Cadabby (LLM Wiki)
+
+| *File Location*
+| Notes move across `00` through `04` directories.
+| `raw/` for ingest, flat `wiki/` for knowledge, `account/<slug>` for clients.
+
+| *Lifecycle State*
+| Dictated by current folder path.
+| Declared in frontmatter metadata (`status: active` or `archived`).
+
+| *Relationships*
+| Expressed via folder nesting & directory index tables.
+| Expressed via wikilinks (`[[...]]`) and MOC index hubs.
+
+| *Agent Operations*
+| `note_move`, `note_archive`, path rewriting.
+| `kb_scaffold`, `kb_graph`, `kb_search`, `kb_inspect`.
+
+| *Git Churn*
+| High (file renames, diffs in multiple folder indexes).
+| Minimal (append-only edits, stable paths).
+|===
+
+'''
+
+== the structure: accounts, raw, and a flat wiki
+
+Karpathy’s LLM Wiki concept centers around two primary directories: `raw/` for uncurated input dumps and `wiki/` for synthesized encyclopedic knowledge. 
+
+In Cadabby, I adopted this exact dynamic—with one essential real-world variation: I added support for cognitive domains, introducing `account/<slug>` folders to group customer notes.
+
+[source,text]
+----
+├── account/                 # Context-isolated customer & engagement notes
+│   ├── acme-corp/           # High-boundary client workspaces
+│   └── globex/
+│
+├── raw/                     # Raw ingest: scratchpads, transcripts, uncurated captures
+│   ├── incident-notes.md
+│   └── customer-call-20261006.md
+│
+├── wiki/                    # The flat LLM Wiki: all evergreen knowledge & concepts
+│   ├── kubernetes-networking.md
+│   ├── tailscale-proxmox.md
+│   └── mcp-architecture.md
+│
+└── .system/                 # Engine, hooks, and sync daemons
+----
+
+* *`raw/` for raw capture*: Ingest point for scratchpads, transcripts, and ephemeral dumps. The AI agent processes and distills notes from here into the permanent wiki without requiring multi-stage folder juggling.
+* *`wiki/` for evergreen concepts*: The single flat home for all architecture patterns, procedural runbooks, and foundational knowledge. Notes link to topic MOCs rather than sitting inside nested folders.
+* *`account/<slug>` for cognitive domains*: Real-world practitioner work involves client engagements. Isolating customer notes into dedicated cognitive domains ensures client-specific deliverables and confidential architectures don't pollute the general wiki or leak across AI retrieval contexts.
+
+'''
+
+== the mental shift: graphs over paths
+
+Moving from Abby's PARA model to Cadabby's LLM Wiki requires a subtle but liberating mindset shift:
+
+* *Identity is permanent*: A note's path is immutable. Once created, its URL/path never changes.
+* *Hubs replace folders*: Instead of putting notes *inside* a folder, notes link *up* to parent topic hubs or Maps of Content (MOCs).
+* *Multi-dimensional belonging*: In a folder hierarchy, a note can only be in one place at a time without symlink tricks. In an LLM Wiki, a note can naturally belong to three different topics simultaneously simply by linking to their hubs.
+* *Agents traverse graphs, not trees*: When Antigravity or another AI companion needs context, it doesn't fumble through folder listings. It searches the index, inspects the node, and traverses 1- or 2-hop graph neighbors.
+
+Tools like `kb_scaffold` now register new notes directly into parent MOC hubs in a single deterministic step, rather than creating files in an inbox that must later be triaged and moved.
+
+'''
+
+== wrap up
+
+Building Abby with speckit and spec-driven development was an invaluable exercise. By forcing clarity on tool contracts and schemas, it made the hidden friction of our architecture visible. It showed us that we were solving the wrong problem: we were building sophisticated machinery to automate folder mechanics that shouldn't have existed in the first place.
+
+Cadabby is the natural evolution. By pairing a flat `wiki/` directory with dedicated `account/<slug>` boundaries, we get the best of both worlds: clean context isolation where it matters, and a frictionless, graph-based second brain where human and AI thinking can grow without a folder tax.
+
+Both projects are available on GitHub:
+
+* *Abby*: https://github.com/naikoob/abby
+* *Cadabby*: https://github.com/naikoob/cadabby
+
